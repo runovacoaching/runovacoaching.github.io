@@ -1,88 +1,93 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RUNOVA</title>
-<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F1F3F6;--ink:#101B2B;--mute:#5B6676;--line:#D9DEE6;--card:#fff;--blue:#1E45C8;--gold:#FFB400;--red:#C62828}
+:root{--bg:#EEF0FB;--ink:#0A0E2A;--mute:#5A6086;--line:#C9CDEA;--blue:#2230E8;--coral:#FF4F5E;--red:#C62828}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "Readex Pro",Tahoma,sans-serif}
-.top{background:var(--ink);color:#fff;padding:18px 20px 0}
-.top .row{display:flex;justify-content:space-between;align-items:center;max-width:720px;margin:0 auto}
-.brand{font-weight:700;font-size:1.35rem;letter-spacing:.18em;direction:ltr}
-.brand small{font-weight:400;letter-spacing:0;font-size:.85rem;opacity:.7;margin-inline-start:8px}
-.lanes{height:14px;margin-top:16px;background:repeating-linear-gradient(90deg,var(--gold) 0 36px,transparent 36px 44px) 0 3px/100% 2px no-repeat,repeating-linear-gradient(90deg,#fff 0 36px,transparent 36px 44px) 0 10px/100% 2px no-repeat;opacity:.9}
-main{max-width:720px;margin:0 auto;padding:20px}
-h2{font-size:1.15rem;margin:28px 0 10px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "DM Sans",system-ui,sans-serif}
+.top{position:relative;overflow:hidden;background:var(--blue);color:#fff;padding:20px 20px 42px}
+.lanes{position:absolute;inset:0;background:repeating-linear-gradient(-14deg,transparent 0 46px,rgba(255,255,255,.17) 46px 49px);pointer-events:none}
+.top .row{position:relative;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:flex-end;max-width:720px;margin:0 auto}
+.brand{font:800 clamp(2.3rem,12vw,3.9rem)/.95 Unbounded,sans-serif;letter-spacing:-.03em}
+.brand small{display:block;font:600 .8rem "DM Sans",sans-serif;letter-spacing:.02em;background:var(--coral);color:#fff;width:max-content;padding:3px 12px;border-radius:99px;margin-top:12px;transform:rotate(-2deg)}
+main{max-width:720px;margin:0 auto;padding:22px 20px 40px}
+h2{font:700 1rem Unbounded,sans-serif;margin:30px 0 12px}
+.card{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:18px;box-shadow:5px 5px 0 var(--ink)}
+summary{cursor:pointer;font:700 1rem Unbounded,sans-serif}
 label{display:block;font-size:.88rem;color:var(--mute);margin-bottom:4px}
-input,select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
-input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+input,select,textarea{width:100%;font:inherit;padding:10px 12px;border:2px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus,button:focus-visible,summary:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .full{grid-column:1/-1}
-button{font:inherit;font-weight:600;border:0;border-radius:8px;padding:11px 18px;background:var(--blue);color:#fff;cursor:pointer}
-button.ghost{background:transparent;color:inherit;border:1px solid currentColor;padding:6px 12px;font-weight:400;font-size:.88rem}
-button.tab{background:none;color:var(--mute);border-radius:0;border-bottom:3px solid transparent;padding:8px 14px}
-button.tab.on{color:var(--ink);border-color:var(--gold)}
-.tabs{display:flex;margin-bottom:16px}
-.err{color:var(--red);font-size:.9rem;margin:10px 0 0;min-height:1.4em}
-.stats{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:12px;align-items:end}
-.big{font-weight:700;font-size:3rem;line-height:1;direction:ltr;text-align:right}
-.big span{font-size:1rem;font-weight:400;color:var(--mute);margin-inline-start:4px}
+button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:11px 20px;background:var(--ink);color:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--coral)}
+button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--coral)}
+button.ghost{background:transparent;color:#fff;border:2px solid #fff;padding:5px 12px;font-weight:600;font-size:.85rem;box-shadow:none}
+.err,.ok{font-size:.9rem;margin:10px 0 0;min-height:1.4em}
+.err{color:var(--red)}.ok{color:var(--blue);font-weight:600}
+.stats{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:12px;align-items:end}
+.big{font:800 clamp(2.6rem,13vw,4.2rem)/1 Unbounded,sans-serif;color:transparent;-webkit-text-stroke:2px var(--blue)}
+.big span{font:600 1rem "DM Sans",sans-serif;color:var(--ink);-webkit-text-stroke:0;margin-inline-start:6px}
 .lbl{font-size:.85rem;color:var(--mute)}
-.mid{font-weight:700;font-size:1.5rem;line-height:1.2}
-.w{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.mid{font:700 1.45rem/1.2 Unbounded,sans-serif}
+.w{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:2px dashed var(--line)}
 .w:last-child{border:0}
 .w b{font-weight:600}
 .w .m{color:var(--mute);font-size:.88rem}
-.w .n{font-size:.9rem;margin-top:2px}
-.x{background:none;color:var(--mute);padding:2px 8px;font-weight:400;font-size:1.2rem}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{background:#fff;color:var(--ink);border:1px solid var(--line);font-weight:400}
-.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.w .n{font-size:.92rem;margin-top:2px}
+.x{background:none;color:var(--mute);padding:2px 8px;font-weight:400;font-size:1.3rem;box-shadow:none}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{background:#fff;color:var(--ink);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:8px 16px}
+.chip.on{background:var(--blue);color:#fff}
 .empty{color:var(--mute);padding:14px 0}
-@media(max-width:480px){.stats{grid-template-columns:1fr 1fr}.stats>:first-child{grid-column:1/-1}.big{font-size:2.6rem}}
+.cm{background:#FFE9EB;border-left:4px solid var(--coral);border-radius:6px;padding:6px 10px;margin-top:6px;font-size:.92rem}
+.cm b{font-weight:600}
+.inl{display:flex;gap:8px;margin-top:8px}
+.inl button{padding:8px 14px}
+input[type=checkbox]{width:24px;height:24px;flex:none;margin-top:3px;accent-color:var(--blue)}
+.pl{justify-content:flex-start;align-items:flex-start}
+.pl.done .t{text-decoration:line-through;color:var(--mute)}
+@media(max-width:480px){.stats{grid-template-columns:1fr 1fr}.stats>:first-child{grid-column:1/-1}}
 </style>
 </head>
 <body>
-<header class="top"><div class="row"><div class="brand">RUNOVA<small>كوتشينج</small></div><div id="who"></div></div><div class="lanes"></div></header>
+<header class="top"><div class="lanes"></div><div class="row"><div class="brand">RUNOVA<small>Coaching</small></div><div id="who"></div></div></header>
 <main id="app"></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 const sb=supabase.createClient('https://fsgawcqntgvfpbxytwhx.supabase.co','sb_publishable_8heKxg7yMRJrV2qbB1hH-Q_ZJqxktXZ');
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const TYPES={easy:'جري خفيف',long:'جري طويل',tempo:'تمبو',interval:'فترات',strength:'قوة',stretch:'إطالة',race:'سباق'};
+const TYPES={easy:'Easy run',long:'Long run',tempo:'Tempo',interval:'Intervals',strength:'Strength',stretch:'Stretching',race:'Race'};
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const weekStart=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+1)%7));return iso(d)};
 const num=v=>v===''||v==null?null:Number(v);
 const fmt=n=>Number.isInteger(n)?n:n.toFixed(1);
-let me=null,mode='in',picked=null;
+let me=null,picked=null;
 
 function msg(e){const m=(e&&e.message)||'';
- if(/Invalid login/i.test(m))return 'اليوزر نيم أو الباسورد غلط';
- if(/already registered/i.test(m))return 'اليوزر نيم ده مستخدم، اختار غيره';
- if(/at least 6/i.test(m))return 'الباسورد لازم يكون 6 حروف أو أرقام على الأقل';
- return 'حصلت مشكلة: '+m}
+ if(/Invalid login/i.test(m))return 'Wrong username or password.';
+ if(/already registered/i.test(m))return 'That username is taken. Choose another.';
+ if(/at least 6/i.test(m))return 'Password must be at least 6 characters.';
+ return 'Something went wrong: '+m}
 
 function authView(){
  $('#who').innerHTML='';
- $('#app').innerHTML=`<div class="card"><div class="tabs"><button class="tab ${mode=='in'?'on':''}" data-m="in">دخول</button><button class="tab ${mode=='up'?'on':''}" data-m="up">حساب جديد</button></div>
- <div class="grid">${mode=='up'?'<div class="full"><label for="fn">الاسم</label><input id="fn" autocomplete="name"></div>':''}
- <div class="full"><label for="un">اليوزر نيم (حروف إنجليزي وأرقام)</label><input id="un" dir="ltr" autocapitalize="none" autocomplete="username"></div>
- <div class="full"><label for="pw">الباسورد</label><input id="pw" type="password" dir="ltr" autocomplete="${mode=='in'?'current-password':'new-password'}"></div>
- <div class="full"><button id="go">${mode=='in'?'دخول':'إنشاء الحساب'}</button></div></div><p class="err" id="err" role="alert"></p></div>`;
- document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{mode=b.dataset.m;authView()});
+ $('#app').innerHTML=`<div class="card"><h2 style="margin-top:0">Log in</h2><div class="grid">
+ <div class="full"><label for="un">Username</label><input id="un" autocapitalize="none" autocomplete="username"></div>
+ <div class="full"><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password"></div>
+ <div class="full"><button id="go">Log in</button></div></div><p class="err" id="err" role="alert"></p>
+ <p class="lbl">Accounts are created by your coach. Ask them for your username and password.</p></div>`;
  $('#go').onclick=async()=>{
   const u=$('#un').value.trim().toLowerCase(),p=$('#pw').value;
-  if(!/^[a-z0-9_]{3,20}$/.test(u))return $('#err').textContent='اليوزر نيم من 3 إلى 20 حرف إنجليزي أو رقم أو _';
-  const email=u+'@runova.app';$('#go').disabled=true;
-  const r=mode=='in'?await sb.auth.signInWithPassword({email,password:p}):await sb.auth.signUp({email,password:p,options:{data:{full_name:($('#fn')?.value||'').trim()}}});
+  if(!u||!p)return $('#err').textContent='Enter your username and password.';
+  $('#go').disabled=true;
+  const r=await sb.auth.signInWithPassword({email:u+'@runova.app',password:p});
   $('#go').disabled=false;
   if(r.error)return $('#err').textContent=msg(r.error);
-  if(!r.data.session)return $('#err').textContent='الحساب اتعمل بس لازم تقفل Confirm email في Supabase';
   boot()}}
 
 async function boot(){
@@ -91,7 +96,7 @@ async function boot(){
  const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
  if(error||!data){await sb.auth.signOut();return authView()}
  me=data;
- $('#who').innerHTML=`<span>${esc(me.full_name||me.username)}</span> <button class="ghost" id="out">خروج</button>`;
+ $('#who').innerHTML=`<span>${esc(me.full_name||me.username)}</span> <button class="ghost" id="out">Log out</button>`;
  $('#out').onclick=async()=>{await sb.auth.signOut();me=null;picked=null;authView()};
  me.role=='coach'?coachView():athleteView()}
 
@@ -99,49 +104,90 @@ function statsHTML(ws){
  const wk=ws.filter(w=>w.workout_date>=weekStart());
  const km=wk.reduce((a,w)=>a+(+w.distance_km||0),0);
  const ef=wk.filter(w=>w.effort);const avg=ef.length?ef.reduce((a,w)=>a+w.effort,0)/ef.length:null;
- return `<div class="card stats"><div><div class="big">${fmt(km)}<span>كم</span></div><div class="lbl">مسافة الأسبوع ده (من السبت)</div></div>
- <div><div class="mid">${wk.length}</div><div class="lbl">تمرينات</div></div>
- <div><div class="mid">${avg?fmt(avg):'-'}</div><div class="lbl">متوسط المجهود</div></div></div>`}
+ return `<div class="card stats"><div><div class="big">${fmt(km)}<span>km</span></div><div class="lbl">Distance this week (from Saturday)</div></div>
+ <div><div class="mid">${wk.length}</div><div class="lbl">Workouts</div></div>
+ <div><div class="mid">${avg?fmt(avg):'-'}</div><div class="lbl">Avg effort</div></div></div>`}
 
-function listHTML(ws,edit){
- if(!ws.length)return '<div class="empty">مفيش تمرينات متسجلة لسه.</div>';
- return ws.map(w=>`<div class="w"><div><b>${TYPES[w.type]||esc(w.type)}</b> <span class="m">${esc(w.workout_date)}</span>
- <div class="m">${[w.distance_km!=null?fmt(+w.distance_km)+' كم':'',w.duration_min!=null?fmt(+w.duration_min)+' دقيقة':'',w.effort?'مجهود '+w.effort+'/10':''].filter(Boolean).join(' • ')}</div>
- ${w.notes?`<div class="n">${esc(w.notes)}</div>`:''}</div>${edit?`<button class="x" data-del="${esc(w.id)}" aria-label="مسح التمرين">×</button>`:''}</div>`).join('')}
+function listHTML(ws,edit,cm,coach){
+ cm=cm||{};
+ if(!ws.length)return '<div class="empty">No workouts logged yet.</div>';
+ return ws.map(w=>`<div class="w"><div style="flex:1;min-width:0"><b>${TYPES[w.type]||esc(w.type)}</b> <span class="m">${esc(w.workout_date)}</span>
+ <div class="m">${[w.distance_km!=null?fmt(+w.distance_km)+' km':'',w.duration_min!=null?fmt(+w.duration_min)+' min':'',w.effort?'Effort '+w.effort+'/10':''].filter(Boolean).join(' • ')}</div>
+ ${w.notes?`<div class="n">${esc(w.notes)}</div>`:''}
+ ${(cm[w.id]||[]).map(c=>`<div class="cm"><b>Coach:</b> ${esc(c.body)}</div>`).join('')}
+ ${coach?`<div class="inl"><input data-ci="${esc(w.id)}" placeholder="Comment for this workout" aria-label="Comment"><button data-c="${esc(w.id)}">Send</button></div>`:''}
+ </div>${edit?`<button class="x" data-del="${esc(w.id)}" aria-label="Delete workout">×</button>`:''}</div>`).join('')}
+
+function plansHTML(ps,coach){
+ if(!ps.length)return '<div class="empty">'+(coach?'No plan added yet.':'Your coach hasn’t added a plan yet.')+'</div>';
+ return ps.map(p=>`<div class="w pl ${p.done?'done':''}">${coach?'':`<input type="checkbox" data-done="${esc(p.id)}" ${p.done?'checked':''} aria-label="Mark done">`}
+ <div style="flex:1;min-width:0"><div class="t"><b>${esc(p.title)}</b> <span class="m">${esc(p.plan_date)}</span></div>${p.details?`<div class="n">${esc(p.details)}</div>`:''}${coach?`<div class="m">${p.done?'Done':'Not done yet'}</div>`:''}</div>
+ ${coach?`<button class="x" data-pdel="${esc(p.id)}" aria-label="Remove from plan">×</button>`:''}</div>`).join('')}
+
+async function fetchPlans(id){const f=new Date();f.setDate(f.getDate()-7);const {data}=await sb.from('plans').select('*').eq('athlete_id',id).gte('plan_date',iso(f)).order('plan_date').limit(40);return data||[]}
+async function fetchComments(ws){const ids=ws.map(w=>w.id);const m={};if(!ids.length)return m;const {data}=await sb.from('comments').select('*').in('workout_id',ids).order('created_at');(data||[]).forEach(c=>(m[c.workout_id]=m[c.workout_id]||[]).push(c));return m}
 
 async function fetchWs(id){const {data}=await sb.from('workouts').select('*').eq('athlete_id',id).order('workout_date',{ascending:false}).order('created_at',{ascending:false}).limit(60);return data||[]}
 
 async function athleteView(){
- $('#app').innerHTML=`<div id="st"></div><h2>سجّل تمرين</h2><div class="card"><div class="grid">
- <div><label for="d">التاريخ</label><input id="d" type="date" value="${iso(new Date())}"></div>
- <div><label for="t">النوع</label><select id="t">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
- <div><label for="km">المسافة (كم)</label><input id="km" type="number" step="0.01" min="0" inputmode="decimal"></div>
- <div><label for="mn">المدة (دقيقة)</label><input id="mn" type="number" step="1" min="0" inputmode="numeric"></div>
- <div class="full"><label for="ef">مجهودك من 1 لـ 10</label><input id="ef" type="number" min="1" max="10" inputmode="numeric"></div>
- <div class="full"><label for="nt">ملاحظات</label><textarea id="nt" rows="2"></textarea></div>
- <div class="full"><button id="save">حفظ التمرين</button></div></div><p class="err" id="err" role="alert"></p></div>
- <h2>تمريناتك</h2><div class="card" id="ls"></div>`;
+ $('#app').innerHTML=`<div id="st"></div><h2>Your plan</h2><div class="card" id="pl"></div><h2>Log a workout</h2><div class="card"><div class="grid">
+ <div><label for="d">Date</label><input id="d" type="date" value="${iso(new Date())}"></div>
+ <div><label for="t">Type</label><select id="t">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+ <div><label for="km">Distance (km)</label><input id="km" type="number" step="0.01" min="0" inputmode="decimal"></div>
+ <div><label for="mn">Duration (min)</label><input id="mn" type="number" step="1" min="0" inputmode="numeric"></div>
+ <div class="full"><label for="ef">Effort, 1 to 10</label><input id="ef" type="number" min="1" max="10" inputmode="numeric"></div>
+ <div class="full"><label for="nt">Notes</label><textarea id="nt" rows="2"></textarea></div>
+ <div class="full"><button id="save">Save workout</button></div></div><p class="err" id="err" role="alert"></p></div>
+ <h2>Your workouts</h2><div class="card" id="ls"></div>`;
  $('#save').onclick=async()=>{
   const ef=num($('#ef').value);
-  if(ef!=null&&(ef<1||ef>10))return $('#err').textContent='المجهود من 1 لـ 10';
-  if(num($('#km').value)==null&&num($('#mn').value)==null)return $('#err').textContent='اكتب المسافة أو المدة على الأقل';
+  if(ef!=null&&(ef<1||ef>10))return $('#err').textContent='Effort must be between 1 and 10.';
+  if(num($('#km').value)==null&&num($('#mn').value)==null)return $('#err').textContent='Enter a distance or a duration.';
   $('#save').disabled=true;
   const {error}=await sb.from('workouts').insert({athlete_id:me.id,workout_date:$('#d').value,type:$('#t').value,distance_km:num($('#km').value),duration_min:num($('#mn').value),effort:ef,notes:$('#nt').value.trim()||null});
   $('#save').disabled=false;
   if(error)return $('#err').textContent=msg(error);
   ['km','mn','ef','nt'].forEach(i=>$('#'+i).value='');$('#err').textContent='';refresh()};
- async function refresh(){const ws=await fetchWs(me.id);$('#st').innerHTML=statsHTML(ws);$('#ls').innerHTML=listHTML(ws,true);
-  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('تمسح التمرين ده؟'))return;await sb.from('workouts').delete().eq('id',b.dataset.del);refresh()})}
+ async function refresh(){const ws=await fetchWs(me.id),ps=await fetchPlans(me.id),cm=await fetchComments(ws);$('#st').innerHTML=statsHTML(ws);$('#pl').innerHTML=plansHTML(ps,false);$('#ls').innerHTML=listHTML(ws,true,cm,false);
+  document.querySelectorAll('[data-done]').forEach(c=>c.onchange=async()=>{await sb.from('plans').update({done:c.checked}).eq('id',c.dataset.done);refresh()});
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this workout?'))return;await sb.from('workouts').delete().eq('id',b.dataset.del);refresh()})}
  refresh()}
+
+let flash='';
+function addHTML(){return `<details class="card" id="aa" ${flash?'open':''} style="margin-top:16px"><summary>Add athlete</summary><div class="grid" style="margin-top:12px">
+ <div class="full"><label for="an">Full name</label><input id="an" autocomplete="off"></div>
+ <div><label for="au">Username</label><input id="au" autocapitalize="none" autocomplete="off"></div>
+ <div><label for="ap">Password</label><input id="ap" autocapitalize="none" autocomplete="off"></div>
+ <div class="full"><button id="aadd">Create athlete</button></div></div><p class="${flash?'ok':'err'}" id="aerr" role="alert">${esc(flash)}</p></details>`}
+function bindAdd(){flash='';$('#aadd').onclick=async()=>{
+ const u=$('#au').value.trim().toLowerCase(),p=$('#ap').value,n=$('#an').value.trim(),e=$('#aerr');e.className='err';
+ if(!/^[a-z0-9_]{3,20}$/.test(u))return e.textContent='Username must be 3 to 20 letters, numbers or underscores.';
+ if(p.length<6)return e.textContent='Password must be at least 6 characters.';
+ $('#aadd').disabled=true;
+ const {data,error}=await sb.functions.invoke('add-athlete',{body:{username:u,password:p,full_name:n}});
+ $('#aadd').disabled=false;
+ if(error||(data&&data.error))return e.textContent='Couldn’t create the athlete: '+((data&&data.error)||error.message);
+ flash='Created. Username: '+u+'  Password: '+p+'  Share these with the athlete.';coachView()}}
 
 async function coachView(){
  const {data}=await sb.from('profiles').select('id,full_name,username').eq('coach_id',me.id).order('full_name');
  const as=data||[];
- if(!as.length){$('#app').innerHTML='<div class="card"><b>مفيش رياضيين مربوطين بيك لسه.</b><p class="lbl">بعد ما الرياضي يعمل حساب، اربطه بيك من Supabase (SQL Editor).</p></div>';return}
+ if(!as.length){$('#app').innerHTML='<div class="card"><b>No athletes yet.</b><p class="lbl">Add your first athlete below.</p></div>'+addHTML();bindAdd();return}
  picked=picked&&as.find(a=>a.id==picked)?picked:as[0].id;
- $('#app').innerHTML=`<div class="chips">${as.map(a=>`<button class="chip ${a.id==picked?'on':''}" data-a="${esc(a.id)}">${esc(a.full_name||a.username)}</button>`).join('')}</div><div id="st" style="margin-top:16px"></div><h2>التمرينات</h2><div class="card" id="ls"></div>`;
+ $('#app').innerHTML=`<div class="chips">${as.map(a=>`<button class="chip ${a.id==picked?'on':''}" data-a="${esc(a.id)}">${esc(a.full_name||a.username)}</button>`).join('')}</div>${addHTML()}<div id="st" style="margin-top:22px"></div>
+ <h2>Add to plan</h2><div class="card"><div class="grid"><div><label for="pd">Date</label><input id="pd" type="date" value="${iso(new Date())}"></div><div><label for="pt">Title</label><input id="pt" placeholder="e.g. 8 km tempo"></div>
+ <div class="full"><label for="px">Details</label><textarea id="px" rows="2"></textarea></div><div class="full"><button id="padd">Add to plan</button></div></div><p class="err" id="err" role="alert"></p></div>
+ <h2>Plan</h2><div class="card" id="pl"></div><h2>Workouts</h2><div class="card" id="ls"></div>`;
+ bindAdd();
  document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{picked=b.dataset.a;coachView()});
- const ws=await fetchWs(picked);$('#st').innerHTML=statsHTML(ws);$('#ls').innerHTML=listHTML(ws,false)}
+ $('#padd').onclick=async()=>{
+  if(!$('#pt').value.trim())return $('#err').textContent='Add a title for the session.';
+  const {error}=await sb.from('plans').insert({athlete_id:picked,plan_date:$('#pd').value,title:$('#pt').value.trim(),details:$('#px').value.trim()||null});
+  if(error)return $('#err').textContent=msg(error);coachView()};
+ const ws=await fetchWs(picked),ps=await fetchPlans(picked),cm=await fetchComments(ws);
+ $('#st').innerHTML=statsHTML(ws);$('#pl').innerHTML=plansHTML(ps,true);$('#ls').innerHTML=listHTML(ws,false,cm,true);
+ document.querySelectorAll('[data-pdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Remove this session from the plan?'))return;await sb.from('plans').delete().eq('id',b.dataset.pdel);coachView()});
+ document.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{const i=document.querySelector('[data-ci="'+b.dataset.c+'"]');const t=i.value.trim();if(!t)return;await sb.from('comments').insert({workout_id:b.dataset.c,coach_id:me.id,body:t});coachView()})}
 
 boot();
 </script>
