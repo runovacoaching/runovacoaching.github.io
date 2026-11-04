@@ -49,8 +49,51 @@ button.ghost{background:transparent;color:#fff;border:2px solid #fff;padding:5px
 .inl button{padding:8px 14px}
 input[type=checkbox]{width:24px;height:24px;flex:none;margin-top:3px;accent-color:var(--blue)}
 .pl{justify-content:flex-start;align-items:flex-start}
-.pl.done .t{text-decoration:line-through;color:var(--mute)}
+.pl.done .t{color:var(--mute)}
+button.danger{background:transparent;color:var(--red);border:2px solid var(--red);box-shadow:none}
+button.sm{padding:6px 14px;font-size:.88rem;margin-top:8px}
 @media(max-width:480px){.stats{grid-template-columns:1fr 1fr}.stats>:first-child{grid-column:1/-1}}
+
+main{max-width:1040px}
+.narrow{max-width:720px}
+.shell{display:grid;grid-template-columns:250px 1fr;gap:24px;align-items:start}
+.side{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:14px;box-shadow:5px 5px 0 var(--ink);position:sticky;top:12px}
+.sh{font:700 .9rem Unbounded,sans-serif;display:flex;justify-content:space-between;margin-bottom:10px}
+.al{display:flex;flex-direction:column;gap:6px;margin:10px 0;max-height:60vh;overflow:auto}
+.ai{display:flex;justify-content:space-between;align-items:center;background:transparent;color:var(--ink);box-shadow:none;text-align:start;padding:9px 12px}
+.ai.on{background:var(--blue);color:#fff}
+.ai i{width:10px;height:10px;border-radius:50%;flex:none;margin-inline-start:8px;box-shadow:0 0 0 2px #fff}
+.pc{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:4px 4px 0 var(--ink)}
+.ph{display:flex;justify-content:space-between;align-items:center;color:var(--mute);font-size:.88rem}
+.pt{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:4px 0}
+.pt b{font:700 1.15rem Unbounded,sans-serif}
+.tot{font:700 1.05rem Unbounded,sans-serif;color:var(--blue)}
+.pre{white-space:pre-wrap}
+.bdg{border:2px solid var(--c);color:var(--c);padding:2px 10px;border-radius:99px;font-weight:600;font-size:.82rem;display:inline-block;margin-top:8px}
+.sts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.nt{margin-top:10px}
+@media(max-width:760px){.shell{grid-template-columns:1fr}.side{position:static}.al{max-height:190px}}
+
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tile{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:16px;box-shadow:4px 4px 0 var(--ink)}
+.tile .mid{font-size:2rem;color:var(--blue)}
+.ai .cnt{width:auto;height:auto;border-radius:99px;padding:0 8px;background:var(--coral);color:#fff;font-style:normal;font-size:.75rem;box-shadow:none}
+.arow{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;background:#fff;color:var(--ink);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);margin-bottom:10px;text-align:start;padding:12px 14px}
+.arow .bdg{margin:0;flex:none}
+button.back{background:transparent;color:var(--ink);box-shadow:none;padding:4px 0;font-weight:600}
+.pbs{display:grid;gap:10px;margin-bottom:12px}
+.pbr{display:grid;grid-template-columns:52px 1fr 1fr;gap:10px;align-items:center}
+.pc.new{border-color:var(--coral)}
+.rl{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:2px dashed var(--line)}
+@media(max-width:760px){.tiles{grid-template-columns:1fr}.side{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px}.ai{padding:8px;font-size:.85rem}}
+
+.quote{background:var(--blue);color:#fff;border:2px solid var(--ink);border-radius:14px;padding:26px 22px;box-shadow:5px 5px 0 var(--ink);font:800 clamp(1.3rem,5vw,2rem)/1.25 Unbounded,sans-serif}
+.quote small{display:block;font:600 .85rem "DM Sans",sans-serif;opacity:.85;margin-bottom:10px}
+.bar{display:grid;grid-template-columns:90px 1fr 52px;gap:10px;align-items:center;margin:6px 0}
+.bar span{font-size:.85rem;color:var(--mute)}
+.bar div{background:var(--bg);height:12px;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--blue)}
+.bar b{text-align:end}
 </style>
 </head>
 <body>
@@ -59,28 +102,42 @@ input[type=checkbox]{width:24px;height:24px;flex:none;margin-top:3px;accent-colo
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 const sb=supabase.createClient('https://fsgawcqntgvfpbxytwhx.supabase.co','sb_publishable_8heKxg7yMRJrV2qbB1hH-Q_ZJqxktXZ');
+const ABOUT={mission:'',why:''}; // paste your text between the quotes
+const MSGS=["Start slow. Finish proud.", "Every kilometer is a promise you keep to yourself.", "Show up today. Future you says thanks.", "Small steps still cover the distance.", "You don’t need a perfect day, just a started one.", "Consistency beats intensity.", "Easy days make hard days possible.", "The hardest step is the first one. Take it.", "Trust the plan and the plan will carry you.", "Strong legs are built on ordinary mornings.", "Progress is quiet. Keep going anyway.", "Run today like you’re racing your best self.", "Tired is a feeling. Moving is a choice.", "Be patient. Fitness is built in layers.", "Breathe, relax your shoulders, run tall.", "You’re closer than you were yesterday.", "Rest is part of the training. Respect it.", "Discipline is choosing what you want most over what you want now.", "Run with your head up and your heart open.", "Fast is fun, but steady wins.", "Every runner started as a beginner.", "Your only competition is who you were last week.", "Make today’s effort count, not just today’s distance.", "Hills are just speed in disguise.", "The track doesn’t care about excuses. Neither do you.", "Be proud of the work nobody sees.", "A bad run is still a run you finished.", "Fuel well. Sleep well. Run well.", "Quiet confidence is built mile by mile.", "Let the rhythm of your steps clear your mind.", "Race day rewards the weeks you showed up.", "You are stronger than your last thought of quitting.", "Cadence, posture, breath. Simple and strong.", "Today’s sweat is tomorrow’s strength.", "Aim for better, not perfect.", "Find your pace, then protect it.", "Every session adds a brick to your foundation.", "The finish line is just the start of the next goal.", "Believe in the miles you’ve already run.", "Run happy. The results will follow.", "Pain passes. Pride stays.", "Focus on this step, then the next.", "The best pace is the one you can hold with a smile.", "Warm up well. Cool down well. Recover well.", "Growth lives just outside your comfort zone.", "You’ve got a plan. Now go and live it.", "Be the runner who keeps showing up.", "Stay relaxed when it gets hard.", "Today is a good day for a good run.", "Great things are built on repeat.", "Run your race, not someone else’s.", "Strength work today means faster legs tomorrow.", "Stretch like you mean it.", "Respect the easy run. It does more than you think.", "Your goals are waiting at the end of your habits.", "Courage is lacing up on a day you don’t feel like it.", "The road remembers every effort.", "Go gently on the start, strongly on the finish.", "Little by little, the distance gets shorter.", "Keep your form when the effort rises.", "Celebrate every session you complete.", "Your body can do more than your mind believes.", "Make your next run your best reason to smile.", "The work you do now is your race-day advantage.", "Be kind to your body. It carries you.", "A steady effort beats a heroic one.", "You didn’t come this far to only come this far.", "Run toward the person you want to become.", "Every step forward is a step you earned.", "Listen to your body, then lead your mind.", "Good habits make great runners.", "Chase the feeling of finishing, not the fear of starting.", "Today’s plan is small enough to start and big enough to matter.", "When it burns, relax and keep your rhythm.", "There are no shortcuts, only smarter steps.", "Run with gratitude for the legs that carry you.", "Your coach believes in you. Believe in yourself too.", "Let the miles teach you patience.", "Another session done is another win banked.", "Don’t count the days. Make the days count.", "Strong mind, steady stride.", "Hold your pace. Hold your nerve.", "Every finish line began with a single decision.", "Be consistent now, be amazed later.", "Recovery is where the strength is built.", "Today is another chance to get it right.", "Smooth is fast. Relaxed is faster.", "Run like the finish line is waiting just for you.", "Get comfortable being uncomfortable.", "The harder you work, the sweeter the finish.", "Take the day one stride at a time.", "Your effort today writes your story tomorrow.", "Fresh air, open road, free mind.", "Stay curious about how far you can go.", "Train with purpose and race with joy.", "You are building something that lasts.", "Strength isn’t only in the legs. It’s in showing up.", "Keep the promise you made at the start of this plan.", "Today’s run is a gift to your future self.", "Every mile you log is proof you can."];
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const TYPES={easy:'Easy run',long:'Long run',tempo:'Tempo',interval:'Intervals',strength:'Strength',stretch:'Stretching',race:'Race'};
+const TYPES={easy:'Easy run',long:'Long run',tempo:'Tempo',interval:'Intervals',race:'Race',strength:'Strength',stretch:'Stretching',rest:'Rest day'};
+const RUN=['easy','long','tempo','interval','race'],isRun=t=>RUN.includes(t);
+const ST={pending:['Waiting','#5A6086'],finished:['Finished','#2230E8'],less:['Did less','#B26A00'],not_finished:['Not finished','#C62828']};
+const PBD=['2K','5K','10K','21K','42K'];
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const weekStart=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+1)%7));return iso(d)};
 const num=v=>v===''||v==null?null:Number(v);
 const fmt=n=>Number.isInteger(n)?n:n.toFixed(1);
-let me=null,picked=null;
+const nm=a=>a.full_name||a.username;
+const url=u=>{u=(u||'').trim();if(!u)return '';if(!/^https?:\/\//i.test(u))u='https://'+u;try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return ''}};
+const linkHTML=(u,l)=>url(u)?`<div style="margin-top:8px"><a href="${esc(url(u))}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-weight:600">${l}</a></div>`:'';
+const dl=d=>{const n=Math.round((new Date(d)-new Date(iso(new Date())))/864e5);return n>0?n+' days to go':n==0?'Today':''};
+const paceOf=(km,min)=>{if(!(km>0)||!(min>0))return '';const t=Math.round(min/km*60);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' /km'};
+const tot=p=>[p.target_km!=null?fmt(+p.target_km)+' km':'',p.target_min!=null?fmt(+p.target_min)+' min':'',p.target_pace?esc(p.target_pace)+' /km':''].filter(Boolean).join(' • ');
+const seed=()=>new Date(Date.now()-7*864e5).toISOString();
+const getSeen=()=>{try{return localStorage.getItem('runova_seen')||seed()}catch(e){return seed()}};
+const setSeen=()=>{try{localStorage.setItem('runova_seen',new Date().toISOString())}catch(e){}};
+const H=t=>`<h2 style="margin-top:0;font-size:1.5rem">${t}</h2>`;
+const typeOpts=ex=>Object.entries(TYPES).filter(([k])=>k!=ex).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+let me=null,view='home',picked=null,adding=false,flash='';
 
 function msg(e){const m=(e&&e.message)||'';
  if(/Invalid login/i.test(m))return 'Wrong username or password.';
- if(/already registered/i.test(m))return 'That username is taken. Choose another.';
- if(/at least 6/i.test(m))return 'Password must be at least 6 characters.';
  return 'Something went wrong: '+m}
 
 function authView(){
  $('#who').innerHTML='';
- $('#app').innerHTML=`<div class="card"><h2 style="margin-top:0">Log in</h2><div class="grid">
+ $('#app').innerHTML=`<div class="narrow"><div class="card"><h2 style="margin-top:0">Log in</h2><div class="grid">
  <div class="full"><label for="un">Username</label><input id="un" autocapitalize="none" autocomplete="username"></div>
  <div class="full"><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password"></div>
  <div class="full"><button id="go">Log in</button></div></div><p class="err" id="err" role="alert"></p>
- <p class="lbl">Accounts are created by your coach. Ask them for your username and password.</p></div>`;
+ <p class="lbl">Accounts are created by your coach. Ask them for your username and password.</p></div></div>`;
  $('#go').onclick=async()=>{
   const u=$('#un').value.trim().toLowerCase(),p=$('#pw').value;
   if(!u||!p)return $('#err').textContent='Enter your username and password.';
@@ -88,7 +145,7 @@ function authView(){
   const r=await sb.auth.signInWithPassword({email:u+'@runova.app',password:p});
   $('#go').disabled=false;
   if(r.error)return $('#err').textContent=msg(r.error);
-  boot()}}
+  view='home';boot()}}
 
 async function boot(){
  const {data:{session}}=await sb.auth.getSession();
@@ -96,98 +153,217 @@ async function boot(){
  const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
  if(error||!data){await sb.auth.signOut();return authView()}
  me=data;
- $('#who').innerHTML=`<span>${esc(me.full_name||me.username)}</span> <button class="ghost" id="out">Log out</button>`;
- $('#out').onclick=async()=>{await sb.auth.signOut();me=null;picked=null;authView()};
+ $('#who').innerHTML=`<span>${esc(nm(me))}</span> <button class="ghost" id="out">Log out</button>`;
+ $('#out').onclick=async()=>{await sb.auth.signOut();me=null;picked=null;adding=false;view='home';authView()};
  me.role=='coach'?coachView():athleteView()}
 
-function statsHTML(ws){
- const wk=ws.filter(w=>w.workout_date>=weekStart());
- const km=wk.reduce((a,w)=>a+(+w.distance_km||0),0);
- const ef=wk.filter(w=>w.effort);const avg=ef.length?ef.reduce((a,w)=>a+w.effort,0)/ef.length:null;
- return `<div class="card stats"><div><div class="big">${fmt(km)}<span>km</span></div><div class="lbl">Distance this week (from Saturday)</div></div>
- <div><div class="mid">${wk.length}</div><div class="lbl">Workouts</div></div>
- <div><div class="mid">${avg?fmt(avg):'-'}</div><div class="lbl">Avg effort</div></div></div>`}
+const dayTag=d=>{const n=new Date();n.setDate(n.getDate()+1);return d==iso(new Date())?'Today':d==iso(n)?'Tomorrow':''};
+const badge=s=>`<span class="bdg" style="--c:${ST[s][1]}">${ST[s][0]}</span>`;
+async function fetchPlans(id){const {data}=await sb.from('plans').select('*').eq('athlete_id',id).order('plan_date',{ascending:false}).limit(120);return data||[]}
+async function fetchWs(id){const {data}=await sb.from('workouts').select('*').eq('athlete_id',id).order('workout_date',{ascending:false}).order('created_at',{ascending:false}).limit(80);return data||[]}
+async function fetchComments(ws){const ids=ws.map(w=>w.id),m={};if(!ids.length)return m;const {data}=await sb.from('comments').select('*').in('workout_id',ids).order('created_at');(data||[]).forEach(c=>(m[c.workout_id]=m[c.workout_id]||[]).push(c));return m}
+async function myAthletes(){const {data}=await sb.from('profiles').select('id,full_name,username').eq('coach_id',me.id).order('full_name');return data||[]}
+function split(ps){const t=iso(new Date());return{today:ps.filter(p=>p.plan_date==t),up:ps.filter(p=>p.plan_date>t).sort((a,b)=>a.plan_date<b.plan_date?-1:1),past:ps.filter(p=>p.plan_date<t)}}
+const sec=(t,l,coach)=>l.length?`<h2>${t}</h2>`+l.map(p=>planCard(p,coach)).join(''):'';
 
-function listHTML(ws,edit,cm,coach){
- cm=cm||{};
- if(!ws.length)return '<div class="empty">No workouts logged yet.</div>';
- return ws.map(w=>`<div class="w"><div style="flex:1;min-width:0"><b>${TYPES[w.type]||esc(w.type)}</b> <span class="m">${esc(w.workout_date)}</span>
- <div class="m">${[w.distance_km!=null?fmt(+w.distance_km)+' km':'',w.duration_min!=null?fmt(+w.duration_min)+' min':'',w.effort?'Effort '+w.effort+'/10':''].filter(Boolean).join(' • ')}</div>
- ${w.notes?`<div class="n">${esc(w.notes)}</div>`:''}
+function loadHTML(ws,ps){
+ const wk=ws.filter(w=>w.workout_date>=weekStart()),km=wk.reduce((a,w)=>a+(+w.distance_km||0),0);
+ const fin=(ps||[]).filter(p=>p.plan_date>=weekStart()&&p.plan_date<=iso(new Date())&&p.status=='finished').length;
+ const w0=new Date(weekStart()+'T00:00:00');
+ const bars=[3,2,1,0].map(i=>{const s=new Date(w0);s.setDate(s.getDate()-7*i);const e=new Date(s);e.setDate(e.getDate()+7);
+  return{l:i==0?'This week':i==1?'Last week':i+' weeks ago',k:ws.filter(w=>w.workout_date>=iso(s)&&w.workout_date<iso(e)).reduce((a,w)=>a+(+w.distance_km||0),0)}});
+ const mx=Math.max(1,...bars.map(b=>b.k));
+ return `<div class="card stats"><div><div class="big">${fmt(km)}<span>km</span></div><div class="lbl">Logged this week (from Saturday)</div></div>
+ <div><div class="mid">${wk.length}</div><div class="lbl">Activities</div></div><div><div class="mid">${fin}</div><div class="lbl">Plan sessions finished</div></div></div>
+ <div class="card" style="margin-top:14px"><div class="lbl" style="margin-bottom:8px">Weekly distance (km)</div>${bars.map(b=>`<div class="bar"><span>${b.l}</span><div><i style="width:${Math.round(b.k/mx*100)}%"></i></div><b>${fmt(b.k)}</b></div>`).join('')}</div>`}
+
+function planCard(p,coach){
+ const t=tot(p),tag=dayTag(p.plan_date),id=esc(p.id);
+ const ctl=coach?`<div>${badge(p.status)}</div>${p.athlete_notes?`<div class="cm"><b>Athlete note:</b> ${esc(p.athlete_notes)}</div>`:''}`
+  :`<div class="sts" data-p="${id}">${[['finished','Finished'],['less','Did less'],['not_finished','Not finished']].map(([k,l])=>`<button class="chip ${p.status==k?'on':''}" data-st="${k}">${l}</button>`).join('')}</div>
+  <input class="nt" placeholder="Notes (anything that bothered you?)" aria-label="Notes" value="${esc(p.athlete_notes||'')}" data-nt="${id}"><button class="sm" data-save="${id}">Save</button>`;
+ return `<div class="pc"><div class="ph"><span>${tag?`<b>${tag}</b> · `:''}${esc(p.plan_date)}</span>${coach?`<button class="x" data-pdel="${id}" aria-label="Remove from plan">×</button>`:''}</div>
+ <div class="pt"><b>${esc(p.title)}</b>${t?`<span class="tot">${t}</span>`:''}</div>${p.details?`<div class="pre">${esc(p.details)}</div>`:''}${linkHTML(p.link,'Open link ↗')}${ctl}</div>`}
+
+const wTxt=w=>[w.distance_km!=null?fmt(+w.distance_km)+' km':'',w.duration_min!=null?fmt(+w.duration_min)+' min':'',paceOf(+w.distance_km,+w.duration_min)].filter(Boolean).join(' • ');
+function wRow(w,cm,coach){const id=esc(w.id);
+ return `<div class="w"><div style="flex:1;min-width:0"><b>${esc(TYPES[w.type]||w.type)}</b> <span class="m">${esc(w.workout_date)}</span><div class="m">${wTxt(w)}</div>${w.notes?`<div class="n pre">${esc(w.notes)}</div>`:''}
  ${(cm[w.id]||[]).map(c=>`<div class="cm"><b>Coach:</b> ${esc(c.body)}</div>`).join('')}
- ${coach?`<div class="inl"><input data-ci="${esc(w.id)}" placeholder="Comment for this workout" aria-label="Comment"><button data-c="${esc(w.id)}">Send</button></div>`:''}
- </div>${edit?`<button class="x" data-del="${esc(w.id)}" aria-label="Delete workout">×</button>`:''}</div>`).join('')}
+ ${coach?`<div class="inl"><input data-ci="${id}" placeholder="Comment for the athlete" aria-label="Comment"><button data-c="${id}">Send</button></div>`:''}</div>
+ ${coach?'':`<button class="x" data-wdel="${id}" aria-label="Delete activity">×</button>`}</div>`}
 
-function plansHTML(ps,coach){
- if(!ps.length)return '<div class="empty">'+(coach?'No plan added yet.':'Your coach hasn’t added a plan yet.')+'</div>';
- return ps.map(p=>`<div class="w pl ${p.done?'done':''}">${coach?'':`<input type="checkbox" data-done="${esc(p.id)}" ${p.done?'checked':''} aria-label="Mark done">`}
- <div style="flex:1;min-width:0"><div class="t"><b>${esc(p.title)}</b> <span class="m">${esc(p.plan_date)}</span></div>${p.details?`<div class="n">${esc(p.details)}</div>`:''}${coach?`<div class="m">${p.done?'Done':'Not done yet'}</div>`:''}</div>
- ${coach?`<button class="x" data-pdel="${esc(p.id)}" aria-label="Remove from plan">×</button>`:''}</div>`).join('')}
+function bindPlan(redo){
+ document.querySelectorAll('.sts .chip').forEach(c=>c.onclick=()=>{c.parentNode.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')});
+ document.querySelectorAll('[data-save]').forEach(b=>b.onclick=async()=>{
+  const id=b.dataset.save,on=document.querySelector('[data-p="'+id+'"] .on'),nt=document.querySelector('[data-nt="'+id+'"]').value.trim();
+  const u={athlete_notes:nt||null};if(on)u.status=on.dataset.st;
+  b.disabled=true;const {error}=await sb.from('plans').update(u).eq('id',id);b.disabled=false;
+  if(error)return alert(msg(error));redo()})}
 
-async function fetchPlans(id){const f=new Date();f.setDate(f.getDate()-7);const {data}=await sb.from('plans').select('*').eq('athlete_id',id).gte('plan_date',iso(f)).order('plan_date').limit(40);return data||[]}
-async function fetchComments(ws){const ids=ws.map(w=>w.id);const m={};if(!ids.length)return m;const {data}=await sb.from('comments').select('*').in('workout_id',ids).order('created_at');(data||[]).forEach(c=>(m[c.workout_id]=m[c.workout_id]||[]).push(c));return m}
+const shell=(items,n)=>`<div class="shell"><nav class="side" aria-label="Main">${items.map(([k,l])=>`<button class="ai ${view==k?'on':''}" data-v="${k}"><span>${l}</span>${k=='notes'&&n?`<i class="cnt">${n}</i>`:''}</button>`).join('')}</nav><section id="mn"></section></div>`;
+const bindNav=re=>document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{view=b.dataset.v;picked=null;adding=false;re()});
 
-async function fetchWs(id){const {data}=await sb.from('workouts').select('*').eq('athlete_id',id).order('workout_date',{ascending:false}).order('created_at',{ascending:false}).limit(60);return data||[]}
-
+/* ---------- athlete ---------- */
 async function athleteView(){
- $('#app').innerHTML=`<div id="st"></div><h2>Your plan</h2><div class="card" id="pl"></div><h2>Log a workout</h2><div class="card"><div class="grid">
- <div><label for="d">Date</label><input id="d" type="date" value="${iso(new Date())}"></div>
- <div><label for="t">Type</label><select id="t">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
- <div><label for="km">Distance (km)</label><input id="km" type="number" step="0.01" min="0" inputmode="decimal"></div>
- <div><label for="mn">Duration (min)</label><input id="mn" type="number" step="1" min="0" inputmode="numeric"></div>
- <div class="full"><label for="ef">Effort, 1 to 10</label><input id="ef" type="number" min="1" max="10" inputmode="numeric"></div>
- <div class="full"><label for="nt">Notes</label><textarea id="nt" rows="2"></textarea></div>
- <div class="full"><button id="save">Save workout</button></div></div><p class="err" id="err" role="alert"></p></div>
- <h2>Your workouts</h2><div class="card" id="ls"></div>`;
- $('#save').onclick=async()=>{
-  const ef=num($('#ef').value);
-  if(ef!=null&&(ef<1||ef>10))return $('#err').textContent='Effort must be between 1 and 10.';
-  if(num($('#km').value)==null&&num($('#mn').value)==null)return $('#err').textContent='Enter a distance or a duration.';
-  $('#save').disabled=true;
-  const {error}=await sb.from('workouts').insert({athlete_id:me.id,workout_date:$('#d').value,type:$('#t').value,distance_km:num($('#km').value),duration_min:num($('#mn').value),effort:ef,notes:$('#nt').value.trim()||null});
-  $('#save').disabled=false;
-  if(error)return $('#err').textContent=msg(error);
-  ['km','mn','ef','nt'].forEach(i=>$('#'+i).value='');$('#err').textContent='';refresh()};
- async function refresh(){const ws=await fetchWs(me.id),ps=await fetchPlans(me.id),cm=await fetchComments(ws);$('#st').innerHTML=statsHTML(ws);$('#pl').innerHTML=plansHTML(ps,false);$('#ls').innerHTML=listHTML(ws,true,cm,false);
-  document.querySelectorAll('[data-done]').forEach(c=>c.onchange=async()=>{await sb.from('plans').update({done:c.checked}).eq('id',c.dataset.done);refresh()});
-  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this workout?'))return;await sb.from('workouts').delete().eq('id',b.dataset.del);refresh()})}
- refresh()}
+ $('#app').innerHTML=shell([['home','Home'],['plan','My Plan'],['load','Activity Load'],['about','About RUNOVA Coaching']]);bindNav(athleteView);
+ await ({home:aHome,plan:aPlan,load:aLoad,about:pgAbout}[view])($('#mn'))}
 
-let flash='';
-function addHTML(){return `<details class="card" id="aa" ${flash?'open':''} style="margin-top:16px"><summary>Add athlete</summary><div class="grid" style="margin-top:12px">
+async function aHome(mn){
+ const [ps,pb,ar]=await Promise.all([fetchPlans(me.id),sb.from('personal_bests').select('*').eq('athlete_id',me.id),sb.from('athlete_races').select('*').eq('athlete_id',me.id)]);
+ const s=split(ps),ids=(ar.data||[]).map(x=>x.race_id);
+ const rr=ids.length?((await sb.from('races').select('*').in('id',ids).order('race_date')).data||[]):[];
+ const goal={};(ar.data||[]).forEach(x=>goal[x.race_id]=x.goal);
+ const pbs=(pb.data||[]).sort((a,b)=>PBD.indexOf(a.distance)-PBD.indexOf(b.distance));
+ mn.innerHTML=`<div class="narrow"><div class="quote"><small>Welcome back, ${esc(nm(me).split(' ')[0])}</small>${esc(MSGS[Math.floor(Math.random()*MSGS.length)])}</div>
+ <h2>Today</h2>${s.today.length?s.today.map(p=>planCard(p,false)).join(''):'<div class="card empty">Nothing planned for today.</div>'}
+ ${rr.length?`<h2>Your races</h2><div class="card">${rr.map(r=>`<div class="rl"><div><b>${esc(r.name)}</b> <span class="m">${esc(r.race_date)}${r.distance?' • '+esc(r.distance):''}</span>${goal[r.id]?`<div class="n">Goal: ${esc(goal[r.id])}</div>`:''}${linkHTML(r.link,'Race page ↗')}</div><span class="tot">${dl(r.race_date)}</span></div>`).join('')}</div>`:''}
+ ${pbs.length?`<h2>Personal bests</h2><div class="card">${pbs.map(x=>`<div class="rl"><b>${esc(x.distance)}</b><span>${esc(x.time_text)} <span class="m">${esc(x.set_on||'')}</span></span></div>`).join('')}</div>`:''}</div>`;
+ bindPlan(athleteView)}
+
+async function aPlan(mn){
+ const s=split(await fetchPlans(me.id));
+ mn.innerHTML=`<div class="narrow">${H('My Plan')}<h2>Today</h2>${s.today.length?s.today.map(p=>planCard(p,false)).join(''):'<div class="card empty">Nothing planned for today.</div>'}${sec('Coming up',s.up,false)}${sec('History',s.past,false)}</div>`;
+ bindPlan(athleteView)}
+
+async function aLoad(mn){
+ const [ws,ps]=await Promise.all([fetchWs(me.id),fetchPlans(me.id)]),cm=await fetchComments(ws);
+ mn.innerHTML=`<div class="narrow">${H('Activity Load')}${loadHTML(ws,ps)}<h2>Log an activity</h2><div class="card"><div class="grid">
+ <div><label for="wd">Date</label><input id="wd" type="date" value="${iso(new Date())}"></div><div><label for="wt">Activity</label><select id="wt">${typeOpts('rest')}</select></div>
+ <div class="rf"><label for="wk">Distance (km)</label><input id="wk" type="number" step="0.01" min="0" inputmode="decimal"></div><div class="rf"><label for="wm">Duration (min)</label><input id="wm" type="number" min="0" inputmode="numeric"></div>
+ <div class="full"><label for="wn" id="wnl">Notes</label><textarea id="wn" rows="3"></textarea></div><div class="full"><button id="wsave">Save activity</button></div></div><p class="err" id="werr" role="alert"></p></div>
+ <h2>Your activities</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,false)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div></div>`;
+ const tg=()=>{const t=$('#wt').value;document.querySelectorAll('.rf').forEach(e=>e.style.display=isRun(t)?'':'none');$('#wnl').textContent=isRun(t)?'Notes':'Description'};
+ $('#wt').onchange=tg;tg();
+ $('#wsave').onclick=async()=>{
+  const t=$('#wt').value,km=num($('#wk').value),du=num($('#wm').value),nt=$('#wn').value.trim(),e=$('#werr');
+  if(isRun(t)){if(km==null&&du==null)return e.textContent='Enter a distance or a duration.'}else if(!nt)return e.textContent='Add a description of what you did.';
+  $('#wsave').disabled=true;
+  const {error}=await sb.from('workouts').insert({athlete_id:me.id,workout_date:$('#wd').value,type:t,distance_km:isRun(t)?km:null,duration_min:isRun(t)?du:null,notes:nt||null});
+  $('#wsave').disabled=false;if(error)return e.textContent=msg(error);athleteView()};
+ document.querySelectorAll('[data-wdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this activity?'))return;await sb.from('workouts').delete().eq('id',b.dataset.wdel);athleteView()})}
+
+/* ---------- coach ---------- */
+function addHTML(){return `<div class="card" style="margin-bottom:16px"><h2 style="margin-top:0">Create new athlete</h2><div class="grid">
  <div class="full"><label for="an">Full name</label><input id="an" autocomplete="off"></div>
  <div><label for="au">Username</label><input id="au" autocapitalize="none" autocomplete="off"></div>
  <div><label for="ap">Password</label><input id="ap" autocapitalize="none" autocomplete="off"></div>
- <div class="full"><button id="aadd">Create athlete</button></div></div><p class="${flash?'ok':'err'}" id="aerr" role="alert">${esc(flash)}</p></details>`}
-function bindAdd(){flash='';$('#aadd').onclick=async()=>{
- const u=$('#au').value.trim().toLowerCase(),p=$('#ap').value,n=$('#an').value.trim(),e=$('#aerr');e.className='err';
+ <div class="full"><button id="aadd">Create athlete</button> <button class="back" id="acn">Cancel</button></div></div><p class="err" id="aerr" role="alert"></p></div>`}
+function bindAdd(){
+ $('#acn').onclick=()=>{adding=false;coachView()};
+ $('#aadd').onclick=async()=>{
+ const u=$('#au').value.trim().toLowerCase(),p=$('#ap').value,n=$('#an').value.trim(),e=$('#aerr');
  if(!/^[a-z0-9_]{3,20}$/.test(u))return e.textContent='Username must be 3 to 20 letters, numbers or underscores.';
  if(p.length<6)return e.textContent='Password must be at least 6 characters.';
  $('#aadd').disabled=true;
  const {data,error}=await sb.functions.invoke('add-athlete',{body:{username:u,password:p,full_name:n}});
  $('#aadd').disabled=false;
  if(error||(data&&data.error))return e.textContent='Couldn’t create the athlete: '+((data&&data.error)||error.message);
- flash='Created. Username: '+u+'  Password: '+p+'  Share these with the athlete.';coachView()}}
+ flash='Created. Username: '+u+'  Password: '+p+'  Share these with the athlete.';adding=false;coachView()}}
 
 async function coachView(){
- const {data}=await sb.from('profiles').select('id,full_name,username').eq('coach_id',me.id).order('full_name');
- const as=data||[];
- if(!as.length){$('#app').innerHTML='<div class="card"><b>No athletes yet.</b><p class="lbl">Add your first athlete below.</p></div>'+addHTML();bindAdd();return}
- picked=picked&&as.find(a=>a.id==picked)?picked:as[0].id;
- $('#app').innerHTML=`<div class="chips">${as.map(a=>`<button class="chip ${a.id==picked?'on':''}" data-a="${esc(a.id)}">${esc(a.full_name||a.username)}</button>`).join('')}</div>${addHTML()}<div id="st" style="margin-top:22px"></div>
- <h2>Add to plan</h2><div class="card"><div class="grid"><div><label for="pd">Date</label><input id="pd" type="date" value="${iso(new Date())}"></div><div><label for="pt">Title</label><input id="pt" placeholder="e.g. 8 km tempo"></div>
- <div class="full"><label for="px">Details</label><textarea id="px" rows="2"></textarea></div><div class="full"><button id="padd">Add to plan</button></div></div><p class="err" id="err" role="alert"></p></div>
- <h2>Plan</h2><div class="card" id="pl"></div><h2>Workouts</h2><div class="card" id="ls"></div>`;
- bindAdd();
- document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{picked=b.dataset.a;coachView()});
- $('#padd').onclick=async()=>{
-  if(!$('#pt').value.trim())return $('#err').textContent='Add a title for the session.';
-  const {error}=await sb.from('plans').insert({athlete_id:picked,plan_date:$('#pd').value,title:$('#pt').value.trim(),details:$('#px').value.trim()||null});
+ const s=getSeen();
+ const [a,b]=await Promise.all([sb.from('plans').select('id',{count:'exact',head:true}).gt('updated_at',s).neq('status','pending'),sb.from('workouts').select('id',{count:'exact',head:true}).gt('created_at',s)]);
+ const n=view=='notes'?0:(a.count||0)+(b.count||0);
+ $('#app').innerHTML=shell([['home','Home'],['athletes','Athletes'],['notes','Notifications'],['races','Races'],['about','About RUNOVA']],n);bindNav(coachView);
+ const fl=flash;flash='';
+ await ({home:cHome,athletes:cAthletes,notes:cNotes,races:cRaces,about:pgAbout}[view])($('#mn'),fl)}
+
+async function cHome(mn){
+ const as=await myAthletes(),t=iso(new Date()),d=new Date();d.setDate(d.getDate()-14);
+ const [pr,wr]=await Promise.all([sb.from('plans').select('athlete_id,plan_date,status,title,target_km').gte('plan_date',iso(d)).lte('plan_date',t),sb.from('workouts').select('athlete_id').gte('workout_date',iso(d))]);
+ const ps=pr.data||[],today=ps.filter(p=>p.plan_date==t),done=today.filter(p=>p.status=='finished').length,nmap={};as.forEach(a=>nmap[a.id]=nm(a));
+ const active=new Set([...ps.filter(p=>p.status=='finished'||p.status=='less').map(p=>p.athlete_id),...(wr.data||[]).map(w=>w.athlete_id)]).size;
+ mn.innerHTML=H('Home')+`<div class="tiles"><div class="tile"><div class="mid">${as.length}</div><div class="lbl">Total athletes</div></div>
+ <div class="tile"><div class="mid">${active}</div><div class="lbl">Active (trained in the last 14 days)</div></div>
+ <div class="tile"><div class="mid">${done} / ${today.length}</div><div class="lbl">Sessions completed today</div></div></div>
+ <h2>Today’s sessions</h2>${today.length?`<div class="card">${today.map(p=>`<div class="rl"><div><b>${esc(nmap[p.athlete_id]||'')}</b> <span class="m">${esc(p.title)}${p.target_km!=null?' • '+fmt(+p.target_km)+' km':''}</span></div>${badge(p.status)}</div>`).join('')}</div>`:'<div class="card empty">No sessions planned for today.</div>'}`}
+
+async function cAthletes(mn,fl){
+ if(picked)return cAthlete(mn,fl);
+ const as=await myAthletes();
+ const {data}=await sb.from('plans').select('athlete_id,status').eq('plan_date',iso(new Date()));
+ const tm={};(data||[]).forEach(p=>tm[p.athlete_id]=p.status);
+ mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+H('Athletes')+(adding?addHTML():'')+
+ `<input id="q" placeholder="Search athletes" aria-label="Search athletes" style="margin-bottom:14px">
+ ${as.map(a=>`<button class="arow" data-a="${esc(a.id)}"><span><b>${esc(nm(a))}</b> <span class="m">@${esc(a.username)}</span></span>${tm[a.id]?badge(tm[a.id]):'<span class="m">No session today</span>'}</button>`).join('')||'<div class="card empty">No athletes yet.</div>'}
+ ${adding?'':'<div style="margin-top:18px"><button id="addb">Create new athlete</button></div>'}`;
+ document.querySelectorAll('.arow').forEach(b=>b.onclick=()=>{picked=b.dataset.a;coachView()});
+ $('#q').oninput=e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('.arow').forEach(b=>b.style.display=b.textContent.toLowerCase().includes(q)?'':'none')};
+ if(adding)bindAdd();else $('#addb').onclick=()=>{adding=true;coachView()}}
+
+async function cAthlete(mn,fl){
+ const {data:a}=await sb.from('profiles').select('id,full_name,username').eq('id',picked).single();
+ const [ps,ws,pb,rc,ar]=await Promise.all([fetchPlans(a.id),fetchWs(a.id),sb.from('personal_bests').select('*').eq('athlete_id',a.id),sb.from('races').select('*').order('race_date'),sb.from('athlete_races').select('*').eq('athlete_id',a.id)]);
+ const cm=await fetchComments(ws),pbm={};(pb.data||[]).forEach(x=>pbm[x.distance]=x);
+ const races=rc.data||[],rm={};races.forEach(r=>rm[r.id]=r);
+ const s=split(ps);
+ mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button>${H(esc(nm(a)))}${loadHTML(ws,ps)}
+ <h2>Personal bests</h2><div class="card"><div class="pbs">${PBD.map(d=>`<div class="pbr"><b>${d}</b><input data-pt="${d}" placeholder="e.g. 19:45" aria-label="${d} time" value="${esc(pbm[d]?pbm[d].time_text:'')}"><input type="date" data-pd="${d}" aria-label="${d} date" value="${pbm[d]&&pbm[d].set_on?pbm[d].set_on:''}"></div>`).join('')}</div><button id="pbsave">Save records</button><p class="err" id="pberr" role="status"></p></div>
+ <h2>Races and goals</h2><div class="card">${races.length?`<div class="grid"><div><label for="rs">Race</label><select id="rs">${races.map(r=>`<option value="${esc(r.id)}">${esc(r.name)} · ${esc(r.race_date)}</option>`).join('')}</select></div><div><label for="rg">Goal</label><input id="rg" placeholder="e.g. sub 50 min"></div><div class="full"><button id="rassign">Assign race</button></div></div>`:'<div class="empty">Add races in the Races tab first.</div>'}
+ ${(ar.data||[]).map(x=>rm[x.race_id]?`<div class="rl"><div><b>${esc(rm[x.race_id].name)}</b> <span class="m">${esc(rm[x.race_id].race_date)}</span>${x.goal?`<div class="n">Goal: ${esc(x.goal)}</div>`:''}</div><button class="x" data-rdel="${esc(x.id)}" aria-label="Remove race">×</button></div>`:'').join('')}</div>
+ <h2>Plan a session</h2><div class="card"><div class="grid"><div><label for="pd">Date</label><input id="pd" type="date" value="${iso(new Date())}"></div>
+ <div><label for="pt">Session</label><select id="pt">${typeOpts('')}</select></div>
+ <div class="rf"><label for="pk">Distance (km)</label><input id="pk" type="number" step="0.01" min="0" inputmode="decimal"></div>
+ <div class="rf"><label for="pp">Average pace (min/km)</label><input id="pp" placeholder="e.g. 5:30"></div>
+ <div class="rf"><label for="pm">Duration (min)</label><input id="pm" type="number" min="0" inputmode="numeric"></div>
+ <div class="full"><label for="px">Description</label><textarea id="px" rows="4" placeholder="What the athlete should do"></textarea></div>
+ <div class="full"><label for="pl">Link (video or page, optional)</label><input id="pl" placeholder="https://..." autocapitalize="none"></div>
+ <div class="full"><button id="padd">Add to plan</button></div></div><p class="err" id="err" role="alert"></p></div>
+ ${sec('Today',s.today,true)}${sec('Coming up',s.up,true)}${sec('History',s.past,true)}
+ <h2>Activity logged by ${esc(nm(a).split(' ')[0])}</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,true)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div>
+ <div style="margin-top:32px"><button class="danger" id="rm">Remove athlete</button></div>`;
+ $('#bk').onclick=()=>{picked=null;coachView()};
+ $('#pbsave').onclick=async()=>{const up=[],del=[];
+  PBD.forEach(d=>{const t=document.querySelector('[data-pt="'+d+'"]').value.trim(),w=document.querySelector('[data-pd="'+d+'"]').value;t?up.push({athlete_id:a.id,distance:d,time_text:t,set_on:w||null}):del.push(d)});
+  let e1=null,e2=null;
+  if(up.length)e1=(await sb.from('personal_bests').upsert(up,{onConflict:'athlete_id,distance'})).error;
+  if(del.length)e2=(await sb.from('personal_bests').delete().eq('athlete_id',a.id).in('distance',del)).error;
+  const e=e1||e2,el=$('#pberr');el.className=e?'err':'ok';el.textContent=e?msg(e):'Saved.'};
+ if($('#rassign'))$('#rassign').onclick=async()=>{const {error}=await sb.from('athlete_races').upsert({athlete_id:a.id,race_id:$('#rs').value,goal:$('#rg').value.trim()||null},{onConflict:'athlete_id,race_id'});if(error)return alert(msg(error));coachView()};
+ document.querySelectorAll('[data-rdel]').forEach(b=>b.onclick=async()=>{await sb.from('athlete_races').delete().eq('id',b.dataset.rdel);coachView()});
+ const tg=()=>{document.querySelectorAll('.rf').forEach(e=>e.style.display=isRun($('#pt').value)?'':'none')};
+ $('#pt').onchange=tg;tg();
+ $('#padd').onclick=async()=>{const t=$('#pt').value,run=isRun(t),d=$('#px').value.trim();
+  if(!run&&!d)return $('#err').textContent='Describe the session for the athlete.';
+  const lk=$('#pl').value.trim();if(lk&&!url(lk))return $('#err').textContent='That link doesn’t look right.';
+  const {error}=await sb.from('plans').insert({athlete_id:a.id,plan_date:$('#pd').value,type:t,title:TYPES[t],target_km:run?num($('#pk').value):null,target_min:run?num($('#pm').value):null,target_pace:run?($('#pp').value.trim()||null):null,details:d||null,link:lk?url(lk):null});
   if(error)return $('#err').textContent=msg(error);coachView()};
- const ws=await fetchWs(picked),ps=await fetchPlans(picked),cm=await fetchComments(ws);
- $('#st').innerHTML=statsHTML(ws);$('#pl').innerHTML=plansHTML(ps,true);$('#ls').innerHTML=listHTML(ws,false,cm,true);
  document.querySelectorAll('[data-pdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Remove this session from the plan?'))return;await sb.from('plans').delete().eq('id',b.dataset.pdel);coachView()});
- document.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{const i=document.querySelector('[data-ci="'+b.dataset.c+'"]');const t=i.value.trim();if(!t)return;await sb.from('comments').insert({workout_id:b.dataset.c,coach_id:me.id,body:t});coachView()})}
+ document.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{const i=document.querySelector('[data-ci="'+b.dataset.c+'"]'),t=i.value.trim();if(!t)return;const {error}=await sb.from('comments').insert({workout_id:b.dataset.c,coach_id:me.id,body:t});if(error)return alert(msg(error));coachView()});
+ $('#rm').onclick=async()=>{
+  if(!confirm('Remove '+nm(a)+' and all their data? This can’t be undone.'))return;
+  const {data,error}=await sb.functions.invoke('add-athlete',{body:{action:'delete',athlete_id:a.id}});
+  if(error||(data&&data.error))return alert('Couldn’t remove: '+((data&&data.error)||error.message));
+  picked=null;coachView()}}
+
+async function cNotes(mn){
+ const prev=new Date(getSeen()),as=await myAthletes(),nmap={};as.forEach(a=>nmap[a.id]=nm(a));
+ const [pr,wr]=await Promise.all([sb.from('plans').select('*').neq('status','pending').not('updated_at','is',null).order('updated_at',{ascending:false}).limit(40),sb.from('workouts').select('*').order('created_at',{ascending:false}).limit(40)]);
+ setSeen();
+ const V={finished:'finished',less:'did less on',not_finished:'did not finish'};
+ const items=[...(pr.data||[]).map(p=>({at:p.updated_at,h:`<b>${esc(nmap[p.athlete_id]||'Athlete')}</b> ${V[p.status]} ${esc(p.title)}${tot(p)?' • '+tot(p):''} <span class="m">(${esc(p.plan_date)})</span>${p.athlete_notes?`<div class="cm"><b>Note:</b> ${esc(p.athlete_notes)}</div>`:''}`})),
+  ...(wr.data||[]).map(w=>({at:w.created_at,h:`<b>${esc(nmap[w.athlete_id]||'Athlete')}</b> logged ${esc(TYPES[w.type]||w.type)}${wTxt(w)?' • '+wTxt(w):''} <span class="m">(${esc(w.workout_date)})</span>${w.notes?`<div class="cm">${esc(w.notes)}</div>`:''}`}))].sort((x,y)=>new Date(y.at)-new Date(x.at)).slice(0,60);
+ mn.innerHTML=H('Notifications')+(items.length?items.map(i=>{const nw=new Date(i.at)>prev;
+  return `<div class="pc ${nw?'new':''}"><div class="ph"><span>${esc(new Date(i.at).toLocaleString())}</span>${nw?'<span class="bdg" style="--c:#FF4F5E;margin:0">New</span>':''}</div><div>${i.h}</div></div>`}).join(''):'<div class="card empty">No updates yet.</div>')}
+
+async function cRaces(mn){
+ const {data}=await sb.from('races').select('*').order('race_date');
+ const rs=data||[];
+ mn.innerHTML=H('Races')+`<div class="card"><div class="grid"><div class="full"><label for="rn">Race name</label><input id="rn"></div>
+ <div><label for="rd">Date</label><input id="rd" type="date"></div><div><label for="rk">Distance</label><input id="rk" placeholder="e.g. 10K"></div>
+ <div class="full"><label for="rl">Location</label><input id="rl"></div><div class="full"><label for="rlk">Link (optional)</label><input id="rlk" placeholder="https://..." autocapitalize="none"></div><div class="full"><button id="radd">Add race</button></div></div><p class="err" id="rerr" role="alert"></p></div>
+ <h2>All races</h2>${rs.length?rs.map(r=>`<div class="pc"><div class="ph"><span>${esc(r.race_date)}</span><button class="x" data-del="${esc(r.id)}" aria-label="Delete race">×</button></div>
+ <div class="pt"><b>${esc(r.name)}</b><span class="tot">${dl(r.race_date)}</span></div><div class="m">${[r.distance,r.location].filter(Boolean).map(esc).join(' • ')}</div>${linkHTML(r.link,'Race page ↗')}</div>`).join(''):'<div class="card empty">No races yet.</div>'}`;
+ $('#radd').onclick=async()=>{
+  if(!$('#rn').value.trim()||!$('#rd').value)return $('#rerr').textContent='Add a race name and a date.';
+  if($('#rlk').value.trim()&&!url($('#rlk').value))return $('#rerr').textContent='That link doesn’t look right.';
+  const {error}=await sb.from('races').insert({name:$('#rn').value.trim(),race_date:$('#rd').value,distance:$('#rk').value.trim()||null,location:$('#rl').value.trim()||null,link:url($('#rlk').value)||null});
+  if(error)return $('#rerr').textContent=msg(error);coachView()};
+ document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this race? It is removed from every athlete too.'))return;await sb.from('races').delete().eq('id',b.dataset.del);coachView()})}
+
+async function pgAbout(mn){
+ const ph='<span class="empty">Text goes here.</span>';
+ mn.innerHTML=`<div class="narrow">${H('About RUNOVA Coaching')}<div class="card"><h2 style="margin-top:0">Our mission</h2><p class="pre">${esc(ABOUT.mission)||ph}</p></div><div class="card" style="margin-top:14px"><h2 style="margin-top:0">Why RUNOVA</h2><p class="pre">${esc(ABOUT.why)||ph}</p></div></div>`}
 
 boot();
 </script>
