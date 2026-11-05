@@ -6,7 +6,7 @@
 <title>RUNOVA</title>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F3F5FB;--ink:#0B1033;--mute:#6A7194;--line:#E4E8F4;--blue:#2230E8;--coral:#FF4F5E;--red:#C62828;--nav:#0B1033}
+:root{--card:#fff;--bd:#cfd4ea;--cmbg:#FFF0F1;--bg:#F3F5FB;--ink:#0B1033;--mute:#6A7194;--line:#E4E8F4;--blue:#2230E8;--coral:#FF4F5E;--red:#C62828;--nav:#0B1033}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 15.5px/1.55 "DM Sans",system-ui,sans-serif;padding-bottom:76px}
 .top{background:var(--nav);color:#fff;padding:12px 20px}
@@ -18,11 +18,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font:400 15.5px/1.55 "DM San
 main{max-width:1200px;margin:0 auto;padding:22px 20px 40px}
 .narrow{max-width:860px}
 h2{font:700 1rem Unbounded,sans-serif;margin:26px 0 12px}
-.card,.pc,.tile{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(11,16,51,.04),0 8px 24px rgba(11,16,51,.05)}
+.card,.pc,.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(11,16,51,.04),0 8px 24px rgba(11,16,51,.05)}
 .pc{padding:16px;margin-bottom:12px}
 .pc.new{border-color:var(--coral);box-shadow:0 0 0 2px rgba(255,79,94,.18)}
 label{display:block;font-size:.85rem;color:var(--mute);margin-bottom:4px}
-input,select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid #cfd4ea;border-radius:10px;background:#fff;color:var(--ink)}
+input,select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--ink)}
 input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid rgba(34,48,232,.35);outline-offset:1px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .full{grid-column:1/-1}
@@ -44,9 +44,9 @@ button.back{background:none;color:var(--blue);padding:4px 0}
 .w:last-child,.rl:last-child{border:0}
 .n{font-size:.92rem;margin-top:2px}
 .empty{color:var(--mute);padding:12px 0}
-.cm{background:#FFF0F1;border-left:3px solid var(--coral);border-radius:6px;padding:6px 10px;margin-top:6px;font-size:.92rem}
+.cm{background:var(--cmbg);border-left:3px solid var(--coral);border-radius:6px;padding:6px 10px;margin-top:6px;font-size:.92rem}
 .inl{display:flex;gap:8px;margin-top:8px}
-.chip{background:#fff;color:var(--ink);border:1px solid #cfd4ea;padding:8px 16px}
+.chip{background:var(--card);color:var(--ink);border:1px solid var(--bd);padding:8px 16px}
 .chip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
 input[type=checkbox]{width:22px;height:22px}
 .ph{display:flex;justify-content:space-between;align-items:center;color:var(--mute);font-size:.88rem}
@@ -64,7 +64,7 @@ input[type=checkbox]{width:22px;height:22px}
 .ai .cnt{background:var(--coral);color:#fff;border-radius:99px;padding:0 8px;font-style:normal;font-size:.75rem}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .tile .mid{font-size:2rem;color:var(--blue)}
-.arow{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;background:#fff;color:var(--ink);border:1px solid var(--line);margin-bottom:10px;text-align:start;padding:12px 14px;border-radius:12px}
+.arow{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;background:var(--card);color:var(--ink);border:1px solid var(--line);margin-bottom:10px;text-align:start;padding:12px 14px;border-radius:12px}
 .arow .bdg{margin:0;flex:none}
 .pbs{display:grid;gap:10px;margin-bottom:12px}
 .pbr{display:grid;grid-template-columns:52px 1fr 1fr;gap:10px;align-items:center}
@@ -81,10 +81,12 @@ input[type=checkbox]{width:22px;height:22px}
 .ai{flex:1;justify-content:center;padding:10px 2px;font-size:.72rem;text-align:center}
 .tiles{grid-template-columns:1fr}}
 @media(max-width:560px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stats>:first-child{grid-column:1/-1}main{padding:16px 14px 30px}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#0A0D24;--ink:#EEF0FB;--mute:#9AA1C8;--line:#222850;--card:#131839;--nav:#070A1C;--bd:#2D3563;--cmbg:#3A1E2C;--blue:#6B78FF}
+.dk{display:inline}.mb{display:none}@media(max-width:820px){.dk{display:none}.mb{display:inline;font-size:1.1rem}}
 </style>
 </head>
 <body>
-<header class="top"><div class="row"><div class="brand">RUNOVA<small>Coaching</small></div><div id="who"></div></div></header>
+<header class="top"><div class="row"><div class="brand">RUNOVA<small>Coaching</small></div><div style="display:flex;gap:10px;align-items:center"><button class="ghost" id="th" aria-label="Switch day and night mode"></button><div id="who"></div></div></div></header>
 <main id="app"></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
@@ -92,6 +94,9 @@ const sb=supabase.createClient('https://fsgawcqntgvfpbxytwhx.supabase.co','sb_pu
 const ABOUT={mission:'',why:''}; // paste your text between the quotes
 const MSGS=["Start slow. Finish proud.", "Every kilometer is a promise you keep to yourself.", "Show up today. Future you says thanks.", "Small steps still cover the distance.", "You don’t need a perfect day, just a started one.", "Consistency beats intensity.", "Easy days make hard days possible.", "The hardest step is the first one. Take it.", "Trust the plan and the plan will carry you.", "Strong legs are built on ordinary mornings.", "Progress is quiet. Keep going anyway.", "Run today like you’re racing your best self.", "Tired is a feeling. Moving is a choice.", "Be patient. Fitness is built in layers.", "Breathe, relax your shoulders, run tall.", "You’re closer than you were yesterday.", "Rest is part of the training. Respect it.", "Discipline is choosing what you want most over what you want now.", "Run with your head up and your heart open.", "Fast is fun, but steady wins.", "Every runner started as a beginner.", "Your only competition is who you were last week.", "Make today’s effort count, not just today’s distance.", "Hills are just speed in disguise.", "The track doesn’t care about excuses. Neither do you.", "Be proud of the work nobody sees.", "A bad run is still a run you finished.", "Fuel well. Sleep well. Run well.", "Quiet confidence is built mile by mile.", "Let the rhythm of your steps clear your mind.", "Race day rewards the weeks you showed up.", "You are stronger than your last thought of quitting.", "Cadence, posture, breath. Simple and strong.", "Today’s sweat is tomorrow’s strength.", "Aim for better, not perfect.", "Find your pace, then protect it.", "Every session adds a brick to your foundation.", "The finish line is just the start of the next goal.", "Believe in the miles you’ve already run.", "Run happy. The results will follow.", "Pain passes. Pride stays.", "Focus on this step, then the next.", "The best pace is the one you can hold with a smile.", "Warm up well. Cool down well. Recover well.", "Growth lives just outside your comfort zone.", "You’ve got a plan. Now go and live it.", "Be the runner who keeps showing up.", "Stay relaxed when it gets hard.", "Today is a good day for a good run.", "Great things are built on repeat.", "Run your race, not someone else’s.", "Strength work today means faster legs tomorrow.", "Stretch like you mean it.", "Respect the easy run. It does more than you think.", "Your goals are waiting at the end of your habits.", "Courage is lacing up on a day you don’t feel like it.", "The road remembers every effort.", "Go gently on the start, strongly on the finish.", "Little by little, the distance gets shorter.", "Keep your form when the effort rises.", "Celebrate every session you complete.", "Your body can do more than your mind believes.", "Make your next run your best reason to smile.", "The work you do now is your race-day advantage.", "Be kind to your body. It carries you.", "A steady effort beats a heroic one.", "You didn’t come this far to only come this far.", "Run toward the person you want to become.", "Every step forward is a step you earned.", "Listen to your body, then lead your mind.", "Good habits make great runners.", "Chase the feeling of finishing, not the fear of starting.", "Today’s plan is small enough to start and big enough to matter.", "When it burns, relax and keep your rhythm.", "There are no shortcuts, only smarter steps.", "Run with gratitude for the legs that carry you.", "Your coach believes in you. Believe in yourself too.", "Let the miles teach you patience.", "Another session done is another win banked.", "Don’t count the days. Make the days count.", "Strong mind, steady stride.", "Hold your pace. Hold your nerve.", "Every finish line began with a single decision.", "Be consistent now, be amazed later.", "Recovery is where the strength is built.", "Today is another chance to get it right.", "Smooth is fast. Relaxed is faster.", "Run like the finish line is waiting just for you.", "Get comfortable being uncomfortable.", "The harder you work, the sweeter the finish.", "Take the day one stride at a time.", "Your effort today writes your story tomorrow.", "Fresh air, open road, free mind.", "Stay curious about how far you can go.", "Train with purpose and race with joy.", "You are building something that lasts.", "Strength isn’t only in the legs. It’s in showing up.", "Keep the promise you made at the start of this plan.", "Today’s run is a gift to your future self.", "Every mile you log is proof you can."];
 const $=s=>document.querySelector(s);
+let cur=(()=>{try{return localStorage.getItem('runova_theme')}catch(e){return null}})()||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+const setTh=t=>{document.documentElement.dataset.theme=t;$('#th').textContent=t=='dark'?'☀️ Day':'🌙 Night'};
+setTh(cur);$('#th').onclick=()=>{cur=cur=='dark'?'light':'dark';setTh(cur);try{localStorage.setItem('runova_theme',cur)}catch(e){}};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const TYPES={easy:'Easy run',long:'Long run',tempo:'Tempo',interval:'Intervals',race:'Race',strength:'Strength',stretch:'Stretching',rest:'Rest day'};
 const RUN=['easy','long','tempo','interval','race'],isRun=t=>RUN.includes(t);
@@ -208,7 +213,7 @@ async function athleteView(){
  const sn=getSeen();
  const [a,b,c]=await Promise.all([sb.from('plans').select('id',{count:'exact',head:true}).gt('created_at',sn),sb.from('comments').select('id',{count:'exact',head:true}).gt('created_at',sn),sb.from('athlete_races').select('id',{count:'exact',head:true}).gt('created_at',sn)]);
  const n=view=='notes'?0:(a.count||0)+(b.count||0)+(c.count||0);
- $('#app').innerHTML=shell([['home','Home'],['plan','My Plan'],['load','Activity Log'],['notes','Notifications'],['about','About']],n);bindNav(athleteView);
+ $('#app').innerHTML=shell([['home','Home'],['plan','My Plan'],['load','Activity Log'],['notes','<span class="dk">Notifications</span><span class="mb">🔔</span>'],['about','About']],n);bindNav(athleteView);
  await ({home:aHome,plan:aPlan,load:aLoad,notes:aNotes,about:pgAbout}[view])($('#mn'))}
 
 async function aHome(mn){
@@ -270,7 +275,7 @@ async function coachView(){
  const s=getSeen();
  const [a,b]=await Promise.all([sb.from('plans').select('id',{count:'exact',head:true}).gt('updated_at',s).neq('status','pending'),sb.from('workouts').select('id',{count:'exact',head:true}).gt('created_at',s)]);
  const n=view=='notes'?0:(a.count||0)+(b.count||0);
- const ad=me.role=='admin';$('#app').innerHTML=shell(ad?[['home','Home'],['coaches','Coaches'],['athletes','Athletes'],['notes','Alerts'],['races','Races'],['about','About']]:[['home','Home'],['athletes','Athletes'],['notes','Alerts'],['races','Races'],['about','About']],n);bindNav(coachView);
+ const ad=me.role=='admin';$('#app').innerHTML=shell(ad?[['home','Home'],['coaches','Coaches'],['athletes','Athletes'],['notes','<span class="dk">Notifications</span><span class="mb">🔔</span>'],['races','Races'],['about','About']]:[['home','Home'],['athletes','Athletes'],['notes','<span class="dk">Notifications</span><span class="mb">🔔</span>'],['races','Races'],['about','About']],n);bindNav(coachView);
  const fl=flash;flash='';
  await ({home:cHome,coaches:cCoaches,athletes:cAthletes,notes:cNotes,races:cRaces,about:pgAbout}[view])($('#mn'),fl)}
 
@@ -304,7 +309,7 @@ async function cAthlete(mn,fl){
  const cm=await fetchComments(ws),pbm={};(pb.data||[]).forEach(x=>pbm[x.distance]=x);
  const races=rc.data||[],rm={};races.forEach(r=>rm[r.id]=r);
  const s=split(ps);
- mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button>${H(esc(nm(a)))}${cs?`<div class="card" style="margin-bottom:14px"><label for="acs2">Coach</label><select id="acs2">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==a.coach_id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select></div>`:''}${loadHTML(ws,ps)}
+ mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button>${H(esc(nm(a)))}${cs?`<div class="card" style="margin-bottom:14px"><label for="acs2">Coach</label><select id="acs2">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==a.coach_id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select><button class="sm" id="ren">Edit name</button></div>`:''}${loadHTML(ws,ps)}
  <h2>Personal bests</h2><div class="card"><div class="pbs">${PBD.map(d=>`<div class="pbr"><b>${d}</b><input data-pt="${d}" placeholder="e.g. 19:45" aria-label="${d} time" value="${esc(pbm[d]?pbm[d].time_text:'')}"><input type="date" data-pd="${d}" aria-label="${d} date" value="${pbm[d]&&pbm[d].set_on?pbm[d].set_on:''}"></div>`).join('')}</div><button id="pbsave">Save records</button><p class="err" id="pberr" role="status"></p></div>
  <h2>Races and goals</h2><div class="card">${races.length?`<div class="grid"><div><label for="rs">Race</label><select id="rs">${races.map(r=>`<option value="${esc(r.id)}">${esc(r.name)} · ${esc(r.race_date)}</option>`).join('')}</select></div><div><label for="rg">Goal</label><input id="rg" placeholder="e.g. sub 50 min"></div><div class="full"><button id="rassign">Assign race</button></div></div>`:'<div class="empty">Add races in the Races tab first.</div>'}
  ${(ar.data||[]).map(x=>rm[x.race_id]?`<div class="rl"><div><b>${esc(rm[x.race_id].name)}</b> <span class="m">${esc(rm[x.race_id].race_date)}</span>${x.goal?`<div class="n">Goal: ${esc(x.goal)}</div>`:''}</div><button class="x" data-rdel="${esc(x.id)}" aria-label="Remove race">×</button></div>`:'').join('')}</div>
@@ -321,6 +326,7 @@ async function cAthlete(mn,fl){
  <div style="margin-top:32px"><button class="danger" id="rm">Remove athlete</button></div>`;
  $('#bk').onclick=()=>{picked=null;coachView()};
  if($('#acs2'))$('#acs2').onchange=async e=>{const {error}=await sb.from('profiles').update({coach_id:e.target.value}).eq('id',a.id);alert(error?msg(error):'Coach updated.')};
+ if($('#ren'))$('#ren').onclick=async()=>{const v=prompt('New name',nm(a));if(v==null||!v.trim())return;const {error}=await sb.from('profiles').update({full_name:v.trim()}).eq('id',a.id);if(error)return alert(msg(error));coachView()};
  $('#pbsave').onclick=async()=>{const up=[],del=[];
   PBD.forEach(d=>{const t=document.querySelector('[data-pt="'+d+'"]').value.trim(),w=document.querySelector('[data-pd="'+d+'"]').value;t?up.push({athlete_id:a.id,distance:d,time_text:t,set_on:w||null}):del.push(d)});
   let e1=null,e2=null;
@@ -347,7 +353,7 @@ async function cAthlete(mn,fl){
 
 async function cCoaches(mn,fl){
  const [cs,as]=await Promise.all([coachesList(),myAthletes()]),cnt={};as.forEach(a=>cnt[a.coach_id]=(cnt[a.coach_id]||0)+1);
- mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+H('Coaches')+`<div class="card" style="margin-bottom:16px"><h2 style="margin-top:0">Add a coach</h2><div class="grid"><div class="full"><label for="kn">Full name</label><input id="kn" autocomplete="off"></div><div><label for="ku">Username</label><input id="ku" autocapitalize="none" autocomplete="off"></div><div><label for="kp">Password</label><input id="kp" autocapitalize="none" autocomplete="off"></div><div class="full"><button id="kadd">Create coach</button></div></div><p class="err" id="kerr" role="alert"></p></div>`+cs.map(c=>`<div class="arow"><span><b>${esc(nm(c))}</b> <span class="m">@${esc(c.username)} · ${c.role=='admin'?'Admin · ':''}${cnt[c.id]||0} athletes</span></span>${c.role=='admin'?'':`<button class="danger sm" style="margin:0" data-kdel="${esc(c.id)}">Remove</button>`}</div>`).join('');
+ mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+H('Coaches')+`<div class="card" style="margin-bottom:16px"><h2 style="margin-top:0">Add a coach</h2><div class="grid"><div class="full"><label for="kn">Full name</label><input id="kn" autocomplete="off"></div><div><label for="ku">Username</label><input id="ku" autocapitalize="none" autocomplete="off"></div><div><label for="kp">Password</label><input id="kp" autocapitalize="none" autocomplete="off"></div><div class="full"><button id="kadd">Create coach</button></div></div><p class="err" id="kerr" role="alert"></p></div>`+cs.map(c=>`<div class="arow"><span><b>${esc(nm(c))}</b> <span class="m">@${esc(c.username)} · ${c.role=='admin'?'Admin · ':''}${cnt[c.id]||0} athletes</span></span><span style="display:flex;gap:8px"><button class="sm" style="margin:0" data-ren="${esc(c.id)}" data-n="${esc(nm(c))}">Edit name</button>${c.role=='admin'?'':`<button class="danger sm" style="margin:0" data-kdel="${esc(c.id)}">Remove</button>`}</span></div>`).join('');
  $('#kadd').onclick=async()=>{const u=$('#ku').value.trim().toLowerCase(),p=$('#kp').value,e=$('#kerr');
   if(!/^[a-z0-9_]{3,20}$/.test(u))return e.textContent='Username must be 3 to 20 letters, numbers or underscores.';
   if(p.length<8)return e.textContent='Password must be at least 8 characters.';
@@ -356,7 +362,8 @@ async function cCoaches(mn,fl){
   flash='Created. Username: '+u+'  Password: '+p+'  Share these with the coach.';coachView()};
  document.querySelectorAll('[data-kdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Remove this coach? Their athletes must be moved first.'))return;
   const {data,error}=await sb.functions.invoke('add-athlete',{body:{action:'delete',athlete_id:b.dataset.kdel}});
-  if(error||(data&&data.error))return alert((data&&data.error)||error.message);coachView()})}
+  if(error||(data&&data.error))return alert((data&&data.error)||error.message);coachView()});
+ document.querySelectorAll('[data-ren]').forEach(b=>b.onclick=async()=>{const v=prompt('New name',b.dataset.n);if(v==null||!v.trim())return;const {error}=await sb.from('profiles').update({full_name:v.trim()}).eq('id',b.dataset.ren);if(error)return alert(msg(error));if(b.dataset.ren==me.id)return boot();coachView()})}
 
 async function cNotes(mn){
  const prev=new Date(getSeen()),as=await myAthletes(),nmap={};as.forEach(a=>nmap[a.id]=nm(a));
