@@ -9,7 +9,7 @@
 :root{--card:#fff;--bd:#cfd4ea;--cmbg:#FFF0F1;--bg:#F3F5FB;--ink:#0B1033;--mute:#6A7194;--line:#E4E8F4;--blue:#2230E8;--coral:#FF4F5E;--red:#C62828;--nav:#0B1033}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 15.5px/1.55 "DM Sans",system-ui,sans-serif;padding-bottom:76px}
-.top{background:var(--nav);color:#fff;padding:12px 20px}
+.top{background:var(--nav);color:#fff;padding:12px 20px;position:sticky;top:0;z-index:30}
 .top .row{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;gap:12px}
 .brand{font:800 1.15rem Unbounded,sans-serif;letter-spacing:-.02em}
 .brand small{font:600 .7rem "DM Sans",sans-serif;background:var(--coral);padding:2px 9px;border-radius:99px;margin-inline-start:8px;vertical-align:middle}
@@ -58,7 +58,7 @@ input[type=checkbox]{width:22px;height:22px}
 .sts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .nt{margin-top:10px}
 .shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px;align-items:start}
-.side{background:var(--nav);border-radius:14px;padding:10px;position:sticky;top:12px;display:flex;flex-direction:column;gap:4px}
+.side{background:var(--nav);border-radius:14px;padding:10px;position:sticky;top:76px;display:flex;flex-direction:column;gap:4px}
 .ai{display:flex;justify-content:space-between;align-items:center;background:transparent;color:#C9CDEA;text-align:start;padding:11px 14px;width:100%}
 .ai.on{background:var(--blue);color:#fff}
 .ai .cnt{background:var(--coral);color:#fff;border-radius:99px;padding:0 8px;font-style:normal;font-size:.75rem}
@@ -102,9 +102,9 @@ let cur=(()=>{try{return localStorage.getItem('runova_theme')}catch(e){return nu
 const setTh=t=>{document.documentElement.dataset.theme=t;$('#th').textContent=t=='dark'?'☀️ Day':'🌙 Night'};
 setTh(cur);$('#th').onclick=()=>{cur=cur=='dark'?'light':'dark';setTh(cur);try{localStorage.setItem('runova_theme',cur)}catch(e){}};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const TYPES={easy:'Easy Run',long:'Long Run',tempo:'Tempo',interval:'Intervals',race:'Race',strength:'Strength',stretch:'Stretching',rest:'Rest Day'};
-const RUN=['easy','long','tempo','interval','race'],isRun=t=>RUN.includes(t);
-const ST={pending:['Waiting','#5A6086'],finished:['Finished','#2230E8'],less:['Did Less','#B26A00'],not_finished:['Not Finished','#C62828']};
+const TYPES={easy:'Easy Run',long:'Long Run',tempo:'Tempo',interval:'Intervals',fartlek:'Fartlek',race:'Race',strength:'Strength',stretch:'Stretching'};
+const RUN=['easy','long','tempo','interval','fartlek','race'],isRun=t=>RUN.includes(t);
+const ST={pending:['Pending','#5A6086'],finished:['Finished','#2230E8'],less:['Did Less','#B26A00'],not_finished:['Not Finished','#C62828']};
 const PBD=['2K','5K','10K','21K','42K'];
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const weekStart=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+1)%7));return iso(d)};
@@ -204,7 +204,7 @@ function wRow(w,cm,coach){const id=esc(w.id);
  return `<div class="w" id="w-${id}"><div style="flex:1;min-width:0"><b>${esc(TYPES[w.type]||w.type)}</b> <span class="m">${esc(w.workout_date)}</span><div class="m">${wTxt(w)}</div>${w.notes?`<div class="n pre">${esc(w.notes)}</div>`:''}
  ${(cm[w.id]||[]).map(c=>`<div class="cm"><b>Coach:</b> ${esc(c.body)}</div>`).join('')}
  ${coach?`<div class="inl"><input data-ci="${id}" placeholder="Comment for the athlete" aria-label="Comment"><button data-c="${id}">Send</button></div>`:''}</div>
- <span style="white-space:nowrap">${coach?`<button class="x" data-wedit="${id}" aria-label="Edit activity" style="font-size:1rem">✎</button>`:''}<button class="x" data-wdel="${id}" aria-label="Delete activity">×</button></span></div>`}
+ <span style="white-space:nowrap">${coach?`<button class="x" data-wedit="${id}" aria-label="Edit activity" style="font-size:1rem">✎</button>`:''}${coach?`<button class="x" data-wdel="${id}" aria-label="Delete activity">×</button>`:''}</span></div>`}
 
 function bindPlan(redo){
  document.querySelectorAll('.sts .chip').forEach(c=>c.onclick=()=>{c.parentNode.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')});
@@ -235,19 +235,19 @@ async function aHome(mn){
  const pbs=(pb.data||[]).sort((a,b)=>PBD.indexOf(a.distance)-PBD.indexOf(b.distance));
  mn.innerHTML=`<div class="narrow"><div class="quote"><small>Welcome back, ${esc(nm(me).split(' ')[0])}</small>${esc(MSGS[Math.floor(Math.random()*MSGS.length)])}</div><div style="margin-top:16px">${weekHTML(ps,ws)}</div>
  <h2>Today</h2>${s.today.length?s.today.map(p=>planCard(p,false)).join(''):'<div class="card empty">Nothing planned for today.</div>'}
- ${rr.length?`<h2>Your races</h2><div class="card">${rr.map(r=>`<div class="rl"><div><b>${esc(r.name)}</b> <span class="m">${esc(r.race_date)}${r.distance?' • '+esc(r.distance):''}</span>${goal[r.id]?`<div class="n">Goal: ${esc(goal[r.id])}</div>`:''}${linkHTML(r.link,'Race Page')}</div><span class="tot">${dl(r.race_date)}</span></div>`).join('')}</div>`:''}
+ ${rr.length?`<h2>My Races</h2><div class="card">${rr.map(r=>`<div class="rl"><div><b>${esc(r.name)}</b> <span class="m">${esc(r.race_date)}${r.distance?' • '+esc(r.distance):''}</span>${goal[r.id]?`<div class="n">Goal: ${esc(goal[r.id])}</div>`:''}${linkHTML(r.link,'Race Page')}</div><span class="tot">${dl(r.race_date)}</span></div>`).join('')}</div>`:''}
  ${pbs.length?`<h2>PRs</h2><div class="card">${pbs.map(x=>`<div class="rl"><b>${esc(x.distance)}</b><span>${esc(x.time_text)} <span class="m">${esc(x.set_on||'')}</span></span></div>`).join('')}</div>`:''}</div>`;
  bindPlan(athleteView)}
 
 async function aPlan(mn){
- const [ps,ws]=await Promise.all([fetchPlans(me.id),fetchWs(me.id)]),s=split(ps);
- mn.innerHTML=`<div class="narrow">${H('My Plan')}${weekHTML(ps,ws)}<h2>Today</h2>${s.today.length?s.today.map(p=>planCard(p,false)).join(''):'<div class="card empty">Nothing planned for today.</div>'}${sec('Coming Up',s.up,false)}${sec('History',s.past,false)}</div>`;
+ const [ps,ws]=await Promise.all([fetchPlans(me.id),fetchWs(me.id)]),s=split(ps),T0=iso(new Date()),asc=(x,y)=>x.plan_date<y.plan_date?-1:1,due=ps.filter(p=>p.status=='pending'&&p.plan_date<=T0).sort(asc),up2=ps.filter(p=>p.plan_date>T0).sort(asc),past2=ps.filter(p=>p.status!='pending'&&p.plan_date<=T0);
+ mn.innerHTML=`<div class="narrow">${H('My Plan')}${weekHTML(ps,ws)}${due.length?sec('Pending',due,false):'<div class="card empty">Nothing pending.</div>'}${sec('Coming Up',up2,false)}${sec('History',past2,false)}</div>`;
  bindPlan(athleteView)}
 
 async function aLoad(mn){
  const [ws,ps]=await Promise.all([fetchWs(me.id),fetchPlans(me.id)]),cm=await fetchComments(ws);
  mn.innerHTML=`<div class="narrow">${H('Activity Log')}${loadHTML(ws,ps)}<h2>Log an Activity</h2><div class="card"><div class="grid">
- <div><label for="wd">Date</label><input id="wd" type="date" value="${iso(new Date())}"></div><div><label for="wt">Activity</label><select id="wt">${typeOpts('rest')}</select></div>
+ <div><label for="wd">Date</label><input id="wd" type="date" value="${iso(new Date())}"></div><div><label for="wt">Activity</label><select id="wt"><option value="">Choose Activity</option>${typeOpts('')}</select></div>
  <div class="rd"><label for="wk">Distance (km) *</label><input id="wk" type="number" step="0.01" min="0" inputmode="decimal"></div><div><label>Duration *</label><div class="three"><input id="wh" type="number" min="0" inputmode="numeric" placeholder="hr" aria-label="Hours"><input id="wm" type="number" min="0" max="59" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="wsec" type="number" min="0" max="59" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
  <div class="rd"><label>Average Pace (min/km) *</label><div class="two"><input id="wpm" type="number" min="0" inputmode="numeric" placeholder="min"><input id="wps" type="number" min="0" max="59" inputmode="numeric" placeholder="sec"></div></div>
  <div class="full"><label for="wn" id="wnl">Notes</label><textarea id="wn" rows="3"></textarea></div><div class="full"><button id="wsave">Save Activity</button></div></div><p class="err" id="werr" role="alert"></p></div>
@@ -258,7 +258,7 @@ async function aLoad(mn){
   const t=$('#wt').value,km=num($('#wk').value),dm=durIn3($('#wh').value,$('#wm').value,$('#wsec').value),nt=$('#wn').value.trim(),e=$('#werr');
   if(!$('#wd').value)return e.textContent='Choose the date.';
   if(num($('#wsec').value)>59||num($('#wm').value)>59)return e.textContent='Minutes and seconds must be 0 to 59.';
-  if(isRun(t)&&!(km>0))return e.textContent='Enter the distance.';
+  if(!t)return e.textContent='Choose the activity.';if(isRun(t)&&!(km>0))return e.textContent='Enter the distance.';
   if(!(dm>0))return e.textContent='Enter the duration.';
   const pm=num($('#wpm').value),ps=num($('#wps').value);
   if(isRun(t)){if(!((pm||0)*60+(ps||0)>0))return e.textContent='Enter the average pace.';if((pm||0)>59||(ps||0)>59)return e.textContent='Pace minutes and seconds must be 0 to 59.'}
@@ -289,7 +289,7 @@ async function coachView(){
  const s=getSeen();
  const [a,b]=await Promise.all([sb.from('plans').select('id',{count:'exact',head:true}).gt('updated_at',s).neq('status','pending'),sb.from('workouts').select('id',{count:'exact',head:true}).gt('created_at',s)]);
  const n=view=='notes'?0:(a.count||0)+(b.count||0);
- const ad=me.role=='admin';$('#app').innerHTML=shell(ad?[['home','Home'],['coaches','Coaches'],['athletes','Athletes'],['notes','<span class="dk">Notifications</span><span class="mb">🔔</span>'],['races','Races'],['about','About']]:[['home','Home'],['athletes','Athletes'],['notes','<span class="dk">Notifications</span><span class="mb">🔔</span>'],['races','Races'],['about','About']],n);bindNav(coachView);
+ const ad=me.role=='admin';$('#app').innerHTML=shell(ad?[['home','Home'],['coaches','Coaches'],['athletes','Athletes'],['races','Races'],['about','About']]:[['home','Home'],['athletes','Athletes'],['notes','<span class="dk">Notifications</span><span class="mb">🔔</span>'],['races','Races'],['about','About']],n);bindNav(coachView);
  const fl=flash;flash='';
  await ({home:cHome,coaches:cCoaches,athletes:cAthletes,notes:cNotes,races:cRaces,about:pgAbout}[view])($('#mn'),fl)}
 
@@ -301,7 +301,7 @@ async function cHome(mn){
  mn.innerHTML=H('Home')+`<div class="tiles"><div class="tile"><div class="mid">${as.length}</div><div class="lbl">Total Athletes</div></div>
  <div class="tile"><div class="mid">${active}</div><div class="lbl">Active (trained in the last 14 days)</div></div>
  <div class="tile"><div class="mid">${done} / ${today.length}</div><div class="lbl">Sessions Completed Today</div></div></div>
- <h2>Today’s Sessions</h2>${today.length?`<div class="card">${today.map(p=>`<div class="rl" data-go="${esc(p.athlete_id)}" style="cursor:pointer"><div>${p.athlete_notes?'📝 ':''}<b>${esc(nmap[p.athlete_id]||'')}</b> <span class="m">${esc(p.title)}${p.target_km!=null?' • '+fmt(+p.target_km)+' km':''}</span></div>${badge(p.status)}</div>`).join('')}</div>`:'<div class="card empty">No sessions planned for today.</div>'}`;
+ ${me.role=='admin'?'':'<h2>Today’s Sessions</h2>'}${me.role=='admin'?'':today.length?`<div class="card">${today.map(p=>`<div class="rl" data-go="${esc(p.athlete_id)}" style="cursor:pointer"><div>${p.athlete_notes?'📝 ':''}<b>${esc(nmap[p.athlete_id]||'')}</b> <span class="m">${esc(p.title)}${p.target_km!=null?' • '+fmt(+p.target_km)+' km':''}</span></div>${badge(p.status)}</div>`).join('')}</div>`:'<div class="card empty">No sessions planned for today.</div>'}`;
  document.querySelectorAll('[data-go]').forEach(e=>e.onclick=()=>{picked=e.dataset.go;jump=e.dataset.t||null;view='athletes';coachView()})}
 
 async function cAthletes(mn,fl){
@@ -318,30 +318,30 @@ async function cAthletes(mn,fl){
  if(adding)bindAdd();else $('#addb').onclick=()=>{adding=true;coachView()}}
 
 async function cAthlete(mn,fl){
- const {data:a}=await sb.from('profiles').select('id,full_name,username,coach_id').eq('id',picked).single();
+ const {data:a}=await sb.from('profiles').select('id,full_name,username,coach_id,coach_from,coach_until').eq('id',picked).single();
  const cs=me.role=='admin'?await coachesList():null;
  const [ps,ws,pb,rc,ar,ph]=await Promise.all([fetchPlans(a.id),fetchWs(a.id),sb.from('personal_bests').select('*').eq('athlete_id',a.id),sb.from('races').select('*').order('race_date'),sb.from('athlete_races').select('*').eq('athlete_id',a.id),sb.from('pr_history').select('*').eq('athlete_id',a.id).order('set_on',{ascending:false}).order('created_at',{ascending:false})]);
  const cm=await fetchComments(ws),pbm={};(pb.data||[]).forEach(x=>pbm[x.distance]=x);
  const prH=PBD.map(d=>{const l=(ph.data||[]).filter(x=>x.distance==d);return l.length>1?`<div class="rl"><b>${d}</b><span>${l.map(x=>esc(x.time_text)+(x.set_on?` <span class="m">(${esc(x.set_on)})</span>`:'')).join(' ← ')}</span></div>`:''}).join('');
  const races=rc.data||[],rm={};races.forEach(r=>rm[r.id]=r);
  const s=split(ps);
- mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button>${H(esc(nm(a)))}${cs?`<div class="card" style="margin-bottom:14px"><label for="acs2">Coach</label><select id="acs2">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==a.coach_id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select><button class="sm" id="ren">Edit name</button></div>`:''}${loadHTML(ws,ps)}
- <h2>Plan a Session</h2><div class="card"><div class="grid"><div><label for="pd">Date</label><input id="pd" type="date" value="${iso(new Date())}"></div>
- <div><label for="pt">Session</label><select id="pt">${typeOpts('')}</select></div>
- <div class="rf"><label for="pk">Distance (km)</label><input id="pk" type="number" step="0.01" min="0" inputmode="decimal"></div>
- <div class="rf"><label for="pp">Average Pace (min/km)</label><input id="pp" placeholder="e.g. 5:30"></div>
- <div class="rf"><label>Duration</label><div class="three"><input id="ph" type="number" min="0" inputmode="numeric" placeholder="hr" aria-label="Hours"><input id="pm" type="number" min="0" max="59" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="ps" type="number" min="0" max="59" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
+ mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${H(esc(nm(a)))}${cs?'<button class="sm" id="ren" style="margin:0">Edit Name</button>':''}</div>${cs?`<div class="card" style="margin-bottom:14px"><label for="acs2">Coach</label><select id="acs2">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==a.coach_id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select><div class="grid" style="margin-top:10px"><div><label for="cf">Coach From</label><input type="date" id="cf" value="${a.coach_from||''}"></div><div><label for="cu">Coach Until</label><input type="date" id="cu" value="${a.coach_until||''}"></div></div><p class="m">Leave dates empty for no limit. After the end date the coach no longer sees this athlete.</p><button class="sm" id="csave">Save Coach</button></div>`:''}${loadHTML(ws,ps)}
+ ${me.role=='admin'?'':` <h2>Plan a Session</h2><div class="card"><div class="grid"><div><label for="pd">Date *</label><input id="pd" type="date"></div>
+ <div><label for="pt">Session *</label><select id="pt"><option value="">Choose Session</option>${typeOpts('')}</select></div>
+ <div class="rf"><label for="pk">Distance (km) *</label><input id="pk" type="number" step="0.01" min="0" inputmode="decimal"></div>
+ <div class="rf"><label>Average Pace (min/km) *</label><div class="two"><input id="ppm" type="number" min="0" inputmode="numeric" placeholder="min"><input id="pps" type="number" min="0" max="59" inputmode="numeric" placeholder="sec"></div></div>
+ <div><label>Duration *</label><div class="three"><input id="ph" type="number" min="0" inputmode="numeric" placeholder="hr" aria-label="Hours"><input id="pm" type="number" min="0" max="59" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="ps" type="number" min="0" max="59" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
  <div class="full"><label for="px">Description</label><textarea id="px" rows="4" placeholder="What the athlete should do"></textarea></div>
  <div class="full"><label>Links (Video or Page, Optional)</label><div id="pls"><input class="lk" placeholder="https://..." autocapitalize="none"></div><button type="button" class="sm" id="pladd">+ Add Link</button></div>
- <div class="full"><button id="padd">Add to Plan</button></div></div><p class="err" id="err" role="alert"></p></div>
+ <div class="full"><button id="padd">Add to Plan</button></div></div><p class="err" id="err" role="alert"></p></div>`}
  ${sec('Today',s.today,true)}${sec('Coming Up',s.up,true)}${sec('History',s.past,true)}
  <h2>Activity Logged by ${esc(nm(a).split(' ')[0])}</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,true)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div>
- <h2>Races and Goals</h2><div class="card">${races.length?`<div class="grid"><div><label for="rs">Race</label><select id="rs">${races.map(r=>`<option value="${esc(r.id)}">${esc(r.name)} · ${esc(r.race_date)}</option>`).join('')}</select></div><div><label>Goal Time</label><div class="three"><input id="rgh" type="number" min="0" placeholder="hr"><input id="rgm" type="number" min="0" max="59" placeholder="min"><input id="rgs" type="number" min="0" max="59" placeholder="sec"></div></div><div class="full"><button id="rassign">Assign Race</button></div></div>`:'<div class="empty">Add Races in the Races tab first.</div>'}
+ <h2>Races and Goals</h2><div class="card">${races.length?`<div class="grid"><div><label for="rs">Race</label><select id="rs">${races.map(r=>`<option value="${esc(r.id)}">${esc(r.name)} · ${esc(r.race_date)}</option>`).join('')}</select></div><div><label>Goal Time</label><div class="three"><input id="rgh" type="number" min="0" placeholder="hr"><input id="rgm" type="number" min="0" max="59" placeholder="min"><input id="rgs" type="number" min="0" max="59" placeholder="sec"></div></div><div class="full"><button id="rassign">Assign Race</button></div></div>`:'<div class="empty">Ask the admin to add races first.</div>'}
  ${(ar.data||[]).map(x=>rm[x.race_id]?`<div class="rl"><div><b>${esc(rm[x.race_id].name)}</b> <span class="m">${esc(rm[x.race_id].race_date)}</span>${x.goal?`<div class="n">Goal: ${esc(x.goal)}</div>`:''}</div><button class="x" data-rdel="${esc(x.id)}" aria-label="Remove race">×</button></div>`:'').join('')}</div>
  <h2>PRs</h2><div class="card"><div class="pbs">${PBD.map(d=>`<div class="pbr2"><b>${d}</b><div class="three">${['hr','min','sec'].map((u,k)=>`<input type="number" min="0"${k?' max="59"':''} inputmode="numeric" placeholder="${u}" data-pt${u}="${d}" aria-label="${d} ${u}" value="${esc(pbm[d]?tparts(pbm[d].time_text)[k].replace(/^0(?=\d)/,''):'')}">`).join('')}</div><input type="date" data-pd="${d}" aria-label="${d} date" value="${pbm[d]&&pbm[d].set_on?pbm[d].set_on:''}"></div>`).join('')}</div><button id="pbsave">Save PRs</button><p class="err" id="pberr" role="status"></p>${prH?`<h2 style="font-size:.85rem">PR History</h2>${prH}`:''}</div>
  <div style="margin-top:32px"><button class="danger" id="rm">Remove Athlete</button></div>`;
  $('#bk').onclick=()=>{picked=null;coachView()};doJump();
- if($('#acs2'))$('#acs2').onchange=async e=>{const {error}=await sb.from('profiles').update({coach_id:e.target.value}).eq('id',a.id);alert(error?msg(error):'Coach updated.')};
+ if($('#csave'))$('#csave').onclick=async()=>{const {error}=await sb.from('profiles').update({coach_id:$('#acs2').value,coach_from:$('#cf').value||null,coach_until:$('#cu').value||null}).eq('id',a.id);alert(error?msg(error):'Coach updated.')};
  if($('#ren'))$('#ren').onclick=async()=>{const v=prompt('New name',nm(a));if(v==null||!v.trim())return;const {error}=await sb.from('profiles').update({full_name:v.trim()}).eq('id',a.id);if(error)return alert(msg(error));coachView()};
  $('#pbsave').onclick=async()=>{const up=[],del=[],hi=[],el=$('#pberr');let bad=false;
   PBD.forEach(d=>{const g=u=>num(document.querySelector('[data-pt'+u+'="'+d+'"]').value),h=g('hr'),m=g('min'),x=g('sec'),w=document.querySelector('[data-pd="'+d+'"]').value;
@@ -356,15 +356,19 @@ async function cAthlete(mn,fl){
   const e=e1||e2||e3;el.className=e?'err':'ok';el.textContent=e?msg(e):'Saved.'};
  if($('#rassign'))$('#rassign').onclick=async()=>{const g=goalTxt();if(g=='bad')return alert('Minutes and seconds must be 0 to 59.');const {error}=await sb.from('athlete_races').upsert({athlete_id:a.id,race_id:$('#rs').value,goal:g},{onConflict:'athlete_id,race_id'});if(error)return alert(msg(error));coachView()};
  document.querySelectorAll('[data-rdel]').forEach(b=>b.onclick=async()=>{await sb.from('athlete_races').delete().eq('id',b.dataset.rdel);coachView()});
- const tg=()=>{document.querySelectorAll('.rf').forEach(e=>e.style.display=isRun($('#pt').value)?'':'none')};
+ const tg=()=>{document.querySelectorAll('.rf').forEach(e=>e.style.display=isRun($('#pt').value)?'':'none')};if($('#padd')){
  $('#pt').onchange=tg;tg();
  $('#pladd').onclick=()=>{const i=document.createElement('input');i.className='lk';i.placeholder='https://...';i.style.marginTop='8px';$('#pls').appendChild(i)};
  $('#padd').onclick=async()=>{const t=$('#pt').value,run=isRun(t),d=$('#px').value.trim();
-  if(!run&&!d)return $('#err').textContent='Describe the session for the athlete.';
-  if(num($('#ps').value)>59||num($('#pm').value)>59)return $('#err').textContent='Minutes and seconds must be 0 to 59.';
+  const E=m=>$('#err').textContent=m,dv=durIn3($('#ph').value,$('#pm').value,$('#ps').value),pa=(num($('#ppm').value)||0)*60+(num($('#pps').value)||0);
+  if(!$('#pd').value)return E('Choose a date.');if(!t)return E('Choose a session type.');
+  if(run&&!(num($('#pk').value)>0))return E('Enter the distance.');
+  if(run&&!(pa>0))return E('Enter the average pace.');
+  if(!(dv>0))return E('Enter the duration.');
+  if(num($('#ps').value)>59||num($('#pm').value)>59||num($('#pps').value)>59)return E('Minutes and seconds must be 0 to 59.');
   const ls=[...document.querySelectorAll('#pls .lk')].map(x=>x.value.trim()).filter(Boolean);if(ls.some(x=>!url(x)))return $('#err').textContent='That link doesn’t look right.';const lk=ls.map(url).join('\n');
-  const {error}=await sb.from('plans').insert({athlete_id:a.id,plan_date:$('#pd').value,type:t,title:TYPES[t],target_km:run?num($('#pk').value):null,target_min:run&&durIn3($('#ph').value,$('#pm').value,$('#ps').value)>0?durIn3($('#ph').value,$('#pm').value,$('#ps').value):null,target_pace:run?($('#pp').value.trim()||null):null,details:d||null,link:lk||null});
-  if(error)return $('#err').textContent=msg(error);coachView()};
+  const {error}=await sb.from('plans').insert({athlete_id:a.id,plan_date:$('#pd').value,type:t,title:TYPES[t],target_km:run?num($('#pk').value):null,target_min:dv,target_pace:run?(num($('#ppm').value)||0)+':'+String(num($('#pps').value)||0).padStart(2,'0'):null,details:d||null,link:lk||null});
+  if(error)return $('#err').textContent=msg(error);coachView()};}
  document.querySelectorAll('[data-pdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Remove this session from the plan?'))return;await sb.from('plans').delete().eq('id',b.dataset.pdel);coachView()});
  document.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{const i=document.querySelector('[data-ci="'+b.dataset.c+'"]'),t=i.value.trim();if(!t)return;const {error}=await sb.from('comments').insert({workout_id:b.dataset.c,coach_id:me.id,body:t});if(error)return alert(msg(error));coachView()});
  document.querySelectorAll('[data-wdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete This Activity?'))return;const {error}=await sb.from('workouts').delete().eq('id',b.dataset.wdel);if(error)return alert(msg(error));coachView()});
@@ -403,13 +407,12 @@ async function cNotes(mn){
 async function cRaces(mn){
  const {data}=await sb.from('races').select('*').order('race_date');
  const rs=data||[];
- mn.innerHTML=H('Races')+`<div class="card"><div class="grid"><div class="full"><label for="rn">Race Name</label><input id="rn"></div>
+ mn.innerHTML=H('Races')+(me.role=='admin'?`<div class="card"><div class="grid"><div class="full"><label for="rn">Race Name</label><input id="rn"></div>
  <div><label for="rd">Date</label><input id="rd" type="date"></div><div><label for="rk">Distance</label><select id="rk"><option>5K</option><option>10K</option><option>21K</option><option>42K</option></select></div>
- <div class="full"><label for="rl">Location</label><input id="rl"></div><div class="full"><label>Links (Optional)</label><div id="rls"><input class="lk" placeholder="https://..." autocapitalize="none"></div><button type="button" class="sm" id="rladd">+ Add Link</button></div><div class="full"><button id="radd">Add Race</button></div></div><p class="err" id="rerr" role="alert"></p></div>
- <h2>All Races</h2>${rs.length?rs.map(r=>`<div class="pc"><div class="ph"><span>${esc(r.race_date)}</span><button class="x" data-del="${esc(r.id)}" aria-label="Delete race">×</button></div>
+ <div class="full"><label for="rl">Location</label><input id="rl"></div><div class="full"><label>Links (Optional)</label><div id="rls"><input class="lk" placeholder="https://..." autocapitalize="none"></div><button type="button" class="sm" id="rladd">+ Add Link</button></div><div class="full"><button id="radd">Add Race</button></div></div><p class="err" id="rerr" role="alert"></p></div>`:'')+`<h2>All Races</h2>${rs.length?rs.map(r=>`<div class="pc"><div class="ph"><span>${esc(r.race_date)}</span>${me.role=='admin'?`<button class="x" data-del="${esc(r.id)}" aria-label="Delete race">×</button>`:''}</div>
  <div class="pt"><b>${esc(r.name)}</b><span class="tot">${dl(r.race_date)}</span></div><div class="m">${[r.distance,r.location].filter(Boolean).map(esc).join(' • ')}</div>${linkHTML(r.link,'Race Page')}</div>`).join(''):'<div class="card empty">No races yet.</div>'}`;
- $('#rladd').onclick=()=>{const i=document.createElement('input');i.className='lk';i.placeholder='https://...';i.style.marginTop='8px';$('#rls').appendChild(i)};
- $('#radd').onclick=async()=>{
+ if($('#rladd'))$('#rladd').onclick=()=>{const i=document.createElement('input');i.className='lk';i.placeholder='https://...';i.style.marginTop='8px';$('#rls').appendChild(i)};
+ if($('#radd'))$('#radd').onclick=async()=>{
   if(!$('#rn').value.trim()||!$('#rd').value)return $('#rerr').textContent='Add a race name and a date.';
   const rl=[...document.querySelectorAll('#rls .lk')].map(x=>x.value.trim()).filter(Boolean);if(rl.some(x=>!url(x)))return $('#rerr').textContent='That link doesn’t look right.';
   const {error}=await sb.from('races').insert({name:$('#rn').value.trim(),race_date:$('#rd').value,distance:$('#rk').value.trim()||null,location:$('#rl').value.trim()||null,link:rl.map(url).join('\n')||null});
