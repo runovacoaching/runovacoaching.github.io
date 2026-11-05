@@ -83,6 +83,9 @@ input[type=checkbox]{width:22px;height:22px}
 @media(max-width:560px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stats>:first-child{grid-column:1/-1}main{padding:16px 14px 30px}}
 :root[data-theme=dark]{color-scheme:dark;--bg:#0A0D24;--ink:#EEF0FB;--mute:#9AA1C8;--line:#222850;--card:#131839;--nav:#070A1C;--bd:#2D3563;--cmbg:#3A1E2C;--blue:#6B78FF}
 .dk{display:inline}.mb{display:none}@media(max-width:820px){.dk{display:none}.mb{display:inline;font-size:1.1rem}}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.pbr2{display:grid;grid-template-columns:52px 1.6fr 1fr;gap:10px;align-items:center}
+@media(max-width:560px){.pbr2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -98,9 +101,9 @@ let cur=(()=>{try{return localStorage.getItem('runova_theme')}catch(e){return nu
 const setTh=t=>{document.documentElement.dataset.theme=t;$('#th').textContent=t=='dark'?'☀️ Day':'🌙 Night'};
 setTh(cur);$('#th').onclick=()=>{cur=cur=='dark'?'light':'dark';setTh(cur);try{localStorage.setItem('runova_theme',cur)}catch(e){}};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const TYPES={easy:'Easy run',long:'Long run',tempo:'Tempo',interval:'Intervals',race:'Race',strength:'Strength',stretch:'Stretching',rest:'Rest day'};
+const TYPES={easy:'Easy Run',long:'Long Run',tempo:'Tempo',interval:'Intervals',race:'Race',strength:'Strength',stretch:'Stretching',rest:'Rest Day'};
 const RUN=['easy','long','tempo','interval','race'],isRun=t=>RUN.includes(t);
-const ST={pending:['Waiting','#5A6086'],finished:['Finished','#2230E8'],less:['Did less','#B26A00'],not_finished:['Not finished','#C62828']};
+const ST={pending:['Waiting','#5A6086'],finished:['Finished','#2230E8'],less:['Did Less','#B26A00'],not_finished:['Not Finished','#C62828']};
 const PBD=['2K','5K','10K','21K','42K'];
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const weekStart=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+1)%7));return iso(d)};
@@ -108,10 +111,15 @@ const num=v=>v===''||v==null?null:Number(v);
 const fmt=n=>Number.isInteger(n)?n:n.toFixed(1);
 const nm=a=>a.full_name||a.username;
 const url=u=>{u=(u||'').trim();if(!u)return '';if(!/^https?:\/\//i.test(u))u='https://'+u;try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return ''}};
-const linkHTML=(u,l)=>url(u)?`<div style="margin-top:8px"><a href="${esc(url(u))}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-weight:600">${l}</a></div>`:'';
+const linkHTML=(u,l)=>String(u||'').split('\n').map(x=>url(x)).filter(Boolean).map((h,i,a)=>`<div style="margin-top:8px"><a href="${esc(h)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-weight:600">${l}${a.length>1?' '+(i+1):''} ↗</a></div>`).join('');
 const dl=d=>{const n=Math.round((new Date(d)-new Date(iso(new Date())))/864e5);return n>0?n+' days to go':n==0?'Today':''};
-const dur=m=>{const t=Math.round(+m*60),mm=Math.floor(t/60),ss=t%60;return mm+' min'+(ss?' '+ss+' s':'')};
+const dur=m=>{const t=Math.round(+m*60),h=Math.floor(t/3600),mm=Math.floor(t%3600/60),ss=t%60;return (h?h+' h ':'')+mm+' min'+(ss?' '+ss+' s':'')};
 const durIn=(a,b)=>(num(a)||0)+(num(b)||0)/60;
+const durIn3=(h,m,x)=>(num(h)||0)*60+(num(m)||0)+(num(x)||0)/60;
+const hms=m=>{const t=Math.round(+m*60);return Math.floor(t/3600)+':'+String(Math.floor(t%3600/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0')};
+const parseHMS=v=>{const q=String(v).split(':').map(x=>Number(x.trim()));if(q.some(isNaN)||q.length>3)return NaN;const [h,m,x]=q.length==3?q:q.length==2?[0,...q]:[0,q[0],0];return m>59||x>59?NaN:h*60+m+x/60};
+const tparts=t=>{const q=String(t||'').split(':');while(q.length<3)q.unshift('');return q.slice(-3)};
+const goalTxt=()=>{const h=num($('#rgh').value),m=num($('#rgm').value),x=num($('#rgs').value);if(h==null&&m==null&&x==null)return null;if((m||0)>59||(x||0)>59)return 'bad';const z=n=>String(n||0).padStart(2,'0');return h?h+':'+z(m)+':'+z(x):(m||0)+':'+z(x)};
 const paceOf=(km,min)=>{if(!(km>0)||!(min>0))return '';const t=Math.round(min/km*60);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' /km'};
 const tot=p=>[p.target_km!=null?fmt(+p.target_km)+' km':'',p.target_min!=null?dur(p.target_min):'',p.target_pace?esc(p.target_pace)+' /km':''].filter(Boolean).join(' • ');
 const seed=()=>new Date(Date.now()-7*864e5).toISOString();
@@ -128,10 +136,10 @@ function msg(e){const m=(e&&e.message)||'';
 
 function authView(){
  $('#who').innerHTML='';
- $('#app').innerHTML=`<div class="narrow"><div class="card"><h2 style="margin-top:0">Log in</h2><div class="grid">
+ $('#app').innerHTML=`<div class="narrow"><div class="card"><h2 style="margin-top:0">Log In</h2><div class="grid">
  <div class="full"><label for="un">Username</label><input id="un" autocapitalize="none" autocomplete="username"></div>
  <div class="full"><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password"></div>
- <div class="full"><button id="go">Log in</button></div></div><p class="err" id="err" role="alert"></p>
+ <div class="full"><button id="go">Log In</button></div></div><p class="err" id="err" role="alert"></p>
  <p class="lbl">Accounts are created by your coach. Ask them for your username and password.</p></div></div>`;
  $('#go').onclick=async()=>{
   const u=$('#un').value.trim().toLowerCase(),p=$('#pw').value;
@@ -148,8 +156,9 @@ async function boot(){
  const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
  if(error||!data){await sb.auth.signOut();return authView()}
  me=data;
- $('#who').innerHTML=`<span>${esc(nm(me))}</span><span class="rc">${esc(me.role)}</span><button class="ghost" id="out">Log out</button>`;
+ $('#who').innerHTML=`<span>${esc(nm(me))}</span><span class="rc">${esc(me.role)}</span>${me.role=='admin'?'<button class="ghost" id="myn">Edit name</button>':''}<button class="ghost" id="out">Log Out</button>`;
  $('#out').onclick=async()=>{await sb.auth.signOut();me=null;picked=null;adding=false;view='home';authView()};
+ if($('#myn'))$('#myn').onclick=async()=>{const v=prompt('Your name',nm(me));if(v==null||!v.trim())return;const {error}=await sb.from('profiles').update({full_name:v.trim()}).eq('id',me.id);if(error)return alert(msg(error));boot()};
  me.role=='athlete'?athleteView():coachView()}
 
 const dayTag=d=>{const n=new Date();n.setDate(n.getDate()+1);return d==iso(new Date())?'Today':d==iso(n)?'Tomorrow':''};
@@ -158,7 +167,7 @@ async function fetchPlans(id){const {data}=await sb.from('plans').select('*').eq
 async function fetchWs(id){const {data}=await sb.from('workouts').select('*').eq('athlete_id',id).order('workout_date',{ascending:false}).order('created_at',{ascending:false}).limit(80);return data||[]}
 async function fetchComments(ws){const ids=ws.map(w=>w.id),m={};if(!ids.length)return m;const {data}=await sb.from('comments').select('*').in('workout_id',ids).order('created_at');(data||[]).forEach(c=>(m[c.workout_id]=m[c.workout_id]||[]).push(c));return m}
 async function myAthletes(){let q=sb.from('profiles').select('id,full_name,username,coach_id').eq('role','athlete');if(me.role!='admin')q=q.eq('coach_id',me.id);const {data}=await q.order('full_name');return data||[]}
-async function coachesList(){const {data}=await sb.from('profiles').select('id,full_name,username,role').in('role',['coach','admin']).order('full_name');return data||[]}
+async function coachesList(){const {data}=await sb.from('profiles').select('id,full_name,username,role').eq('role','coach').order('full_name');return data||[]}
 function split(ps){const t=iso(new Date());return{today:ps.filter(p=>p.plan_date==t),up:ps.filter(p=>p.plan_date>t).sort((a,b)=>a.plan_date<b.plan_date?-1:1),past:ps.filter(p=>p.plan_date<t)}}
 const sec=(t,l,coach)=>l.length?`<h2>${t}</h2>`+l.map(p=>planCard(p,coach)).join(''):'';
 
@@ -170,7 +179,7 @@ function loadHTML(ws,ps){
   return{l:i==0?'This week':i==1?'Last week':i+' weeks ago',k:ws.filter(w=>w.workout_date>=iso(s)&&w.workout_date<iso(e)).reduce((a,w)=>a+(+w.distance_km||0),0)}});
  const mx=Math.max(1,...bars.map(b=>b.k));
  return `<div class="card stats"><div><div class="big">${fmt(km)}<span>km</span></div><div class="lbl">Logged this week (from Saturday)</div></div>
- <div><div class="mid">${wk.length}</div><div class="lbl">Activities</div></div><div><div class="mid">${fin}</div><div class="lbl">Plan sessions finished</div></div></div>
+ <div><div class="mid">${wk.length}</div><div class="lbl">Activities</div></div><div><div class="mid">${fin}</div><div class="lbl">Plan Sessions Finished</div></div></div>
  <div class="card" style="margin-top:14px"><div class="lbl" style="margin-bottom:8px">Weekly distance (km)</div>${bars.map(b=>`<div class="bar"><span>${b.l}</span><div><i style="width:${Math.round(b.k/mx*100)}%"></i></div><b>${fmt(b.k)}</b></div>`).join('')}</div>`}
 
 function weekHTML(ps,ws){
@@ -182,18 +191,18 @@ function weekHTML(ps,ws){
 
 function planCard(p,coach){
  const t=tot(p),tag=dayTag(p.plan_date),id=esc(p.id);
- const ctl=(coach||p.status!='pending')?`<div>${badge(p.status)}</div>${p.athlete_notes?`<div class="cm"><b>${coach?'Athlete note:':'Your note:'}</b> ${esc(p.athlete_notes)}</div>`:''}`
-  :`<div class="sts" data-p="${id}">${[['finished','Finished'],['less','Did less'],['not_finished','Not finished']].map(([k,l])=>`<button class="chip ${p.status==k?'on':''}" data-st="${k}">${l}</button>`).join('')}</div>
+ const ctl=(coach||p.status!='pending')?`<div>${badge(p.status)}</div>${p.athlete_notes?`<div class="cm"><b>${coach?'Athlete Note:':'Your Note:'}</b> ${esc(p.athlete_notes)}</div>`:''}`
+  :`<div class="sts" data-p="${id}">${[['finished','Finished'],['less','Did Less'],['not_finished','Not Finished']].map(([k,l])=>`<button class="chip ${p.status==k?'on':''}" data-st="${k}">${l}</button>`).join('')}</div>
   <input class="nt" placeholder="Notes (anything that bothered you?)" aria-label="Notes" value="${esc(p.athlete_notes||'')}" data-nt="${id}"><button class="sm" data-save="${id}">Save</button>`;
  return `<div class="pc"><div class="ph"><span>${tag?`<b>${tag}</b> · `:''}${esc(p.plan_date)}</span>${coach?`<button class="x" data-pdel="${id}" aria-label="Remove from plan">×</button>`:''}</div>
- <div class="pt"><b>${esc(p.title)}</b>${t?`<span class="tot">${t}</span>`:''}</div>${p.details?`<div class="pre">${esc(p.details)}</div>`:''}${linkHTML(p.link,'Open link ↗')}${ctl}</div>`}
+ <div class="pt"><b>${esc(p.title)}</b>${t?`<span class="tot">${t}</span>`:''}</div>${p.details?`<div class="pre">${esc(p.details)}</div>`:''}${linkHTML(p.link,'Open Link')}${ctl}</div>`}
 
-const wTxt=w=>[w.distance_km!=null?fmt(+w.distance_km)+' km':'',w.duration_min!=null?dur(+w.duration_min):'',paceOf(+w.distance_km,+w.duration_min)].filter(Boolean).join(' • ');
+const wTxt=w=>[w.distance_km!=null?fmt(+w.distance_km)+' km':'',w.duration_min!=null?dur(+w.duration_min):'',(w.avg_pace?esc(w.avg_pace)+' /km':paceOf(+w.distance_km,+w.duration_min))].filter(Boolean).join(' • ');
 function wRow(w,cm,coach){const id=esc(w.id);
  return `<div class="w"><div style="flex:1;min-width:0"><b>${esc(TYPES[w.type]||w.type)}</b> <span class="m">${esc(w.workout_date)}</span><div class="m">${wTxt(w)}</div>${w.notes?`<div class="n pre">${esc(w.notes)}</div>`:''}
  ${(cm[w.id]||[]).map(c=>`<div class="cm"><b>Coach:</b> ${esc(c.body)}</div>`).join('')}
  ${coach?`<div class="inl"><input data-ci="${id}" placeholder="Comment for the athlete" aria-label="Comment"><button data-c="${id}">Send</button></div>`:''}</div>
- ${coach?'':`<button class="x" data-wdel="${id}" aria-label="Delete activity">×</button>`}</div>`}
+ <span style="white-space:nowrap">${coach?`<button class="x" data-wedit="${id}" aria-label="Edit activity" style="font-size:1rem">✎</button>`:''}<button class="x" data-wdel="${id}" aria-label="Delete activity">×</button></span></div>`}
 
 function bindPlan(redo){
  document.querySelectorAll('.sts .chip').forEach(c=>c.onclick=()=>{c.parentNode.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')});
@@ -224,41 +233,44 @@ async function aHome(mn){
  const pbs=(pb.data||[]).sort((a,b)=>PBD.indexOf(a.distance)-PBD.indexOf(b.distance));
  mn.innerHTML=`<div class="narrow"><div class="quote"><small>Welcome back, ${esc(nm(me).split(' ')[0])}</small>${esc(MSGS[Math.floor(Math.random()*MSGS.length)])}</div><div style="margin-top:16px">${weekHTML(ps,ws)}</div>
  <h2>Today</h2>${s.today.length?s.today.map(p=>planCard(p,false)).join(''):'<div class="card empty">Nothing planned for today.</div>'}
- ${rr.length?`<h2>Your races</h2><div class="card">${rr.map(r=>`<div class="rl"><div><b>${esc(r.name)}</b> <span class="m">${esc(r.race_date)}${r.distance?' • '+esc(r.distance):''}</span>${goal[r.id]?`<div class="n">Goal: ${esc(goal[r.id])}</div>`:''}${linkHTML(r.link,'Race page ↗')}</div><span class="tot">${dl(r.race_date)}</span></div>`).join('')}</div>`:''}
- ${pbs.length?`<h2>Personal bests</h2><div class="card">${pbs.map(x=>`<div class="rl"><b>${esc(x.distance)}</b><span>${esc(x.time_text)} <span class="m">${esc(x.set_on||'')}</span></span></div>`).join('')}</div>`:''}</div>`;
+ ${rr.length?`<h2>Your races</h2><div class="card">${rr.map(r=>`<div class="rl"><div><b>${esc(r.name)}</b> <span class="m">${esc(r.race_date)}${r.distance?' • '+esc(r.distance):''}</span>${goal[r.id]?`<div class="n">Goal: ${esc(goal[r.id])}</div>`:''}${linkHTML(r.link,'Race Page')}</div><span class="tot">${dl(r.race_date)}</span></div>`).join('')}</div>`:''}
+ ${pbs.length?`<h2>PRs</h2><div class="card">${pbs.map(x=>`<div class="rl"><b>${esc(x.distance)}</b><span>${esc(x.time_text)} <span class="m">${esc(x.set_on||'')}</span></span></div>`).join('')}</div>`:''}</div>`;
  bindPlan(athleteView)}
 
 async function aPlan(mn){
  const [ps,ws]=await Promise.all([fetchPlans(me.id),fetchWs(me.id)]),s=split(ps);
- mn.innerHTML=`<div class="narrow">${H('My Plan')}${weekHTML(ps,ws)}<h2>Today</h2>${s.today.length?s.today.map(p=>planCard(p,false)).join(''):'<div class="card empty">Nothing planned for today.</div>'}${sec('Coming up',s.up,false)}${sec('History',s.past,false)}</div>`;
+ mn.innerHTML=`<div class="narrow">${H('My Plan')}${weekHTML(ps,ws)}<h2>Today</h2>${s.today.length?s.today.map(p=>planCard(p,false)).join(''):'<div class="card empty">Nothing planned for today.</div>'}${sec('Coming Up',s.up,false)}${sec('History',s.past,false)}</div>`;
  bindPlan(athleteView)}
 
 async function aLoad(mn){
  const [ws,ps]=await Promise.all([fetchWs(me.id),fetchPlans(me.id)]),cm=await fetchComments(ws);
- mn.innerHTML=`<div class="narrow">${H('Activity Log')}${loadHTML(ws,ps)}<h2>Log an activity</h2><div class="card"><div class="grid">
+ mn.innerHTML=`<div class="narrow">${H('Activity Log')}${loadHTML(ws,ps)}<h2>Log an Activity</h2><div class="card"><div class="grid">
  <div><label for="wd">Date</label><input id="wd" type="date" value="${iso(new Date())}"></div><div><label for="wt">Activity</label><select id="wt">${typeOpts('rest')}</select></div>
- <div class="rd"><label for="wk">Distance (km) *</label><input id="wk" type="number" step="0.01" min="0" inputmode="decimal"></div><div><label>Duration *</label><div class="two"><input id="wm" type="number" min="0" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="wsec" type="number" min="0" max="59" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
- <div class="full"><label for="wn" id="wnl">Notes</label><textarea id="wn" rows="3"></textarea></div><div class="full"><button id="wsave">Save activity</button></div></div><p class="err" id="werr" role="alert"></p></div>
- <h2>Your activities</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,false)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div></div>`;
+ <div class="rd"><label for="wk">Distance (km) *</label><input id="wk" type="number" step="0.01" min="0" inputmode="decimal"></div><div><label>Duration *</label><div class="three"><input id="wh" type="number" min="0" inputmode="numeric" placeholder="hr" aria-label="Hours"><input id="wm" type="number" min="0" max="59" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="wsec" type="number" min="0" max="59" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
+ <div class="rd"><label>Average Pace (min/km) *</label><div class="two"><input id="wpm" type="number" min="0" inputmode="numeric" placeholder="min"><input id="wps" type="number" min="0" max="59" inputmode="numeric" placeholder="sec"></div></div>
+ <div class="full"><label for="wn" id="wnl">Notes</label><textarea id="wn" rows="3"></textarea></div><div class="full"><button id="wsave">Save Activity</button></div></div><p class="err" id="werr" role="alert"></p></div>
+ <h2>Your Activities</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,false)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div></div>`;
  const tg=()=>{const t=$('#wt').value;document.querySelectorAll('.rd').forEach(e=>e.style.display=isRun(t)?'':'none');$('#wnl').textContent=isRun(t)?'Notes':'Description (optional)'};
  $('#wt').onchange=tg;tg();
  $('#wsave').onclick=async()=>{
-  const t=$('#wt').value,km=num($('#wk').value),dm=durIn($('#wm').value,$('#wsec').value),nt=$('#wn').value.trim(),e=$('#werr');
+  const t=$('#wt').value,km=num($('#wk').value),dm=durIn3($('#wh').value,$('#wm').value,$('#wsec').value),nt=$('#wn').value.trim(),e=$('#werr');
   if(!$('#wd').value)return e.textContent='Choose the date.';
-  if(num($('#wsec').value)>59)return e.textContent='Seconds must be 0 to 59.';
+  if(num($('#wsec').value)>59||num($('#wm').value)>59)return e.textContent='Minutes and seconds must be 0 to 59.';
   if(isRun(t)&&!(km>0))return e.textContent='Enter the distance.';
   if(!(dm>0))return e.textContent='Enter the duration.';
+  const pm=num($('#wpm').value),ps=num($('#wps').value);
+  if(isRun(t)){if(!((pm||0)*60+(ps||0)>0))return e.textContent='Enter the average pace.';if((pm||0)>59||(ps||0)>59)return e.textContent='Pace minutes and seconds must be 0 to 59.'}
   $('#wsave').disabled=true;
-  const {error}=await sb.from('workouts').insert({athlete_id:me.id,workout_date:$('#wd').value,type:t,distance_km:isRun(t)?km:null,duration_min:dm,notes:nt||null});
+  const {error}=await sb.from('workouts').insert({athlete_id:me.id,workout_date:$('#wd').value,type:t,distance_km:isRun(t)?km:null,duration_min:dm,notes:nt||null,avg_pace:isRun(t)?(pm||0)+':'+String(ps||0).padStart(2,'0'):null});
   $('#wsave').disabled=false;if(error)return e.textContent=msg(error);athleteView()};
  document.querySelectorAll('[data-wdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this activity?'))return;await sb.from('workouts').delete().eq('id',b.dataset.wdel);athleteView()})}
 
 /* ---------- coach ---------- */
-function addHTML(cs){return `<div class="card" style="margin-bottom:16px"><h2 style="margin-top:0">Create new athlete</h2><div class="grid">${cs?`<div class="full"><label for="acs">Coach</label><select id="acs">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==me.id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select></div>`:''}
- <div class="full"><label for="an">Full name</label><input id="an" autocomplete="off"></div>
+function addHTML(cs){return `<div class="card" style="margin-bottom:16px"><h2 style="margin-top:0">Create New Athlete</h2><div class="grid">${cs?`<div class="full"><label for="acs">Coach</label><select id="acs">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==me.id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select></div>`:''}
+ <div class="full"><label for="an">Full Name</label><input id="an" autocomplete="off"></div>
  <div><label for="au">Username</label><input id="au" autocapitalize="none" autocomplete="off"></div>
  <div><label for="ap">Password</label><input id="ap" autocapitalize="none" autocomplete="off"></div>
- <div class="full"><button id="aadd">Create athlete</button> <button class="back" id="acn">Cancel</button></div></div><p class="err" id="aerr" role="alert"></p></div>`}
+ <div class="full"><button id="aadd">Create Athlete</button> <button class="back" id="acn">Cancel</button></div></div><p class="err" id="aerr" role="alert"></p></div>`}
 function bindAdd(){
  $('#acn').onclick=()=>{adding=false;coachView()};
  $('#aadd').onclick=async()=>{
@@ -281,23 +293,24 @@ async function coachView(){
 
 async function cHome(mn){
  const as=await myAthletes(),t=iso(new Date()),d=new Date();d.setDate(d.getDate()-14);
- const [pr,wr]=await Promise.all([sb.from('plans').select('athlete_id,plan_date,status,title,target_km').gte('plan_date',iso(d)).lte('plan_date',t),sb.from('workouts').select('athlete_id').gte('workout_date',iso(d))]);
+ const [pr,wr]=await Promise.all([sb.from('plans').select('athlete_id,plan_date,status,title,target_km,athlete_notes').gte('plan_date',iso(d)).lte('plan_date',t),sb.from('workouts').select('athlete_id').gte('workout_date',iso(d))]);
  const ps=pr.data||[],today=ps.filter(p=>p.plan_date==t),done=today.filter(p=>p.status=='finished').length,nmap={};as.forEach(a=>nmap[a.id]=nm(a));
  const active=new Set([...ps.filter(p=>p.status=='finished'||p.status=='less').map(p=>p.athlete_id),...(wr.data||[]).map(w=>w.athlete_id)]).size;
- mn.innerHTML=H('Home')+`<div class="tiles"><div class="tile"><div class="mid">${as.length}</div><div class="lbl">Total athletes</div></div>
+ mn.innerHTML=H('Home')+`<div class="tiles"><div class="tile"><div class="mid">${as.length}</div><div class="lbl">Total Athletes</div></div>
  <div class="tile"><div class="mid">${active}</div><div class="lbl">Active (trained in the last 14 days)</div></div>
- <div class="tile"><div class="mid">${done} / ${today.length}</div><div class="lbl">Sessions completed today</div></div></div>
- <h2>Today’s sessions</h2>${today.length?`<div class="card">${today.map(p=>`<div class="rl"><div><b>${esc(nmap[p.athlete_id]||'')}</b> <span class="m">${esc(p.title)}${p.target_km!=null?' • '+fmt(+p.target_km)+' km':''}</span></div>${badge(p.status)}</div>`).join('')}</div>`:'<div class="card empty">No sessions planned for today.</div>'}`}
+ <div class="tile"><div class="mid">${done} / ${today.length}</div><div class="lbl">Sessions Completed Today</div></div></div>
+ <h2>Today’s Sessions</h2>${today.length?`<div class="card">${today.map(p=>`<div class="rl" data-go="${esc(p.athlete_id)}" style="cursor:pointer"><div>${p.athlete_notes?'📝 ':''}<b>${esc(nmap[p.athlete_id]||'')}</b> <span class="m">${esc(p.title)}${p.target_km!=null?' • '+fmt(+p.target_km)+' km':''}</span></div>${badge(p.status)}</div>`).join('')}</div>`:'<div class="card empty">No sessions planned for today.</div>'}`;
+ document.querySelectorAll('[data-go]').forEach(e=>e.onclick=()=>{picked=e.dataset.go;view='athletes';coachView()})}
 
 async function cAthletes(mn,fl){
  if(picked)return cAthlete(mn,fl);
  const as=await myAthletes(),cs=me.role=='admin'?await coachesList():null,cn={};(cs||[]).forEach(c=>cn[c.id]=nm(c));
- const {data}=await sb.from('plans').select('athlete_id,status').eq('plan_date',iso(new Date()));
- const tm={};(data||[]).forEach(p=>tm[p.athlete_id]=p.status);
+ const {data}=await sb.from('plans').select('athlete_id,status,athlete_notes').eq('plan_date',iso(new Date()));
+ const tm={};const tn={};(data||[]).forEach(p=>{tm[p.athlete_id]=p.status;if(p.athlete_notes)tn[p.athlete_id]=1});
  mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+H('Athletes')+(adding?addHTML(cs):'')+
  `<input id="q" placeholder="Search athletes" aria-label="Search athletes" style="margin-bottom:14px">
- ${as.map(a=>`<button class="arow" data-a="${esc(a.id)}"><span><b>${esc(nm(a))}</b> <span class="m">@${esc(a.username)}${cs?' · '+esc(cn[a.coach_id]||'No coach'):''}</span></span>${tm[a.id]?badge(tm[a.id]):'<span class="m">No session today</span>'}</button>`).join('')||'<div class="card empty">No athletes yet.</div>'}
- ${adding?'':'<div style="margin-top:18px"><button id="addb">Create new athlete</button></div>'}`;
+ ${as.map(a=>`<button class="arow" data-a="${esc(a.id)}"><span><b>${esc(nm(a))}</b> <span class="m">@${esc(a.username)}${cs?' · '+esc(cn[a.coach_id]||'No coach'):''}</span></span><span>${tn[a.id]?'📝 ':''}${tm[a.id]?badge(tm[a.id]):'<span class="m">No session today</span>'}</span></button>`).join('')||'<div class="card empty">No athletes yet.</div>'}
+ ${adding?'':'<div style="margin-top:18px"><button id="addb">Create New Athlete</button></div>'}`;
  document.querySelectorAll('.arow').forEach(b=>b.onclick=()=>{picked=b.dataset.a;coachView()});
  $('#q').oninput=e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('.arow').forEach(b=>b.style.display=b.textContent.toLowerCase().includes(q)?'':'none')};
  if(adding)bindAdd();else $('#addb').onclick=()=>{adding=true;coachView()}}
@@ -305,46 +318,55 @@ async function cAthletes(mn,fl){
 async function cAthlete(mn,fl){
  const {data:a}=await sb.from('profiles').select('id,full_name,username,coach_id').eq('id',picked).single();
  const cs=me.role=='admin'?await coachesList():null;
- const [ps,ws,pb,rc,ar]=await Promise.all([fetchPlans(a.id),fetchWs(a.id),sb.from('personal_bests').select('*').eq('athlete_id',a.id),sb.from('races').select('*').order('race_date'),sb.from('athlete_races').select('*').eq('athlete_id',a.id)]);
+ const [ps,ws,pb,rc,ar,ph]=await Promise.all([fetchPlans(a.id),fetchWs(a.id),sb.from('personal_bests').select('*').eq('athlete_id',a.id),sb.from('races').select('*').order('race_date'),sb.from('athlete_races').select('*').eq('athlete_id',a.id),sb.from('pr_history').select('*').eq('athlete_id',a.id).order('set_on',{ascending:false}).order('created_at',{ascending:false})]);
  const cm=await fetchComments(ws),pbm={};(pb.data||[]).forEach(x=>pbm[x.distance]=x);
+ const prH=PBD.map(d=>{const l=(ph.data||[]).filter(x=>x.distance==d);return l.length>1?`<div class="rl"><b>${d}</b><span>${l.map(x=>esc(x.time_text)+(x.set_on?` <span class="m">(${esc(x.set_on)})</span>`:'')).join(' ← ')}</span></div>`:''}).join('');
  const races=rc.data||[],rm={};races.forEach(r=>rm[r.id]=r);
  const s=split(ps);
  mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button>${H(esc(nm(a)))}${cs?`<div class="card" style="margin-bottom:14px"><label for="acs2">Coach</label><select id="acs2">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==a.coach_id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select><button class="sm" id="ren">Edit name</button></div>`:''}${loadHTML(ws,ps)}
- <h2>Personal bests</h2><div class="card"><div class="pbs">${PBD.map(d=>`<div class="pbr"><b>${d}</b><input data-pt="${d}" placeholder="e.g. 19:45" aria-label="${d} time" value="${esc(pbm[d]?pbm[d].time_text:'')}"><input type="date" data-pd="${d}" aria-label="${d} date" value="${pbm[d]&&pbm[d].set_on?pbm[d].set_on:''}"></div>`).join('')}</div><button id="pbsave">Save records</button><p class="err" id="pberr" role="status"></p></div>
- <h2>Races and goals</h2><div class="card">${races.length?`<div class="grid"><div><label for="rs">Race</label><select id="rs">${races.map(r=>`<option value="${esc(r.id)}">${esc(r.name)} · ${esc(r.race_date)}</option>`).join('')}</select></div><div><label for="rg">Goal</label><input id="rg" placeholder="e.g. sub 50 min"></div><div class="full"><button id="rassign">Assign race</button></div></div>`:'<div class="empty">Add races in the Races tab first.</div>'}
- ${(ar.data||[]).map(x=>rm[x.race_id]?`<div class="rl"><div><b>${esc(rm[x.race_id].name)}</b> <span class="m">${esc(rm[x.race_id].race_date)}</span>${x.goal?`<div class="n">Goal: ${esc(x.goal)}</div>`:''}</div><button class="x" data-rdel="${esc(x.id)}" aria-label="Remove race">×</button></div>`:'').join('')}</div>
- <h2>Plan a session</h2><div class="card"><div class="grid"><div><label for="pd">Date</label><input id="pd" type="date" value="${iso(new Date())}"></div>
+ <h2>Plan a Session</h2><div class="card"><div class="grid"><div><label for="pd">Date</label><input id="pd" type="date" value="${iso(new Date())}"></div>
  <div><label for="pt">Session</label><select id="pt">${typeOpts('')}</select></div>
  <div class="rf"><label for="pk">Distance (km)</label><input id="pk" type="number" step="0.01" min="0" inputmode="decimal"></div>
- <div class="rf"><label for="pp">Average pace (min/km)</label><input id="pp" placeholder="e.g. 5:30"></div>
- <div class="rf"><label>Duration</label><div class="two"><input id="pm" type="number" min="0" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="ps" type="number" min="0" max="59" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
+ <div class="rf"><label for="pp">Average Pace (min/km)</label><input id="pp" placeholder="e.g. 5:30"></div>
+ <div class="rf"><label>Duration</label><div class="three"><input id="ph" type="number" min="0" inputmode="numeric" placeholder="hr" aria-label="Hours"><input id="pm" type="number" min="0" max="59" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="ps" type="number" min="0" max="59" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
  <div class="full"><label for="px">Description</label><textarea id="px" rows="4" placeholder="What the athlete should do"></textarea></div>
- <div class="full"><label for="pl">Link (video or page, optional)</label><input id="pl" placeholder="https://..." autocapitalize="none"></div>
- <div class="full"><button id="padd">Add to plan</button></div></div><p class="err" id="err" role="alert"></p></div>
- ${sec('Today',s.today,true)}${sec('Coming up',s.up,true)}${sec('History',s.past,true)}
- <h2>Activity logged by ${esc(nm(a).split(' ')[0])}</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,true)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div>
- <div style="margin-top:32px"><button class="danger" id="rm">Remove athlete</button></div>`;
+ <div class="full"><label>Links (Video or Page, Optional)</label><div id="pls"><input class="lk" placeholder="https://..." autocapitalize="none"></div><button type="button" class="sm" id="pladd">+ Add Link</button></div>
+ <div class="full"><button id="padd">Add to Plan</button></div></div><p class="err" id="err" role="alert"></p></div>
+ ${sec('Today',s.today,true)}${sec('Coming Up',s.up,true)}${sec('History',s.past,true)}
+ <h2>Activity Logged by ${esc(nm(a).split(' ')[0])}</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,true)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div>
+ <h2>Races and Goals</h2><div class="card">${races.length?`<div class="grid"><div><label for="rs">Race</label><select id="rs">${races.map(r=>`<option value="${esc(r.id)}">${esc(r.name)} · ${esc(r.race_date)}</option>`).join('')}</select></div><div><label>Goal Time</label><div class="three"><input id="rgh" type="number" min="0" placeholder="hr"><input id="rgm" type="number" min="0" max="59" placeholder="min"><input id="rgs" type="number" min="0" max="59" placeholder="sec"></div></div><div class="full"><button id="rassign">Assign Race</button></div></div>`:'<div class="empty">Add Races in the Races tab first.</div>'}
+ ${(ar.data||[]).map(x=>rm[x.race_id]?`<div class="rl"><div><b>${esc(rm[x.race_id].name)}</b> <span class="m">${esc(rm[x.race_id].race_date)}</span>${x.goal?`<div class="n">Goal: ${esc(x.goal)}</div>`:''}</div><button class="x" data-rdel="${esc(x.id)}" aria-label="Remove race">×</button></div>`:'').join('')}</div>
+ <h2>PRs</h2><div class="card"><div class="pbs">${PBD.map(d=>`<div class="pbr2"><b>${d}</b><div class="three">${['hr','min','sec'].map((u,k)=>`<input type="number" min="0"${k?' max="59"':''} inputmode="numeric" placeholder="${u}" data-pt${u}="${d}" aria-label="${d} ${u}" value="${esc(pbm[d]?tparts(pbm[d].time_text)[k].replace(/^0(?=\d)/,''):'')}">`).join('')}</div><input type="date" data-pd="${d}" aria-label="${d} date" value="${pbm[d]&&pbm[d].set_on?pbm[d].set_on:''}"></div>`).join('')}</div><button id="pbsave">Save PRs</button><p class="err" id="pberr" role="status"></p>${prH?`<h2 style="font-size:.85rem">PR History</h2>${prH}`:''}</div>
+ <div style="margin-top:32px"><button class="danger" id="rm">Remove Athlete</button></div>`;
  $('#bk').onclick=()=>{picked=null;coachView()};
  if($('#acs2'))$('#acs2').onchange=async e=>{const {error}=await sb.from('profiles').update({coach_id:e.target.value}).eq('id',a.id);alert(error?msg(error):'Coach updated.')};
  if($('#ren'))$('#ren').onclick=async()=>{const v=prompt('New name',nm(a));if(v==null||!v.trim())return;const {error}=await sb.from('profiles').update({full_name:v.trim()}).eq('id',a.id);if(error)return alert(msg(error));coachView()};
- $('#pbsave').onclick=async()=>{const up=[],del=[];
-  PBD.forEach(d=>{const t=document.querySelector('[data-pt="'+d+'"]').value.trim(),w=document.querySelector('[data-pd="'+d+'"]').value;t?up.push({athlete_id:a.id,distance:d,time_text:t,set_on:w||null}):del.push(d)});
-  let e1=null,e2=null;
+ $('#pbsave').onclick=async()=>{const up=[],del=[],hi=[],el=$('#pberr');let bad=false;
+  PBD.forEach(d=>{const g=u=>num(document.querySelector('[data-pt'+u+'="'+d+'"]').value),h=g('hr'),m=g('min'),x=g('sec'),w=document.querySelector('[data-pd="'+d+'"]').value;
+   if(h==null&&m==null&&x==null){del.push(d);return}
+   if((m||0)>59||(x||0)>59||!((h||0)*3600+(m||0)*60+(x||0)>0)){bad=true;return}
+   const z=n=>String(n||0).padStart(2,'0'),t=h?h+':'+z(m)+':'+z(x):(m||0)+':'+z(x),r={athlete_id:a.id,distance:d,time_text:t,set_on:w||null};up.push(r);if(!pbm[d]||pbm[d].time_text!==t)hi.push(r)});
+  if(bad){el.className='err';return el.textContent='Minutes and seconds must be 0 to 59, and each time needs a value.'}
+  let e1=null,e2=null,e3=null;
   if(up.length)e1=(await sb.from('personal_bests').upsert(up,{onConflict:'athlete_id,distance'})).error;
+  if(hi.length)e3=(await sb.from('pr_history').insert(hi)).error;
   if(del.length)e2=(await sb.from('personal_bests').delete().eq('athlete_id',a.id).in('distance',del)).error;
-  const e=e1||e2,el=$('#pberr');el.className=e?'err':'ok';el.textContent=e?msg(e):'Saved.'};
- if($('#rassign'))$('#rassign').onclick=async()=>{const {error}=await sb.from('athlete_races').upsert({athlete_id:a.id,race_id:$('#rs').value,goal:$('#rg').value.trim()||null},{onConflict:'athlete_id,race_id'});if(error)return alert(msg(error));coachView()};
+  const e=e1||e2||e3;el.className=e?'err':'ok';el.textContent=e?msg(e):'Saved.'};
+ if($('#rassign'))$('#rassign').onclick=async()=>{const g=goalTxt();if(g=='bad')return alert('Minutes and seconds must be 0 to 59.');const {error}=await sb.from('athlete_races').upsert({athlete_id:a.id,race_id:$('#rs').value,goal:g},{onConflict:'athlete_id,race_id'});if(error)return alert(msg(error));coachView()};
  document.querySelectorAll('[data-rdel]').forEach(b=>b.onclick=async()=>{await sb.from('athlete_races').delete().eq('id',b.dataset.rdel);coachView()});
  const tg=()=>{document.querySelectorAll('.rf').forEach(e=>e.style.display=isRun($('#pt').value)?'':'none')};
  $('#pt').onchange=tg;tg();
+ $('#pladd').onclick=()=>{const i=document.createElement('input');i.className='lk';i.placeholder='https://...';i.style.marginTop='8px';$('#pls').appendChild(i)};
  $('#padd').onclick=async()=>{const t=$('#pt').value,run=isRun(t),d=$('#px').value.trim();
   if(!run&&!d)return $('#err').textContent='Describe the session for the athlete.';
-  if(num($('#ps').value)>59)return $('#err').textContent='Seconds must be 0 to 59.';
-  const lk=$('#pl').value.trim();if(lk&&!url(lk))return $('#err').textContent='That link doesn’t look right.';
-  const {error}=await sb.from('plans').insert({athlete_id:a.id,plan_date:$('#pd').value,type:t,title:TYPES[t],target_km:run?num($('#pk').value):null,target_min:run&&(num($('#pm').value)!=null||num($('#ps').value)!=null)?durIn($('#pm').value,$('#ps').value):null,target_pace:run?($('#pp').value.trim()||null):null,details:d||null,link:lk?url(lk):null});
+  if(num($('#ps').value)>59||num($('#pm').value)>59)return $('#err').textContent='Minutes and seconds must be 0 to 59.';
+  const ls=[...document.querySelectorAll('#pls .lk')].map(x=>x.value.trim()).filter(Boolean);if(ls.some(x=>!url(x)))return $('#err').textContent='That link doesn’t look right.';const lk=ls.map(url).join('\n');
+  const {error}=await sb.from('plans').insert({athlete_id:a.id,plan_date:$('#pd').value,type:t,title:TYPES[t],target_km:run?num($('#pk').value):null,target_min:run&&durIn3($('#ph').value,$('#pm').value,$('#ps').value)>0?durIn3($('#ph').value,$('#pm').value,$('#ps').value):null,target_pace:run?($('#pp').value.trim()||null):null,details:d||null,link:lk||null});
   if(error)return $('#err').textContent=msg(error);coachView()};
  document.querySelectorAll('[data-pdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Remove this session from the plan?'))return;await sb.from('plans').delete().eq('id',b.dataset.pdel);coachView()});
  document.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{const i=document.querySelector('[data-ci="'+b.dataset.c+'"]'),t=i.value.trim();if(!t)return;const {error}=await sb.from('comments').insert({workout_id:b.dataset.c,coach_id:me.id,body:t});if(error)return alert(msg(error));coachView()});
+ document.querySelectorAll('[data-wdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete This Activity?'))return;const {error}=await sb.from('workouts').delete().eq('id',b.dataset.wdel);if(error)return alert(msg(error));coachView()});
+ document.querySelectorAll('[data-wedit]').forEach(b=>b.onclick=async()=>{const w=ws.find(x=>x.id==b.dataset.wedit),d=w.distance_km!=null?prompt('Distance (km)',w.distance_km):null;if(w.distance_km!=null&&d===null)return;const t=prompt('Duration (H:M:S)',hms(w.duration_min));if(t===null)return;const n=prompt('Notes',w.notes||'');if(n===null)return;const m=parseHMS(t);if(!(m>0))return alert('Duration must look like 1:05:30 (minutes and seconds up to 59).');const {error}=await sb.from('workouts').update({distance_km:w.distance_km!=null?num(d):null,duration_min:m,notes:n.trim()||null}).eq('id',w.id);if(error)return alert(msg(error));coachView()});
  $('#rm').onclick=async()=>{
   if(!confirm('Remove '+nm(a)+' and all their data? This can’t be undone.'))return;
   const {data,error}=await sb.functions.invoke('add-athlete',{body:{action:'delete',athlete_id:a.id}});
@@ -353,7 +375,7 @@ async function cAthlete(mn,fl){
 
 async function cCoaches(mn,fl){
  const [cs,as]=await Promise.all([coachesList(),myAthletes()]),cnt={};as.forEach(a=>cnt[a.coach_id]=(cnt[a.coach_id]||0)+1);
- mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+H('Coaches')+`<div class="card" style="margin-bottom:16px"><h2 style="margin-top:0">Add a coach</h2><div class="grid"><div class="full"><label for="kn">Full name</label><input id="kn" autocomplete="off"></div><div><label for="ku">Username</label><input id="ku" autocapitalize="none" autocomplete="off"></div><div><label for="kp">Password</label><input id="kp" autocapitalize="none" autocomplete="off"></div><div class="full"><button id="kadd">Create coach</button></div></div><p class="err" id="kerr" role="alert"></p></div>`+cs.map(c=>`<div class="arow"><span><b>${esc(nm(c))}</b> <span class="m">@${esc(c.username)} · ${c.role=='admin'?'Admin · ':''}${cnt[c.id]||0} athletes</span></span><span style="display:flex;gap:8px"><button class="sm" style="margin:0" data-ren="${esc(c.id)}" data-n="${esc(nm(c))}">Edit name</button>${c.role=='admin'?'':`<button class="danger sm" style="margin:0" data-kdel="${esc(c.id)}">Remove</button>`}</span></div>`).join('');
+ mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+H('Coaches')+`<div class="card" style="margin-bottom:16px"><h2 style="margin-top:0">Add a Coach</h2><div class="grid"><div class="full"><label for="kn">Full Name</label><input id="kn" autocomplete="off"></div><div><label for="ku">Username</label><input id="ku" autocapitalize="none" autocomplete="off"></div><div><label for="kp">Password</label><input id="kp" autocapitalize="none" autocomplete="off"></div><div class="full"><button id="kadd">Create Coach</button></div></div><p class="err" id="kerr" role="alert"></p></div>`+cs.map(c=>`<div class="arow"><span><b>${esc(nm(c))}</b> <span class="m">@${esc(c.username)} · ${c.role=='admin'?'Admin · ':''}${cnt[c.id]||0} athletes</span></span><span style="display:flex;gap:8px"><button class="sm" style="margin:0" data-ren="${esc(c.id)}" data-n="${esc(nm(c))}">Edit name</button>${c.role=='admin'?'':`<button class="danger sm" style="margin:0" data-kdel="${esc(c.id)}">Remove</button>`}</span></div>`).join('');
  $('#kadd').onclick=async()=>{const u=$('#ku').value.trim().toLowerCase(),p=$('#kp').value,e=$('#kerr');
   if(!/^[a-z0-9_]{3,20}$/.test(u))return e.textContent='Username must be 3 to 20 letters, numbers or underscores.';
   if(p.length<8)return e.textContent='Password must be at least 8 characters.';
@@ -370,23 +392,25 @@ async function cNotes(mn){
  const [pr,wr]=await Promise.all([sb.from('plans').select('*').neq('status','pending').not('updated_at','is',null).order('updated_at',{ascending:false}).limit(40),sb.from('workouts').select('*').order('created_at',{ascending:false}).limit(40)]);
  setSeen();
  const V={finished:'finished',less:'did less on',not_finished:'did not finish'};
- const items=[...(pr.data||[]).map(p=>({at:p.updated_at,h:`<b>${esc(nmap[p.athlete_id]||'Athlete')}</b> ${V[p.status]} ${esc(p.title)}${tot(p)?' • '+tot(p):''} <span class="m">(${esc(p.plan_date)})</span>${p.athlete_notes?`<div class="cm"><b>Note:</b> ${esc(p.athlete_notes)}</div>`:''}`})),
-  ...(wr.data||[]).map(w=>({at:w.created_at,h:`<b>${esc(nmap[w.athlete_id]||'Athlete')}</b> logged ${esc(TYPES[w.type]||w.type)}${wTxt(w)?' • '+wTxt(w):''} <span class="m">(${esc(w.workout_date)})</span>${w.notes?`<div class="cm">${esc(w.notes)}</div>`:''}`}))].sort((x,y)=>new Date(y.at)-new Date(x.at)).slice(0,60);
+ const items=[...(pr.data||[]).map(p=>({a:p.athlete_id,at:p.updated_at,h:`<b>${esc(nmap[p.athlete_id]||'Athlete')}</b> ${V[p.status]} ${esc(p.title)}${tot(p)?' • '+tot(p):''} <span class="m">(${esc(p.plan_date)})</span>${p.athlete_notes?`<div class="cm"><b>Note:</b> ${esc(p.athlete_notes)}</div>`:''}`})),
+  ...(wr.data||[]).map(w=>({a:w.athlete_id,at:w.created_at,h:`<b>${esc(nmap[w.athlete_id]||'Athlete')}</b> logged ${esc(TYPES[w.type]||w.type)}${wTxt(w)?' • '+wTxt(w):''} <span class="m">(${esc(w.workout_date)})</span>${w.notes?`<div class="cm">${esc(w.notes)}</div>`:''}`}))].sort((x,y)=>new Date(y.at)-new Date(x.at)).slice(0,60);
  mn.innerHTML=H('Notifications')+(items.length?items.map(i=>{const nw=new Date(i.at)>prev;
-  return `<div class="pc ${nw?'new':''}"><div class="ph"><span>${esc(new Date(i.at).toLocaleString())}</span>${nw?'<span class="bdg" style="--c:#FF4F5E;margin:0">New</span>':''}</div><div>${i.h}</div></div>`}).join(''):'<div class="card empty">No updates yet.</div>')}
+  return `<div class="pc ${nw?'new':''}" ${i.a?`data-go="${esc(i.a)}"`:''} style="cursor:pointer"><div class="ph"><span>${esc(new Date(i.at).toLocaleString())}</span>${nw?'<span class="bdg" style="--c:#FF4F5E;margin:0">New</span>':''}</div><div>${i.h}</div></div>`}).join(''):'<div class="card empty">No updates yet.</div>');
+ document.querySelectorAll('[data-go]').forEach(e=>e.onclick=()=>{picked=e.dataset.go;view='athletes';coachView()})}
 
 async function cRaces(mn){
  const {data}=await sb.from('races').select('*').order('race_date');
  const rs=data||[];
- mn.innerHTML=H('Races')+`<div class="card"><div class="grid"><div class="full"><label for="rn">Race name</label><input id="rn"></div>
- <div><label for="rd">Date</label><input id="rd" type="date"></div><div><label for="rk">Distance</label><input id="rk" placeholder="e.g. 10K"></div>
- <div class="full"><label for="rl">Location</label><input id="rl"></div><div class="full"><label for="rlk">Link (optional)</label><input id="rlk" placeholder="https://..." autocapitalize="none"></div><div class="full"><button id="radd">Add race</button></div></div><p class="err" id="rerr" role="alert"></p></div>
- <h2>All races</h2>${rs.length?rs.map(r=>`<div class="pc"><div class="ph"><span>${esc(r.race_date)}</span><button class="x" data-del="${esc(r.id)}" aria-label="Delete race">×</button></div>
- <div class="pt"><b>${esc(r.name)}</b><span class="tot">${dl(r.race_date)}</span></div><div class="m">${[r.distance,r.location].filter(Boolean).map(esc).join(' • ')}</div>${linkHTML(r.link,'Race page ↗')}</div>`).join(''):'<div class="card empty">No races yet.</div>'}`;
+ mn.innerHTML=H('Races')+`<div class="card"><div class="grid"><div class="full"><label for="rn">Race Name</label><input id="rn"></div>
+ <div><label for="rd">Date</label><input id="rd" type="date"></div><div><label for="rk">Distance</label><select id="rk"><option>5K</option><option>10K</option><option>21K</option><option>42K</option></select></div>
+ <div class="full"><label for="rl">Location</label><input id="rl"></div><div class="full"><label>Links (Optional)</label><div id="rls"><input class="lk" placeholder="https://..." autocapitalize="none"></div><button type="button" class="sm" id="rladd">+ Add Link</button></div><div class="full"><button id="radd">Add Race</button></div></div><p class="err" id="rerr" role="alert"></p></div>
+ <h2>All Races</h2>${rs.length?rs.map(r=>`<div class="pc"><div class="ph"><span>${esc(r.race_date)}</span><button class="x" data-del="${esc(r.id)}" aria-label="Delete race">×</button></div>
+ <div class="pt"><b>${esc(r.name)}</b><span class="tot">${dl(r.race_date)}</span></div><div class="m">${[r.distance,r.location].filter(Boolean).map(esc).join(' • ')}</div>${linkHTML(r.link,'Race Page')}</div>`).join(''):'<div class="card empty">No races yet.</div>'}`;
+ $('#rladd').onclick=()=>{const i=document.createElement('input');i.className='lk';i.placeholder='https://...';i.style.marginTop='8px';$('#rls').appendChild(i)};
  $('#radd').onclick=async()=>{
   if(!$('#rn').value.trim()||!$('#rd').value)return $('#rerr').textContent='Add a race name and a date.';
-  if($('#rlk').value.trim()&&!url($('#rlk').value))return $('#rerr').textContent='That link doesn’t look right.';
-  const {error}=await sb.from('races').insert({name:$('#rn').value.trim(),race_date:$('#rd').value,distance:$('#rk').value.trim()||null,location:$('#rl').value.trim()||null,link:url($('#rlk').value)||null});
+  const rl=[...document.querySelectorAll('#rls .lk')].map(x=>x.value.trim()).filter(Boolean);if(rl.some(x=>!url(x)))return $('#rerr').textContent='That link doesn’t look right.';
+  const {error}=await sb.from('races').insert({name:$('#rn').value.trim(),race_date:$('#rd').value,distance:$('#rk').value.trim()||null,location:$('#rl').value.trim()||null,link:rl.map(url).join('\n')||null});
   if(error)return $('#rerr').textContent=msg(error);coachView()};
  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this race? It is removed from every athlete too.'))return;await sb.from('races').delete().eq('id',b.dataset.del);coachView()})}
 
@@ -397,11 +421,12 @@ async function aNotes(mn){
  const [wd,rd]=await Promise.all([wid.length?sb.from('workouts').select('id,type,workout_date').in('id',wid):{data:[]},rid.length?sb.from('races').select('id,name,race_date').in('id',rid):{data:[]}]);
  setSeen();
  const wm={},rm={};(wd.data||[]).forEach(w=>wm[w.id]=w);(rd.data||[]).forEach(r=>rm[r.id]=r);
- const items=[...(pr.data||[]).map(p=>({at:p.created_at,h:`Your coach added <b>${esc(p.title)}</b> for ${esc(p.plan_date)}${tot(p)?' • '+tot(p):''}`})),
-  ...(cr.data||[]).map(c=>{const w=wm[c.workout_id];return{at:c.created_at,h:`Your coach commented on your ${esc(w?(TYPES[w.type]||w.type):'activity')}${w?' ('+esc(w.workout_date)+')':''}<div class="cm">${esc(c.body)}</div>`}}),
-  ...(rr.data||[]).filter(x=>rm[x.race_id]).map(x=>({at:x.created_at,h:`You were assigned <b>${esc(rm[x.race_id].name)}</b> (${esc(rm[x.race_id].race_date)})${x.goal?' • Goal: '+esc(x.goal):''}`}))].filter(i=>i.at).sort((x,y)=>new Date(y.at)-new Date(x.at)).slice(0,50);
+ const items=[...(pr.data||[]).map(p=>({v:'plan',at:p.created_at,h:`Your coach added <b>${esc(p.title)}</b> for ${esc(p.plan_date)}${tot(p)?' • '+tot(p):''}`})),
+  ...(cr.data||[]).map(c=>{const w=wm[c.workout_id];return{v:'load',at:c.created_at,h:`Your coach commented on your ${esc(w?(TYPES[w.type]||w.type):'activity')}${w?' ('+esc(w.workout_date)+')':''}<div class="cm">${esc(c.body)}</div>`}}),
+  ...(rr.data||[]).filter(x=>rm[x.race_id]).map(x=>({v:'home',at:x.created_at,h:`You were assigned <b>${esc(rm[x.race_id].name)}</b> (${esc(rm[x.race_id].race_date)})${x.goal?' • Goal: '+esc(x.goal):''}`}))].filter(i=>i.at).sort((x,y)=>new Date(y.at)-new Date(x.at)).slice(0,50);
  mn.innerHTML=`<div class="narrow">${H('Notifications')}${items.length?items.map(i=>{const nw=new Date(i.at)>prev;
-  return `<div class="pc ${nw?'new':''}"><div class="ph"><span>${esc(new Date(i.at).toLocaleString())}</span>${nw?'<span class="bdg" style="--c:#FF4F5E;margin:0">New</span>':''}</div><div>${i.h}</div></div>`}).join(''):'<div class="card empty">No updates yet.</div>'}</div>`}
+  return `<div class="pc ${nw?'new':''}" data-v="${i.v}" style="cursor:pointer"><div class="ph"><span>${esc(new Date(i.at).toLocaleString())}</span>${nw?'<span class="bdg" style="--c:#FF4F5E;margin:0">New</span>':''}</div><div>${i.h}</div></div>`}).join(''):'<div class="card empty">No updates yet.</div>'}</div>`;
+ document.querySelectorAll('[data-v]').forEach(e=>e.onclick=()=>{view=e.dataset.v;athleteView()})}
 
 async function pgAbout(mn){
  const ph='<span class="empty">Text goes here.</span>';
