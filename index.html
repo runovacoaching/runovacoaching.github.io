@@ -2,103 +2,89 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>RUNOVA</title>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#EEF0FB;--ink:#0A0E2A;--mute:#5A6086;--line:#C9CDEA;--blue:#2230E8;--coral:#FF4F5E;--red:#C62828}
+:root{--bg:#F3F5FB;--ink:#0B1033;--mute:#6A7194;--line:#E4E8F4;--blue:#2230E8;--coral:#FF4F5E;--red:#C62828;--nav:#0B1033}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "DM Sans",system-ui,sans-serif}
-.top{position:relative;overflow:hidden;background:var(--blue);color:#fff;padding:20px 20px 42px}
-.lanes{position:absolute;inset:0;background:repeating-linear-gradient(-14deg,transparent 0 46px,rgba(255,255,255,.17) 46px 49px);pointer-events:none}
-.top .row{position:relative;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:flex-end;max-width:720px;margin:0 auto}
-.brand{font:800 clamp(2.3rem,12vw,3.9rem)/.95 Unbounded,sans-serif;letter-spacing:-.03em}
-.brand small{display:block;font:600 .8rem "DM Sans",sans-serif;letter-spacing:.02em;background:var(--coral);color:#fff;width:max-content;padding:3px 12px;border-radius:99px;margin-top:12px;transform:rotate(-2deg)}
-main{max-width:720px;margin:0 auto;padding:22px 20px 40px}
-h2{font:700 1rem Unbounded,sans-serif;margin:30px 0 12px}
-.card{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:18px;box-shadow:5px 5px 0 var(--ink)}
-summary{cursor:pointer;font:700 1rem Unbounded,sans-serif}
-label{display:block;font-size:.88rem;color:var(--mute);margin-bottom:4px}
-input,select,textarea{width:100%;font:inherit;padding:10px 12px;border:2px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink)}
-input:focus,select:focus,textarea:focus,button:focus-visible,summary:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15.5px/1.55 "DM Sans",system-ui,sans-serif;padding-bottom:76px}
+.top{background:var(--nav);color:#fff;padding:12px 20px}
+.top .row{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;gap:12px}
+.brand{font:800 1.15rem Unbounded,sans-serif;letter-spacing:-.02em}
+.brand small{font:600 .7rem "DM Sans",sans-serif;background:var(--coral);padding:2px 9px;border-radius:99px;margin-inline-start:8px;vertical-align:middle}
+#who{display:flex;align-items:center;gap:10px;font-weight:600;font-size:.9rem}
+.rc{background:rgba(255,255,255,.16);padding:2px 9px;border-radius:99px;font-size:.72rem;text-transform:capitalize}
+main{max-width:1200px;margin:0 auto;padding:22px 20px 40px}
+.narrow{max-width:860px}
+h2{font:700 1rem Unbounded,sans-serif;margin:26px 0 12px}
+.card,.pc,.tile{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(11,16,51,.04),0 8px 24px rgba(11,16,51,.05)}
+.pc{padding:16px;margin-bottom:12px}
+.pc.new{border-color:var(--coral);box-shadow:0 0 0 2px rgba(255,79,94,.18)}
+label{display:block;font-size:.85rem;color:var(--mute);margin-bottom:4px}
+input,select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid #cfd4ea;border-radius:10px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid rgba(34,48,232,.35);outline-offset:1px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .full{grid-column:1/-1}
-button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:11px 20px;background:var(--ink);color:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--coral)}
-button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--coral)}
-button.ghost{background:transparent;color:#fff;border:2px solid #fff;padding:5px 12px;font-weight:600;font-size:.85rem;box-shadow:none}
-.err,.ok{font-size:.9rem;margin:10px 0 0;min-height:1.4em}
+button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:10px 18px;background:var(--blue);color:#fff;cursor:pointer}
+button:hover{filter:brightness(1.1)}
+button.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);padding:5px 12px;font-size:.85rem}
+button.danger{background:transparent;color:var(--red);border:1px solid var(--red)}
+button.sm{padding:6px 14px;font-size:.88rem;margin-top:8px}
+button.back{background:none;color:var(--blue);padding:4px 0}
+.x{background:none;color:var(--mute);padding:2px 8px;font-weight:400;font-size:1.3rem}
+.err,.ok{font-size:.9rem;margin:10px 0 0;min-height:1.2em}
 .err{color:var(--red)}.ok{color:var(--blue);font-weight:600}
 .stats{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:12px;align-items:end}
-.big{font:800 clamp(2.6rem,13vw,4.2rem)/1 Unbounded,sans-serif;color:transparent;-webkit-text-stroke:2px var(--blue)}
+.big{font:800 clamp(2.4rem,9vw,3.6rem)/1 Unbounded,sans-serif;color:transparent;-webkit-text-stroke:2px var(--blue)}
 .big span{font:600 1rem "DM Sans",sans-serif;color:var(--ink);-webkit-text-stroke:0;margin-inline-start:6px}
-.lbl{font-size:.85rem;color:var(--mute)}
-.mid{font:700 1.45rem/1.2 Unbounded,sans-serif}
-.w{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:2px dashed var(--line)}
-.w:last-child{border:0}
-.w b{font-weight:600}
-.w .m{color:var(--mute);font-size:.88rem}
-.w .n{font-size:.92rem;margin-top:2px}
-.x{background:none;color:var(--mute);padding:2px 8px;font-weight:400;font-size:1.3rem;box-shadow:none}
-.chips{display:flex;flex-wrap:wrap;gap:10px}
-.chip{background:#fff;color:var(--ink);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:8px 16px}
-.chip.on{background:var(--blue);color:#fff}
-.empty{color:var(--mute);padding:14px 0}
-.cm{background:#FFE9EB;border-left:4px solid var(--coral);border-radius:6px;padding:6px 10px;margin-top:6px;font-size:.92rem}
-.cm b{font-weight:600}
+.lbl,.m{font-size:.85rem;color:var(--mute)}
+.mid{font:700 1.4rem/1.2 Unbounded,sans-serif}
+.w,.rl{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.w:last-child,.rl:last-child{border:0}
+.n{font-size:.92rem;margin-top:2px}
+.empty{color:var(--mute);padding:12px 0}
+.cm{background:#FFF0F1;border-left:3px solid var(--coral);border-radius:6px;padding:6px 10px;margin-top:6px;font-size:.92rem}
 .inl{display:flex;gap:8px;margin-top:8px}
-.inl button{padding:8px 14px}
-input[type=checkbox]{width:24px;height:24px;flex:none;margin-top:3px;accent-color:var(--blue)}
-.pl{justify-content:flex-start;align-items:flex-start}
-.pl.done .t{color:var(--mute)}
-button.danger{background:transparent;color:var(--red);border:2px solid var(--red);box-shadow:none}
-button.sm{padding:6px 14px;font-size:.88rem;margin-top:8px}
-@media(max-width:480px){.stats{grid-template-columns:1fr 1fr}.stats>:first-child{grid-column:1/-1}}
-
-main{max-width:1040px}
-.narrow{max-width:720px}
-.shell{display:grid;grid-template-columns:250px 1fr;gap:24px;align-items:start}
-.side{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:14px;box-shadow:5px 5px 0 var(--ink);position:sticky;top:12px}
-.sh{font:700 .9rem Unbounded,sans-serif;display:flex;justify-content:space-between;margin-bottom:10px}
-.al{display:flex;flex-direction:column;gap:6px;margin:10px 0;max-height:60vh;overflow:auto}
-.ai{display:flex;justify-content:space-between;align-items:center;background:transparent;color:var(--ink);box-shadow:none;text-align:start;padding:9px 12px}
-.ai.on{background:var(--blue);color:#fff}
-.ai i{width:10px;height:10px;border-radius:50%;flex:none;margin-inline-start:8px;box-shadow:0 0 0 2px #fff}
-.pc{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:4px 4px 0 var(--ink)}
+.chip{background:#fff;color:var(--ink);border:1px solid #cfd4ea;padding:8px 16px}
+.chip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+input[type=checkbox]{width:22px;height:22px}
 .ph{display:flex;justify-content:space-between;align-items:center;color:var(--mute);font-size:.88rem}
 .pt{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:4px 0}
-.pt b{font:700 1.15rem Unbounded,sans-serif}
-.tot{font:700 1.05rem Unbounded,sans-serif;color:var(--blue)}
+.pt b{font:700 1.1rem Unbounded,sans-serif}
+.tot{font:700 1rem Unbounded,sans-serif;color:var(--blue)}
 .pre{white-space:pre-wrap}
-.bdg{border:2px solid var(--c);color:var(--c);padding:2px 10px;border-radius:99px;font-weight:600;font-size:.82rem;display:inline-block;margin-top:8px}
+.bdg{border:1px solid var(--c);color:var(--c);padding:2px 10px;border-radius:99px;font-weight:600;font-size:.8rem;display:inline-block;margin-top:8px}
 .sts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .nt{margin-top:10px}
-@media(max-width:760px){.shell{grid-template-columns:1fr}.side{position:static}.al{max-height:190px}}
-
+.shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px;align-items:start}
+.side{background:var(--nav);border-radius:14px;padding:10px;position:sticky;top:12px;display:flex;flex-direction:column;gap:4px}
+.ai{display:flex;justify-content:space-between;align-items:center;background:transparent;color:#C9CDEA;text-align:start;padding:11px 14px;width:100%}
+.ai.on{background:var(--blue);color:#fff}
+.ai .cnt{background:var(--coral);color:#fff;border-radius:99px;padding:0 8px;font-style:normal;font-size:.75rem}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.tile{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:16px;box-shadow:4px 4px 0 var(--ink)}
 .tile .mid{font-size:2rem;color:var(--blue)}
-.ai .cnt{width:auto;height:auto;border-radius:99px;padding:0 8px;background:var(--coral);color:#fff;font-style:normal;font-size:.75rem;box-shadow:none}
-.arow{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;background:#fff;color:var(--ink);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);margin-bottom:10px;text-align:start;padding:12px 14px}
+.arow{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;background:#fff;color:var(--ink);border:1px solid var(--line);margin-bottom:10px;text-align:start;padding:12px 14px;border-radius:12px}
 .arow .bdg{margin:0;flex:none}
-button.back{background:transparent;color:var(--ink);box-shadow:none;padding:4px 0;font-weight:600}
 .pbs{display:grid;gap:10px;margin-bottom:12px}
 .pbr{display:grid;grid-template-columns:52px 1fr 1fr;gap:10px;align-items:center}
-.pc.new{border-color:var(--coral)}
-.rl{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:2px dashed var(--line)}
-@media(max-width:760px){.tiles{grid-template-columns:1fr}.side{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px}.ai{padding:8px;font-size:.85rem}}
-
-.quote{background:var(--blue);color:#fff;border:2px solid var(--ink);border-radius:14px;padding:26px 22px;box-shadow:5px 5px 0 var(--ink);font:800 clamp(1.3rem,5vw,2rem)/1.25 Unbounded,sans-serif}
+.quote{background:linear-gradient(135deg,#2230E8,#4B2BD8);color:#fff;border-radius:14px;padding:26px 22px;font:800 clamp(1.2rem,4.5vw,1.9rem)/1.25 Unbounded,sans-serif}
 .quote small{display:block;font:600 .85rem "DM Sans",sans-serif;opacity:.85;margin-bottom:10px}
 .bar{display:grid;grid-template-columns:90px 1fr 52px;gap:10px;align-items:center;margin:6px 0}
 .bar span{font-size:.85rem;color:var(--mute)}
-.bar div{background:var(--bg);height:12px;border-radius:99px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--blue)}
+.bar div{background:var(--bg);height:10px;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--blue);border-radius:99px}
 .bar b{text-align:end}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:820px){.shell{grid-template-columns:1fr}
+.side{position:fixed;left:0;right:0;bottom:0;z-index:20;flex-direction:row;border-radius:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
+.ai{flex:1;justify-content:center;padding:10px 2px;font-size:.72rem;text-align:center}
+.tiles{grid-template-columns:1fr}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stats>:first-child{grid-column:1/-1}main{padding:16px 14px 30px}}
 </style>
 </head>
 <body>
-<header class="top"><div class="lanes"></div><div class="row"><div class="brand">RUNOVA<small>Coaching</small></div><div id="who"></div></div></header>
+<header class="top"><div class="row"><div class="brand">RUNOVA<small>Coaching</small></div><div id="who"></div></div></header>
 <main id="app"></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
@@ -157,16 +143,17 @@ async function boot(){
  const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
  if(error||!data){await sb.auth.signOut();return authView()}
  me=data;
- $('#who').innerHTML=`<span>${esc(nm(me))}</span> <button class="ghost" id="out">Log out</button>`;
+ $('#who').innerHTML=`<span>${esc(nm(me))}</span><span class="rc">${esc(me.role)}</span><button class="ghost" id="out">Log out</button>`;
  $('#out').onclick=async()=>{await sb.auth.signOut();me=null;picked=null;adding=false;view='home';authView()};
- me.role=='coach'?coachView():athleteView()}
+ me.role=='athlete'?athleteView():coachView()}
 
 const dayTag=d=>{const n=new Date();n.setDate(n.getDate()+1);return d==iso(new Date())?'Today':d==iso(n)?'Tomorrow':''};
 const badge=s=>`<span class="bdg" style="--c:${ST[s][1]}">${ST[s][0]}</span>`;
 async function fetchPlans(id){const {data}=await sb.from('plans').select('*').eq('athlete_id',id).order('plan_date',{ascending:false}).limit(120);return data||[]}
 async function fetchWs(id){const {data}=await sb.from('workouts').select('*').eq('athlete_id',id).order('workout_date',{ascending:false}).order('created_at',{ascending:false}).limit(80);return data||[]}
 async function fetchComments(ws){const ids=ws.map(w=>w.id),m={};if(!ids.length)return m;const {data}=await sb.from('comments').select('*').in('workout_id',ids).order('created_at');(data||[]).forEach(c=>(m[c.workout_id]=m[c.workout_id]||[]).push(c));return m}
-async function myAthletes(){const {data}=await sb.from('profiles').select('id,full_name,username').eq('coach_id',me.id).order('full_name');return data||[]}
+async function myAthletes(){let q=sb.from('profiles').select('id,full_name,username,coach_id').eq('role','athlete');if(me.role!='admin')q=q.eq('coach_id',me.id);const {data}=await q.order('full_name');return data||[]}
+async function coachesList(){const {data}=await sb.from('profiles').select('id,full_name,username,role').in('role',['coach','admin']).order('full_name');return data||[]}
 function split(ps){const t=iso(new Date());return{today:ps.filter(p=>p.plan_date==t),up:ps.filter(p=>p.plan_date>t).sort((a,b)=>a.plan_date<b.plan_date?-1:1),past:ps.filter(p=>p.plan_date<t)}}
 const sec=(t,l,coach)=>l.length?`<h2>${t}</h2>`+l.map(p=>planCard(p,coach)).join(''):'';
 
@@ -262,7 +249,7 @@ async function aLoad(mn){
  document.querySelectorAll('[data-wdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this activity?'))return;await sb.from('workouts').delete().eq('id',b.dataset.wdel);athleteView()})}
 
 /* ---------- coach ---------- */
-function addHTML(){return `<div class="card" style="margin-bottom:16px"><h2 style="margin-top:0">Create new athlete</h2><div class="grid">
+function addHTML(cs){return `<div class="card" style="margin-bottom:16px"><h2 style="margin-top:0">Create new athlete</h2><div class="grid">${cs?`<div class="full"><label for="acs">Coach</label><select id="acs">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==me.id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select></div>`:''}
  <div class="full"><label for="an">Full name</label><input id="an" autocomplete="off"></div>
  <div><label for="au">Username</label><input id="au" autocapitalize="none" autocomplete="off"></div>
  <div><label for="ap">Password</label><input id="ap" autocapitalize="none" autocomplete="off"></div>
@@ -272,9 +259,9 @@ function bindAdd(){
  $('#aadd').onclick=async()=>{
  const u=$('#au').value.trim().toLowerCase(),p=$('#ap').value,n=$('#an').value.trim(),e=$('#aerr');
  if(!/^[a-z0-9_]{3,20}$/.test(u))return e.textContent='Username must be 3 to 20 letters, numbers or underscores.';
- if(p.length<6)return e.textContent='Password must be at least 6 characters.';
+ if(p.length<8)return e.textContent='Password must be at least 8 characters.';
  $('#aadd').disabled=true;
- const {data,error}=await sb.functions.invoke('add-athlete',{body:{username:u,password:p,full_name:n}});
+ const {data,error}=await sb.functions.invoke('add-athlete',{body:{username:u,password:p,full_name:n,coach_id:$('#acs')?$('#acs').value:null}});
  $('#aadd').disabled=false;
  if(error||(data&&data.error))return e.textContent='Couldn’t create the athlete: '+((data&&data.error)||error.message);
  flash='Created. Username: '+u+'  Password: '+p+'  Share these with the athlete.';adding=false;coachView()}}
@@ -283,9 +270,9 @@ async function coachView(){
  const s=getSeen();
  const [a,b]=await Promise.all([sb.from('plans').select('id',{count:'exact',head:true}).gt('updated_at',s).neq('status','pending'),sb.from('workouts').select('id',{count:'exact',head:true}).gt('created_at',s)]);
  const n=view=='notes'?0:(a.count||0)+(b.count||0);
- $('#app').innerHTML=shell([['home','Home'],['athletes','Athletes'],['notes','Notifications'],['races','Races'],['about','About']],n);bindNav(coachView);
+ const ad=me.role=='admin';$('#app').innerHTML=shell(ad?[['home','Home'],['coaches','Coaches'],['athletes','Athletes'],['notes','Alerts'],['races','Races'],['about','About']]:[['home','Home'],['athletes','Athletes'],['notes','Alerts'],['races','Races'],['about','About']],n);bindNav(coachView);
  const fl=flash;flash='';
- await ({home:cHome,athletes:cAthletes,notes:cNotes,races:cRaces,about:pgAbout}[view])($('#mn'),fl)}
+ await ({home:cHome,coaches:cCoaches,athletes:cAthletes,notes:cNotes,races:cRaces,about:pgAbout}[view])($('#mn'),fl)}
 
 async function cHome(mn){
  const as=await myAthletes(),t=iso(new Date()),d=new Date();d.setDate(d.getDate()-14);
@@ -299,24 +286,25 @@ async function cHome(mn){
 
 async function cAthletes(mn,fl){
  if(picked)return cAthlete(mn,fl);
- const as=await myAthletes();
+ const as=await myAthletes(),cs=me.role=='admin'?await coachesList():null,cn={};(cs||[]).forEach(c=>cn[c.id]=nm(c));
  const {data}=await sb.from('plans').select('athlete_id,status').eq('plan_date',iso(new Date()));
  const tm={};(data||[]).forEach(p=>tm[p.athlete_id]=p.status);
- mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+H('Athletes')+(adding?addHTML():'')+
+ mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+H('Athletes')+(adding?addHTML(cs):'')+
  `<input id="q" placeholder="Search athletes" aria-label="Search athletes" style="margin-bottom:14px">
- ${as.map(a=>`<button class="arow" data-a="${esc(a.id)}"><span><b>${esc(nm(a))}</b> <span class="m">@${esc(a.username)}</span></span>${tm[a.id]?badge(tm[a.id]):'<span class="m">No session today</span>'}</button>`).join('')||'<div class="card empty">No athletes yet.</div>'}
+ ${as.map(a=>`<button class="arow" data-a="${esc(a.id)}"><span><b>${esc(nm(a))}</b> <span class="m">@${esc(a.username)}${cs?' · '+esc(cn[a.coach_id]||'No coach'):''}</span></span>${tm[a.id]?badge(tm[a.id]):'<span class="m">No session today</span>'}</button>`).join('')||'<div class="card empty">No athletes yet.</div>'}
  ${adding?'':'<div style="margin-top:18px"><button id="addb">Create new athlete</button></div>'}`;
  document.querySelectorAll('.arow').forEach(b=>b.onclick=()=>{picked=b.dataset.a;coachView()});
  $('#q').oninput=e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('.arow').forEach(b=>b.style.display=b.textContent.toLowerCase().includes(q)?'':'none')};
  if(adding)bindAdd();else $('#addb').onclick=()=>{adding=true;coachView()}}
 
 async function cAthlete(mn,fl){
- const {data:a}=await sb.from('profiles').select('id,full_name,username').eq('id',picked).single();
+ const {data:a}=await sb.from('profiles').select('id,full_name,username,coach_id').eq('id',picked).single();
+ const cs=me.role=='admin'?await coachesList():null;
  const [ps,ws,pb,rc,ar]=await Promise.all([fetchPlans(a.id),fetchWs(a.id),sb.from('personal_bests').select('*').eq('athlete_id',a.id),sb.from('races').select('*').order('race_date'),sb.from('athlete_races').select('*').eq('athlete_id',a.id)]);
  const cm=await fetchComments(ws),pbm={};(pb.data||[]).forEach(x=>pbm[x.distance]=x);
  const races=rc.data||[],rm={};races.forEach(r=>rm[r.id]=r);
  const s=split(ps);
- mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button>${H(esc(nm(a)))}${loadHTML(ws,ps)}
+ mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button>${H(esc(nm(a)))}${cs?`<div class="card" style="margin-bottom:14px"><label for="acs2">Coach</label><select id="acs2">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==a.coach_id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select></div>`:''}${loadHTML(ws,ps)}
  <h2>Personal bests</h2><div class="card"><div class="pbs">${PBD.map(d=>`<div class="pbr"><b>${d}</b><input data-pt="${d}" placeholder="e.g. 19:45" aria-label="${d} time" value="${esc(pbm[d]?pbm[d].time_text:'')}"><input type="date" data-pd="${d}" aria-label="${d} date" value="${pbm[d]&&pbm[d].set_on?pbm[d].set_on:''}"></div>`).join('')}</div><button id="pbsave">Save records</button><p class="err" id="pberr" role="status"></p></div>
  <h2>Races and goals</h2><div class="card">${races.length?`<div class="grid"><div><label for="rs">Race</label><select id="rs">${races.map(r=>`<option value="${esc(r.id)}">${esc(r.name)} · ${esc(r.race_date)}</option>`).join('')}</select></div><div><label for="rg">Goal</label><input id="rg" placeholder="e.g. sub 50 min"></div><div class="full"><button id="rassign">Assign race</button></div></div>`:'<div class="empty">Add races in the Races tab first.</div>'}
  ${(ar.data||[]).map(x=>rm[x.race_id]?`<div class="rl"><div><b>${esc(rm[x.race_id].name)}</b> <span class="m">${esc(rm[x.race_id].race_date)}</span>${x.goal?`<div class="n">Goal: ${esc(x.goal)}</div>`:''}</div><button class="x" data-rdel="${esc(x.id)}" aria-label="Remove race">×</button></div>`:'').join('')}</div>
@@ -332,6 +320,7 @@ async function cAthlete(mn,fl){
  <h2>Activity logged by ${esc(nm(a).split(' ')[0])}</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,true)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div>
  <div style="margin-top:32px"><button class="danger" id="rm">Remove athlete</button></div>`;
  $('#bk').onclick=()=>{picked=null;coachView()};
+ if($('#acs2'))$('#acs2').onchange=async e=>{const {error}=await sb.from('profiles').update({coach_id:e.target.value}).eq('id',a.id);alert(error?msg(error):'Coach updated.')};
  $('#pbsave').onclick=async()=>{const up=[],del=[];
   PBD.forEach(d=>{const t=document.querySelector('[data-pt="'+d+'"]').value.trim(),w=document.querySelector('[data-pd="'+d+'"]').value;t?up.push({athlete_id:a.id,distance:d,time_text:t,set_on:w||null}):del.push(d)});
   let e1=null,e2=null;
@@ -355,6 +344,19 @@ async function cAthlete(mn,fl){
   const {data,error}=await sb.functions.invoke('add-athlete',{body:{action:'delete',athlete_id:a.id}});
   if(error||(data&&data.error))return alert('Couldn’t remove: '+((data&&data.error)||error.message));
   picked=null;coachView()}}
+
+async function cCoaches(mn,fl){
+ const [cs,as]=await Promise.all([coachesList(),myAthletes()]),cnt={};as.forEach(a=>cnt[a.coach_id]=(cnt[a.coach_id]||0)+1);
+ mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+H('Coaches')+`<div class="card" style="margin-bottom:16px"><h2 style="margin-top:0">Add a coach</h2><div class="grid"><div class="full"><label for="kn">Full name</label><input id="kn" autocomplete="off"></div><div><label for="ku">Username</label><input id="ku" autocapitalize="none" autocomplete="off"></div><div><label for="kp">Password</label><input id="kp" autocapitalize="none" autocomplete="off"></div><div class="full"><button id="kadd">Create coach</button></div></div><p class="err" id="kerr" role="alert"></p></div>`+cs.map(c=>`<div class="arow"><span><b>${esc(nm(c))}</b> <span class="m">@${esc(c.username)} · ${c.role=='admin'?'Admin · ':''}${cnt[c.id]||0} athletes</span></span>${c.role=='admin'?'':`<button class="danger sm" style="margin:0" data-kdel="${esc(c.id)}">Remove</button>`}</div>`).join('');
+ $('#kadd').onclick=async()=>{const u=$('#ku').value.trim().toLowerCase(),p=$('#kp').value,e=$('#kerr');
+  if(!/^[a-z0-9_]{3,20}$/.test(u))return e.textContent='Username must be 3 to 20 letters, numbers or underscores.';
+  if(p.length<8)return e.textContent='Password must be at least 8 characters.';
+  const {data,error}=await sb.functions.invoke('add-athlete',{body:{role:'coach',username:u,password:p,full_name:$('#kn').value.trim()}});
+  if(error||(data&&data.error))return e.textContent='Couldn’t create the coach: '+((data&&data.error)||error.message);
+  flash='Created. Username: '+u+'  Password: '+p+'  Share these with the coach.';coachView()};
+ document.querySelectorAll('[data-kdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Remove this coach? Their athletes must be moved first.'))return;
+  const {data,error}=await sb.functions.invoke('add-athlete',{body:{action:'delete',athlete_id:b.dataset.kdel}});
+  if(error||(data&&data.error))return alert((data&&data.error)||error.message);coachView()})}
 
 async function cNotes(mn){
  const prev=new Date(getSeen()),as=await myAthletes(),nmap={};as.forEach(a=>nmap[a.id]=nm(a));
