@@ -105,6 +105,9 @@ button.ghost{white-space:nowrap}
 .spl{display:grid;grid-template-columns:minmax(0,1.2fr) 76px minmax(0,1.4fr) auto;gap:8px;align-items:center;margin-top:8px}.spl .spt{grid-column:1/-1;margin-top:-2px}.spl .su{padding-left:8px;padding-right:4px}
 @media(max-width:560px){.spl{grid-template-columns:minmax(0,1fr) 76px 36px}.spl .two{grid-column:1/-1;order:5}.spl .spt{order:6}}
 .pdfb{background:#fff;color:#0B1033;width:700px;padding:6px 8px;font:400 15px/1.5 "DM Sans",system-ui,sans-serif}.pdfb .m{color:#4a5070}
+
+.spl{grid-template-columns:minmax(0,1fr) 76px minmax(0,1.3fr) minmax(0,1.3fr) auto;align-items:end}.spl .stm .m,.spl .spc .m{display:block;font-size:.75rem}
+@media(max-width:560px){.spl{grid-template-columns:minmax(0,1fr) 76px 36px}.spl .stm,.spl .spc{grid-column:1/-1;order:5}.spl .x{align-self:center}}
 </style>
 </head>
 <body>
@@ -143,6 +146,9 @@ const goalTxt=()=>{const h=num($('#rgh').value),m=num($('#rgm').value),x=num($('
 const paceOf=(km,min)=>{if(!(km>0)||!(min>0))return '';const t=Math.round(min/km*60);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' /km'};
 const tot=p=>[p.target_km!=null?fmtD(+p.target_km,p.distance_unit):'',p.target_min!=null?dur(p.target_min):'',p.target_pace?esc(p.target_pace)+' /km':''].filter(Boolean).join(' • ');
 const seed=()=>new Date(Date.now()-7*864e5).toISOString();
+const p2=n=>String(n).padStart(2,'0');
+document.addEventListener('input',e=>{const t=e.target;if(t.classList&&t.classList.contains('t2')){const v=t.value.replace(/\D/g,'').slice(0,2);if(v!==t.value)t.value=v}});
+document.addEventListener('focusout',e=>{const t=e.target;if(t.classList&&t.classList.contains('t2')&&t.value!=='')t.value=p2(t.value)});
 const toKm=(v,u)=>(+v||0)/(u=='m'?1000:1);
 const fmtD=(km,u)=>u=='m'?Math.round(km*1000)+' m':String(+(+km).toFixed(2))+' km';
 const paceMin=p=>{const q=String(p||'').split(':');return (+q[0]||0)+(+q[1]||0)/60};
@@ -151,25 +157,41 @@ const addDays=(x,n)=>{const d=new Date(x+'T00:00:00');d.setDate(d.getDate()+n);r
 const wkOf=x=>{const d=new Date(x+'T00:00:00');d.setDate(d.getDate()-((d.getDay()+1)%7));return iso(d)};
 const sumPts=m=>Object.values(m).reduce((t,v)=>t+(+v||0),0);
 const sUrl=v=>{v=(v||'').trim();if(!v)return '';if(/^\d+$/.test(v))return 'https://www.strava.com/athletes/'+v;const u=url(v);if(!u)return '';try{const h=new URL(u).hostname;return /(^|\.)strava\.com$|(^|\.)strava\.app\.link$/.test(h)?u:''}catch(e){return ''}};
-const splitsHTML=sp=>!Array.isArray(sp)||!sp.length?'':`<div style="margin:6px 0">${sp.map((x,i)=>`<div class="m" style="display:flex;justify-content:space-between;gap:10px;padding:3px 0"><span>${i+1}. ${fmtD(+x.km,x.u)}</span><span>${esc(x.pace)} /km • ${dur(+x.km*paceMin(x.pace))}</span></div>`).join('')}</div>`;
+const splitsHTML=sp=>!Array.isArray(sp)||!sp.length?'':`<div style="margin:6px 0">${sp.map((x,i)=>`<div class="m" style="display:flex;justify-content:space-between;gap:10px;padding:3px 0"><span>${i+1}. ${fmtD(+x.km,x.u)}</span><span>${dur((x.sec||+x.km*paceMin(x.pace)*60)/60)} • ${esc(x.pace)} /km</span></div>`).join('')}</div>`;
 const ptsCard=rows=>{const l=rows||[],n=l.reduce((t,x)=>t+(+x.points||0),0);return `<div class="card" style="margin-top:14px;text-align:center"><div class="big">${n}<span>points</span></div><div class="lbl">From your coach · ${l.length} rated ${l.length==1?'activity':'activities'}</div></div>`};
-function bindPace(k,u,h,m,sc,pm,ps,lock){const g=i=>document.getElementById(i),f=()=>{const km=toKm(num(g(k).value),g(u).value),min=durIn3(g(h).value,g(m).value,g(sc).value);if(km>0&&min>0){const t=Math.round(min/km*60);g(pm).value=Math.floor(t/60);g(ps).value=t%60}else if(lock){g(pm).value='';g(ps).value=''}};[k,u,h,m,sc].forEach(i=>{g(i).addEventListener('input',f);g(i).addEventListener('change',f)});if(lock){g(pm).readOnly=true;g(ps).readOnly=true}}
+function bindPace(k,u,h,m,sc,pm,ps,lock){const g=i=>document.getElementById(i),f=()=>{const km=toKm(num(g(k).value),g(u).value),min=durIn3(g(h).value,g(m).value,g(sc).value);if(km>0&&min>0){const t=Math.round(min/km*60);g(pm).value=p2(Math.floor(t/60));g(ps).value=p2(t%60)}else if(lock){g(pm).value='';g(ps).value=''}};[k,u,h,m,sc].forEach(i=>{g(i).addEventListener('input',f);g(i).addEventListener('change',f)});if(lock){g(pm).readOnly=true;g(ps).readOnly=true}}
 function dlg(html){const o=document.createElement('div');o.className='ov';o.innerHTML='<div class="card dg">'+html+'</div>';o.onclick=e=>{if(e.target==o)o.remove()};document.body.appendChild(o);return o}
-function spRow(){const r=document.createElement('div');r.className='spl';r.innerHTML='<input class="sd" type="number" step="0.01" min="0" inputmode="decimal" placeholder="Distance" aria-label="Split distance"><select class="su" aria-label="Unit"><option value="km">km</option><option value="m">m</option></select><div class="two"><input class="sp1" type="number" min="0" inputmode="numeric" placeholder="pace min" aria-label="Pace minutes"><input class="sp2" type="number" min="0" max="59" inputmode="numeric" placeholder="sec" aria-label="Pace seconds"></div><button type="button" class="x" aria-label="Remove split line">×</button><span class="m spt"></span>';r.addEventListener('input',spUpdate);r.addEventListener('change',spUpdate);r.querySelector('.x').onclick=()=>{r.remove();spUpdate()};return r}
-function spUpdate(){const rows=[...document.querySelectorAll('#psp .spl')];let tk=0;rows.forEach(r=>{const km=toKm(num(r.querySelector('.sd').value),r.querySelector('.su').value),pa=(num(r.querySelector('.sp1').value)||0)+(num(r.querySelector('.sp2').value)||0)/60;tk+=km;r.querySelector('.spt').textContent=km>0&&pa>0?'Time: '+dur(km*pa):''});const el=document.getElementById('spsum');if(!el)return;const pk=toKm(num($('#pk').value),$('#pku').value);el.textContent=rows.length?'Splits total: '+fmtD(tk,'km')+(pk>0?' of '+fmtD(pk,$('#pku').value):''):''}
-function collectSplits(){const out=[];for(const r of document.querySelectorAll('#psp .spl')){const d=num(r.querySelector('.sd').value),u=r.querySelector('.su').value,pm=num(r.querySelector('.sp1').value)||0,ps=num(r.querySelector('.sp2').value)||0;if(d==null&&!pm&&!ps)continue;if(!(d>0)||!(pm*60+ps>0)||ps>59)return false;out.push({km:Math.round(toKm(d,u)*1e5)/1e5,u,pace:pm+':'+String(ps).padStart(2,'0')})}return out}
+function spRow(){const r=document.createElement('div');r.className='spl';
+ r.innerHTML='<input class="sd" type="number" step="0.01" min="0" inputmode="decimal" placeholder="Distance" aria-label="Split distance"><select class="su" aria-label="Unit"><option value="km">km</option><option value="m">m</option></select><div class="stm"><span class="m">Time</span><div class="two"><input class="t2 st1" type="text" maxlength="2" inputmode="numeric" placeholder="min" aria-label="Split time minutes"><input class="t2 st2" type="text" maxlength="2" inputmode="numeric" placeholder="sec" aria-label="Split time seconds"></div></div><div class="spc"><span class="m">Pace /km</span><div class="two"><input class="t2 sp1" type="text" maxlength="2" inputmode="numeric" placeholder="min" aria-label="Pace minutes"><input class="t2 sp2" type="text" maxlength="2" inputmode="numeric" placeholder="sec" aria-label="Pace seconds"></div></div><button type="button" class="x" aria-label="Remove split line">×</button>';
+ const q=c=>r.querySelector('.'+c),T=()=>(num(q('st1').value)||0)*60+(num(q('st2').value)||0),P=()=>(num(q('sp1').value)||0)*60+(num(q('sp2').value)||0),K=()=>toKm(num(q('sd').value),q('su').value);
+ const setT=x=>{q('st1').value=x>0?p2(Math.floor(x/60)):'';q('st2').value=x>0?p2(x%60):''},setP=x=>{q('sp1').value=x>0?p2(Math.floor(x/60)):'';q('sp2').value=x>0?p2(x%60):''};
+ r.addEventListener('input',e=>{const c=e.target.className,k=K();if(k>0){if(/\bst[12]\b/.test(c))setP(Math.round(T()/k));else if(/\bsp[12]\b/.test(c))setT(Math.round(P()*k));else if(T()>0)setP(Math.round(T()/k));else if(P()>0)setT(Math.round(P()*k))}spUpdate()});
+ r.addEventListener('change',spUpdate);r.querySelector('.x').onclick=()=>{r.remove();spUpdate()};return r}
+function spUpdate(){const rows=[...document.querySelectorAll('#psp .spl')];let tk=0,ts=0;rows.forEach(r=>{const km=toKm(num(r.querySelector('.sd').value),r.querySelector('.su').value),t=(num(r.querySelector('.st1').value)||0)*60+(num(r.querySelector('.st2').value)||0);tk+=km;ts+=t});const el=document.getElementById('spsum');if(!el)return;const pk=toKm(num($('#pk').value),$('#pku').value);el.textContent=rows.length?'Splits total: '+fmtD(tk,'km')+(ts>0?' • '+dur(ts/60):'')+(pk>0?' (session distance: '+fmtD(pk,$('#pku').value)+')':''):''}
+function collectSplits(){const out=[];for(const r of document.querySelectorAll('#psp .spl')){const v=c=>r.querySelector('.'+c).value,d=num(v('sd')),u=v('su'),t1=num(v('st1'))||0,t2=num(v('st2'))||0,p1=num(v('sp1'))||0,p2s=num(v('sp2'))||0;if(d==null&&!t1&&!t2&&!p1&&!p2s)continue;const km=toKm(d,u);if(!(km>0)||t2>59||p2s>59)return false;let t=t1*60+t2,pc=p1*60+p2s;if(!(t>0)&&!(pc>0))return false;if(!(t>0))t=Math.round(pc*km);if(!(pc>0))pc=Math.round(t/km);out.push({km:Math.round(km*1e5)/1e5,u,sec:t,pace:Math.floor(pc/60)+':'+p2(pc%60)})}return out}
 function pbSugs(ws,pbm){let no=[];try{no=JSON.parse(localStorage.getItem('runova_pbno')||'[]')}catch(e){}const out=[];PBD.forEach(d=>{const dk=parseFloat(d),c=ws.filter(w=>w.type=='race'&&w.distance_km!=null&&w.duration_min>0&&w.distance_km>=dk*0.99&&w.distance_km<=dk*1.02&&!no.includes(String(w.id)));if(!c.length)return;const b=c.reduce((x,y)=>y.duration_min<x.duration_min?y:x),cur=pbm[d],cm=cur?parseHMS(cur.time_text):NaN;if(!cur||isNaN(cm)||Math.round(b.duration_min*60)<Math.round(cm*60))out.push({d,w:b,cur:cur?cur.time_text:''})});return out}
 const loadJs=src=>new Promise((ok,no)=>{if(document.querySelector('script[src="'+src+'"]'))return ok();const e=document.createElement('script');e.src=src;e.onload=ok;e.onerror=()=>no(new Error('Could not load a PDF library. Check your internet.'));document.head.appendChild(e)});
 async function planPdf(a,w0){
  const {data,error}=await sb.from('plans').select('*').eq('athlete_id',a.id).gte('plan_date',w0).lte('plan_date',addDays(w0,6)).order('plan_date');
  if(error)throw error;
+ let coachName='';
+ if(a.coach_id){if(me&&a.coach_id==me.id)coachName=nm(me);else{const {data:c}=await sb.from('profiles').select('full_name,username').eq('id',a.coach_id).maybeSingle();if(c)coachName=nm(c)}}
  await Promise.all([loadJs('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'),loadJs('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js')]);
  const ps=data||[],nice=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'});
- const blocks=[`<div style="font:800 26px Unbounded,sans-serif">RUNOVA</div><div dir="auto" style="font:700 20px 'DM Sans',sans-serif;margin-top:8px">${esc(nm(a))}</div><div class="m" style="margin-top:2px">Weekly plan · ${fd(w0)} to ${fd(addDays(w0,6))}</div>`];
- for(let i=0;i<7;i++){const d=addDays(w0,i),l=ps.filter(p=>p.plan_date==d);blocks.push(`<div style="border-top:2px solid #2230E8;padding-top:8px"><div style="font-weight:700;color:#2230E8">${nice(d)}</div>${l.length?l.map(p=>`<div style="margin-top:8px"><b>${esc(p.title)}</b>${tot(p)?' · '+tot(p):''}${splitsHTML(p.splits)}${p.details?`<div dir="auto" style="white-space:pre-wrap;margin-top:4px">${esc(p.details)}</div>`:''}</div>`).join(''):'<div class="m" style="margin-top:6px">Rest</div>'}</div>`)}
- const {jsPDF}=window.jspdf,pdf=new jsPDF('p','pt','a4'),W=pdf.internal.pageSize.getWidth(),PH=pdf.internal.pageSize.getHeight(),M=36,cw=W-2*M;let y=M;
- for(const h of blocks){const el=document.createElement('div');el.className='pdfb';el.style.cssText+='position:fixed;left:-9999px;top:0';el.innerHTML=h;document.body.appendChild(el);let cv;try{cv=await html2canvas(el,{scale:2,backgroundColor:'#ffffff'})}finally{el.remove()}
-  const hh=cv.height*cw/cv.width;if(y+hh>PH-M&&y>M){pdf.addPage();y=M}pdf.addImage(cv.toDataURL('image/jpeg',.92),'JPEG',M,y,cw,Math.min(hh,PH-2*M));y+=hh+10}
+ const km=ps.reduce((t,p)=>t+(+p.target_km||0),0);
+ const cell=(h,b)=>`<div style="border:1.5px solid #2230E8;border-radius:12px;padding:12px;min-height:190px"><div style="font-weight:700;color:#2230E8;margin-bottom:6px">${h}</div>${b}</div>`;
+ const cells=[];
+ for(let i=0;i<7;i++){const d=addDays(w0,i),l=ps.filter(p=>p.plan_date==d);cells.push(cell(nice(d),l.length?l.map(p=>`<div style="margin-bottom:10px"><b>${esc(p.title)}</b>${tot(p)?`<div class="m">${tot(p)}</div>`:''}${splitsHTML(p.splits)}${p.details?`<div dir="auto" style="white-space:pre-wrap;font-size:13px;margin-top:3px">${esc(p.details)}</div>`:''}</div>`).join(''):'<div class="m">Rest</div>'))}
+ cells.push(cell('Week total',`<div style="font:800 26px Unbounded,sans-serif">${fmtD(km,'km')}</div><div class="m">planned distance</div>`));
+ const sq='<i style="display:block;width:10px;height:10px;border-radius:2px;background:#2230E8"></i>'.repeat(9);
+ const html=`<div style="display:flex;align-items:center;gap:12px"><div style="display:grid;grid-template-columns:repeat(3,10px);gap:3px">${sq}</div><span style="font:800 30px Unbounded,sans-serif">RUNOVA</span><span style="background:#FF4F5E;color:#fff;font:700 13px 'DM Sans',sans-serif;padding:3px 13px;border-radius:99px">Coaching</span></div>
+ <div style="margin-top:12px;font-size:16px;line-height:1.7"><div dir="auto"><b>Coach:</b> ${esc(coachName||'-')}</div><div dir="auto"><b>Athlete:</b> ${esc(nm(a))}</div></div>
+ <div class="m" style="margin:6px 0 14px">Weekly plan · ${fd(w0)} to ${fd(addDays(w0,6))}</div>
+ <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">${cells.join('')}</div>`;
+ const el=document.createElement('div');el.className='pdfb';el.style.cssText+='position:fixed;left:-9999px;top:0;width:1100px;padding:14px';el.innerHTML=html;document.body.appendChild(el);
+ let cv;try{if(document.fonts&&document.fonts.ready)await document.fonts.ready;cv=await html2canvas(el,{scale:2,backgroundColor:'#ffffff'})}finally{el.remove()}
+ const {jsPDF}=window.jspdf,pdf=new jsPDF('l','pt','a4'),W=pdf.internal.pageSize.getWidth(),PH=pdf.internal.pageSize.getHeight(),M=24,k=Math.min((W-2*M)/cv.width,(PH-2*M)/cv.height);
+ pdf.addImage(cv.toDataURL('image/jpeg',.92),'JPEG',(W-cv.width*k)/2,M,cv.width*k,cv.height*k);
  pdf.save('RUNOVA-'+(a.username||'athlete')+'-'+w0+'.pdf')}
 const sk=()=>'runova_seen_'+(me?me.id:'');
 const getSeen=()=>{try{return localStorage.getItem(sk())||seed()}catch(e){return seed()}};
@@ -197,7 +219,7 @@ function authView(){
   const r=await sb.auth.signInWithPassword({email:u+'@runova.app',password:p});
   $('#go').disabled=false;
   if(r.error)return $('#err').textContent=msg(r.error);
-  view='home';boot()}}
+  view='home';localStorage.removeItem('runova_nav');boot()}}
 
 async function boot(){
  const {data:{session}}=await sb.auth.getSession();
@@ -205,8 +227,9 @@ async function boot(){
  const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
  if(error||!data){await sb.auth.signOut();return authView()}
  me=data;
+ try{const o=JSON.parse(localStorage.getItem('runova_nav')||'null'),ok=me.role=='athlete'?['home','plan','load','notes','about']:me.role=='admin'?['home','coaches','athletes','races','about']:['home','athletes','notes','races','about'];if(o&&o.u==me.id&&ok.includes(o.view)){view=o.view;picked=me.role=='athlete'?null:(o.picked||null)}}catch(e){}
  $('#who').innerHTML=`<span>${esc(nm(me))}</span><span class="rc">${esc(me.role)}</span>${me.role=='admin'?'<button class="ghost" id="myn">Edit name</button>':''}<button class="ghost" id="out">Log Out</button>`;
- $('#out').onclick=async()=>{await sb.auth.signOut();me=null;picked=null;adding=false;view='home';authView()};
+ $('#out').onclick=async()=>{localStorage.removeItem('runova_nav');await sb.auth.signOut();me=null;picked=null;adding=false;view='home';authView()};
  if($('#myn'))$('#myn').onclick=async()=>{const v=prompt('Your name',nm(me));if(v==null||!v.trim())return;const {error}=await sb.from('profiles').update({full_name:v.trim()}).eq('id',me.id);if(error)return alert(msg(error));boot()};
  me.role=='athlete'?athleteView():coachView()}
 
@@ -255,10 +278,10 @@ function weekHTML(ps,ws){
 
 function planCard(p,coach){
  const t=tot(p),tag=dayTag(p.plan_date),id=esc(p.id);
- const ctl=(coach||p.status!='pending')?`<div>${badge(p.status)}</div>${p.athlete_notes?`<div class="cm"><b>${coach?'Athlete Note:':'Your Note:'}</b> ${esc(p.athlete_notes)}</div>`:''}`
+ const ctl=(coach||p.status!='pending')?`<div>${badge(p.status)}</div>${coach&&p.athlete_notes?`<div class="cm"><b>Athlete Note:</b> ${esc(p.athlete_notes)}</div>`:''}`
   :`<div class="sts" data-p="${id}">${[['finished','Completed'],['less','Partial'],['not_finished','Missed']].map(([k,l])=>`<button class="chip ${p.status==k?'on':''}" data-st="${k}">${l}</button>`).join('')}</div>
-  <input class="nt" maxlength="50" placeholder="Notes (max 50 characters)" aria-label="Notes" value="${esc(p.athlete_notes||'')}" data-nt="${id}"><button class="sm" data-save="${id}">Save</button>`;
- return `<div class="pc" id="pc-${id}"><div class="ph"><span>${tag?`<b>${tag}</b> · `:''}${esc(p.plan_date)}</span>${coach?`<span style="white-space:nowrap"><button class="x" data-pcopy="${id}" aria-label="Copy session" style="font-size:1rem">⧉</button><button class="x" data-pdel="${id}" aria-label="Remove from plan">×</button></span>`:''}</div>
+  <button class="sm" data-save="${id}">Save</button>`;
+ return `<div class="pc" id="pc-${id}"><div class="ph"><span>${tag?`<b>${tag}</b> · `:''}${esc(p.plan_date)}</span>${coach?`<span style="white-space:nowrap">${me.role!='admin'?`<button class="x" data-pedit="${id}" aria-label="Edit session" style="font-size:1rem">✎</button>`:''}<button class="x" data-pcopy="${id}" aria-label="Copy session" style="font-size:1rem">⧉</button><button class="x" data-pdel="${id}" aria-label="Remove from plan">×</button></span>`:''}</div>
  <div class="pt"><b>${esc(p.title)}</b>${t?`<span class="tot">${t}</span>`:''}</div>${splitsHTML(p.splits)}${p.details?`<div class="pre">${esc(p.details)}</div>`:''}${linkHTML(p.link,'Open Link')}${ctl}</div>`}
 
 const wTxt=w=>[w.distance_km!=null?fmtD(+w.distance_km,w.distance_unit):'',w.duration_min!=null?dur(+w.duration_min):'',(w.avg_pace?esc(w.avg_pace)+' /km':paceOf(+w.distance_km,+w.duration_min))].filter(Boolean).join(' • ');
@@ -272,10 +295,10 @@ function wRow(w,cm,coach,pm){pm=pm||{};const id=esc(w.id),pv=pm[w.id];
 function bindPlan(redo){
  document.querySelectorAll('.sts .chip').forEach(c=>c.onclick=()=>{c.parentNode.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')});
  document.querySelectorAll('[data-save]').forEach(b=>b.onclick=async()=>{
-  const id=b.dataset.save,on=document.querySelector('[data-p="'+id+'"] .on'),nt=document.querySelector('[data-nt="'+id+'"]').value.trim();
+  const id=b.dataset.save,on=document.querySelector('[data-p="'+id+'"] .on');
   if(!on)return alert('Choose Finished, Did less or Not finished first.');
   if(!confirm('Once you save, you can’t change this. Save?'))return;
-  const u={status:on.dataset.st,athlete_notes:nt||null};
+  const u={status:on.dataset.st};
   b.disabled=true;const {error}=await sb.from('plans').update(u).eq('id',id).eq('status','pending');b.disabled=false;
   if(error)return alert(msg(error));redo()})}
 
@@ -284,6 +307,7 @@ const bindNav=re=>document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=
 
 /* ---------- athlete ---------- */
 async function athleteView(){
+ try{localStorage.setItem('runova_nav',JSON.stringify({u:me.id,view,picked:null}))}catch(e){}
  const sn=getSeen();
  const [a,b,c,d]=await Promise.all([sb.from('plans').select('id',{count:'exact',head:true}).gt('created_at',sn),sb.from('comments').select('id',{count:'exact',head:true}).gt('created_at',sn),sb.from('athlete_races').select('id',{count:'exact',head:true}).gt('created_at',sn),sb.from('workouts').select('id',{count:'exact',head:true}).gt('edited_at',sn)]);
  const n=view=='notes'?0:(a.count||0)+(b.count||0)+(c.count||0)+(d.count||0);
@@ -311,8 +335,8 @@ async function aLoad(mn){
  const [ws,ps,pp]=await Promise.all([fetchWs(me.id),fetchPlans(me.id),sb.from('workout_points').select('workout_id,points').eq('athlete_id',me.id)]),cm=await fetchComments(ws),pm={};(pp.data||[]).forEach(x=>pm[x.workout_id]=x.points);
  mn.innerHTML=`<div class="narrow">${H('Activity Log')}${loadHTML(ws,ps)}<h2>Log an Activity</h2><div class="card"><div class="grid">
  <div><label for="wd">Date</label><input id="wd" type="date" value="${iso(new Date())}"></div><div><label for="wt">Activity</label><select id="wt"><option value="">Choose Activity</option>${typeOpts('')}</select></div>
- <div class="rd"><label for="wk">Distance *</label><div class="two"><input id="wk" type="number" step="0.01" min="0" inputmode="decimal"><select id="wku" aria-label="Unit"><option value="km">km</option><option value="m">m</option></select></div></div><div><label>Duration *</label><div class="three"><input id="wh" type="number" min="0" inputmode="numeric" placeholder="hr" aria-label="Hours"><input id="wm" type="number" min="0" max="59" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="wsec" type="number" min="0" max="59" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
- <div class="rd"><label>Average Pace (min/km), calculated automatically</label><div class="two"><input id="wpm" type="number" min="0" inputmode="numeric" placeholder="min"><input id="wps" type="number" min="0" max="59" inputmode="numeric" placeholder="sec"></div></div>
+ <div class="rd"><label for="wk">Distance *</label><div class="two"><input id="wk" type="number" step="0.01" min="0" inputmode="decimal"><select id="wku" aria-label="Unit"><option value="km">km</option><option value="m">m</option></select></div></div><div><label>Duration *</label><div class="three"><input id="wh" type="number" min="0" inputmode="numeric" placeholder="hr" aria-label="Hours"><input id="wm" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="wsec" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
+ <div class="rd"><label>Average Pace (min/km), calculated automatically</label><div class="two"><input id="wpm" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="min"><input id="wps" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="sec"></div></div>
  <div class="full"><label for="wn" id="wnl">Notes</label><textarea id="wn" rows="2" maxlength="50" placeholder="Max 50 characters"></textarea></div><div class="full"><button id="wsave">Save Activity</button></div></div><p class="err" id="werr" role="alert"></p></div>
  <h2>Your Activities</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,false,pm)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div></div>`;
  const tg=()=>{const t=$('#wt').value;document.querySelectorAll('.rd').forEach(e=>e.style.display=isRun(t)?'':'none');$('#wnl').textContent=isRun(t)?'Notes':'Description (optional)'};
@@ -349,6 +373,7 @@ function bindAdd(){
  flash='Created. Username: '+u+'  Password: '+p+'  Share these with the athlete.';adding=false;coachView()}}
 
 async function coachView(){
+ try{localStorage.setItem('runova_nav',JSON.stringify({u:me.id,view,picked}))}catch(e){}
  const s=getSeen();
  const [a,b]=await Promise.all([sb.from('plans').select('id',{count:'exact',head:true}).gt('updated_at',s).neq('status','pending'),sb.from('workouts').select('id',{count:'exact',head:true}).gt('created_at',s)]);
  const n=view=='notes'?0:(a.count||0)+(b.count||0);
@@ -399,12 +424,12 @@ async function cAthlete(mn,fl){
  ${me.role=='admin'?'':` <h2>Plan a Session</h2><div class="card"><div class="grid"><div><label for="pd">Date *</label><input id="pd" type="date"></div>
  <div><label for="pt">Session *</label><select id="pt"><option value="">Choose Session</option>${typeOpts('')}</select></div>
  <div class="rf"><label for="pk">Distance *</label><div class="two"><input id="pk" type="number" step="0.01" min="0" inputmode="decimal"><select id="pku" aria-label="Unit"><option value="km">km</option><option value="m">m</option></select></div></div>
- <div class="rf"><label>Average Pace (min/km) *</label><div class="two"><input id="ppm" type="number" min="0" inputmode="numeric" placeholder="min"><input id="pps" type="number" min="0" max="59" inputmode="numeric" placeholder="sec"></div></div>
- <div><label>Duration *</label><div class="three"><input id="ph" type="number" min="0" inputmode="numeric" placeholder="hr" aria-label="Hours"><input id="pm" type="number" min="0" max="59" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="ps" type="number" min="0" max="59" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
+ <div class="rf"><label>Average Pace (min/km) *</label><div class="two"><input id="ppm" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="min"><input id="pps" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="sec"></div></div>
+ <div><label>Duration *</label><div class="three"><input id="ph" type="number" min="0" inputmode="numeric" placeholder="hr" aria-label="Hours"><input id="pm" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="ps" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
  <div class="full rf"><label>Split Lines (Optional)</label><div id="psp"></div><button type="button" class="sm" id="spadd">+ Add Split Line</button><div class="m" id="spsum"></div></div>
  <div class="full"><label for="px">Description</label><textarea id="px" rows="4" placeholder="What the athlete should do"></textarea></div>
  <div class="full"><label>Links (Video or Page, Optional)</label><div id="pls"><input class="lk" placeholder="https://..." autocapitalize="none"></div><button type="button" class="sm" id="pladd">+ Add Link</button></div>
- <div class="full"><button id="padd">Add to Plan</button></div></div><p class="err" id="err" role="alert"></p></div>`}${wkTools}
+ <div class="full"><button id="padd">Add to Plan</button> <button type="button" class="back" id="pcancel" style="display:none">Cancel edit</button></div></div><p class="err" id="err" role="alert"></p></div>`}${wkTools}
  ${sec('Today',s.today,true)}${sec('Coming Up',s.up,true)}${sec('History',s.past,true)}
  <h2>Activity Logged by ${esc(nm(a).split(' ')[0])}</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,true,pmap)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div>
  <h2>Races and Goals</h2><div class="card">${races.length?`<div class="grid"><div><label for="rs">Race</label><select id="rs">${races.map(r=>`<option value="${esc(r.id)}">${esc(r.name)} · ${esc(r.race_date)}</option>`).join('')}</select></div><div><label>Goal Time</label><div class="three"><input id="rgh" type="number" min="0" placeholder="hr"><input id="rgm" type="number" min="0" max="59" placeholder="min"><input id="rgs" type="number" min="0" max="59" placeholder="sec"></div></div><div class="full"><button id="rassign">Assign Race</button></div></div>`:'<div class="empty">Ask the admin to add races first.</div>'}
@@ -439,6 +464,17 @@ async function cAthlete(mn,fl){
  document.querySelectorAll('[data-rdel]').forEach(b=>b.onclick=async()=>{await sb.from('athlete_races').delete().eq('id',b.dataset.rdel);coachView()});
  const tg=()=>{document.querySelectorAll('.rf').forEach(e=>e.style.display=isRun($('#pt').value)?'':'none')};if($('#padd')){
  $('#pt').onchange=tg;tg();
+ let editId=null;
+ $('#pcancel').onclick=()=>coachView();
+ document.querySelectorAll('[data-pedit]').forEach(b=>b.onclick=()=>{const p=ps.find(x=>x.id==b.dataset.pedit);if(!p)return;editId=p.id;
+  $('#pd').value=p.plan_date;$('#pt').value=p.type;tg();
+  const u=p.distance_unit||'km';$('#pku').value=u;$('#pk').value=p.target_km!=null?(u=='m'?Math.round(p.target_km*1000):+(+p.target_km).toFixed(3)):'';
+  const q=String(p.target_pace||'').split(':');$('#ppm').value=q[0]?p2(q[0]):'';$('#pps').value=q[1]?p2(q[1]):'';
+  const tm=Math.round((+p.target_min||0)*60);$('#ph').value=Math.floor(tm/3600)||'';$('#pm').value=p2(Math.floor(tm%3600/60));$('#ps').value=p2(tm%60);
+  $('#px').value=p.details||'';
+  $('#psp').innerHTML='';(p.splits||[]).forEach(x=>{const r=spRow();$('#psp').appendChild(r);r.querySelector('.sd').value=x.u=='m'?Math.round(x.km*1000):+(+x.km).toFixed(3);r.querySelector('.su').value=x.u;const sec=x.sec||Math.round(x.km*paceMin(x.pace)*60),pq=String(x.pace).split(':');r.querySelector('.st1').value=p2(Math.floor(sec/60));r.querySelector('.st2').value=p2(sec%60);r.querySelector('.sp1').value=p2(pq[0]||0);r.querySelector('.sp2').value=p2(pq[1]||0)});spUpdate();
+  const L=String(p.link||'').split('\n').filter(Boolean);$('#pls').innerHTML='';(L.length?L:['']).forEach(l=>{const i=document.createElement('input');i.className='lk';i.placeholder='https://...';i.value=l;i.style.marginTop='8px';$('#pls').appendChild(i)});
+  $('#padd').textContent='Save Changes';$('#pcancel').style.display='';$('#err').textContent='';$('#pd').scrollIntoView({behavior:'smooth',block:'center'})});
  $('#spadd').onclick=()=>{$('#psp').appendChild(spRow());spUpdate()};['pk','pku'].forEach(i=>$('#'+i).addEventListener('input',spUpdate));bindPace('pk','pku','ph','pm','ps','ppm','pps',false);
  $('#pladd').onclick=()=>{const i=document.createElement('input');i.className='lk';i.placeholder='https://...';i.style.marginTop='8px';$('#pls').appendChild(i)};
  $('#padd').onclick=async()=>{const t=$('#pt').value,run=isRun(t),d=$('#px').value.trim();
@@ -448,9 +484,10 @@ async function cAthlete(mn,fl){
   if(run&&!(pa>0))return E('Enter the average pace.');
   if(!(dv>0))return E('Enter the duration.');
   if(num($('#ps').value)>59||num($('#pm').value)>59||num($('#pps').value)>59)return E('Minutes and seconds must be 0 to 59.');
-  const sp=collectSplits();if(sp===false)return E('Complete each split line (distance and pace) or remove it.');
+  const sp=collectSplits();if(sp===false)return E('Complete each split line (distance and time or pace) or remove it.');
   const ls=[...document.querySelectorAll('#pls .lk')].map(x=>x.value.trim()).filter(Boolean);if(ls.some(x=>!url(x)))return $('#err').textContent='That link doesn’t look right.';const lk=ls.map(url).join('\n');
-  const {error}=await sb.from('plans').insert({athlete_id:a.id,plan_date:$('#pd').value,type:t,title:TYPES[t],target_km:run?toKm(num($('#pk').value),$('#pku').value):null,distance_unit:run?$('#pku').value:'km',splits:run&&sp.length?sp:null,target_min:dv,target_pace:run?(num($('#ppm').value)||0)+':'+String(num($('#pps').value)||0).padStart(2,'0'):null,details:d||null,link:lk||null});
+  const row={plan_date:$('#pd').value,type:t,title:TYPES[t],target_km:run?toKm(num($('#pk').value),$('#pku').value):null,distance_unit:run?$('#pku').value:'km',splits:run&&sp.length?sp:null,target_min:dv,target_pace:run?(num($('#ppm').value)||0)+':'+String(num($('#pps').value)||0).padStart(2,'0'):null,details:d||null,link:lk||null};
+  const {error}=editId?await sb.rpc('coach_update_plan',{pid:String(editId),r:row}):await sb.from('plans').insert({athlete_id:a.id,...row});
   if(error)return $('#err').textContent=msg(error);coachView()};}
  document.querySelectorAll('[data-pcopy]').forEach(b=>b.onclick=()=>{const p=ps.find(x=>x.id==b.dataset.pcopy);if(!p)return;
   const o=dlg(`<h2 style="margin-top:0">Copy Session</h2><label for="cpa">To athlete</label><select id="cpa">${mine.map(x=>`<option value="${esc(x.id)}"${x.id==a.id?' selected':''}>${esc(nm(x))}</option>`).join('')}</select><label for="cpd" style="margin-top:10px">Date</label><input type="date" id="cpd" value="${esc(p.plan_date)}"><p class="err" id="cpe" role="alert"></p><div class="inl"><button id="cpgo">Copy</button><button class="back" id="cpx">Cancel</button></div>`);
