@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#0B1033"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Runova">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#00063A"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Runova">
 <title>RUNOVA Coaching</title>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--card:#fff;--bd:#cfd4ea;--cmbg:#FFF0F1;--bg:#F3F5FB;--ink:#0B1033;--mute:#6A7194;--line:#E4E8F4;--blue:#2230E8;--coral:#FF4F5E;--red:#C62828;--nav:#0B1033}
+:root{--card:#fff;--bd:#C8D2F2;--cmbg:#FFF1E8;--bg:#EDF2FF;--ink:#0A1240;--mute:#5B6699;--line:#DDE4F8;--blue:#E24400;--ta:#C93B00;--coral:#FF5A00;--red:#C62828;--nav:#00093F;--inp:#fff;--ok:#12794A;--warn:#A85F00;--pl:#C3C8E0}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}html,body{max-width:100%;overflow-x:hidden;overflow-x:clip}.card,.pc,.tile,.arow{min-width:0;overflow-wrap:anywhere}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 15.5px/1.55 "DM Sans",system-ui,sans-serif;padding-bottom:76px}
 .top{background:var(--nav);color:#fff;padding:12px 20px;position:sticky;top:0;z-index:30}
@@ -21,10 +21,10 @@ main{max-width:1200px;margin:0 auto;padding:22px 20px 40px}
 h2{font:700 1rem Unbounded,sans-serif;margin:26px 0 12px}
 .card,.pc,.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(11,16,51,.04),0 8px 24px rgba(11,16,51,.05)}
 .pc{padding:16px;margin-bottom:12px}
-.pc.new{border-color:var(--coral);box-shadow:0 0 0 2px rgba(255,79,94,.18)}
+.pc.new{border-color:var(--coral);box-shadow:0 0 0 2px rgba(255,90,0,.22)}
 label{display:block;font-size:.85rem;color:var(--mute);margin-bottom:4px}
-input,select,textarea{min-width:0;max-width:100%;font-size:16px;width:100%;font:inherit;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--ink)}
-input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid rgba(34,48,232,.35);outline-offset:1px}
+input,select,textarea{min-width:0;max-width:100%;font-size:16px;width:100%;font:inherit;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--inp);color:var(--ink)}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid rgba(255,138,61,.6);outline-offset:1px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .full{grid-column:1/-1}
 button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:10px 18px;background:var(--blue);color:#fff;cursor:pointer}
@@ -32,12 +32,12 @@ button:hover{filter:brightness(1.1)}
 button.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);padding:5px 12px;font-size:.85rem}
 button.danger{background:transparent;color:var(--red);border:1px solid var(--red)}
 button.sm{padding:6px 14px;font-size:.88rem;margin-top:8px}
-button.back{background:none;color:var(--blue);padding:4px 0}
+button.back{background:none;color:var(--ta);padding:4px 0}
 .x{background:none;color:var(--mute);padding:2px 8px;font-weight:400;font-size:1.3rem}
 .err,.ok{font-size:.9rem;margin:10px 0 0;min-height:1.2em}
-.err{color:var(--red)}.ok{color:var(--blue);font-weight:600}
+.err{color:var(--red)}.ok{color:var(--ta);font-weight:600}
 .stats{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:end}
-.big{font:800 clamp(2.4rem,9vw,3.6rem)/1 Unbounded,sans-serif;color:transparent;-webkit-text-stroke:2px var(--blue)}
+.big{font:800 clamp(2.4rem,9vw,3.6rem)/1 Unbounded,sans-serif;color:transparent;-webkit-text-stroke:2px var(--ta)}
 .big span{font:600 1rem "DM Sans",sans-serif;color:var(--ink);-webkit-text-stroke:0;margin-inline-start:6px}
 .lbl,.m{font-size:.85rem;color:var(--mute)}
 .mid{font:700 1.4rem/1.2 Unbounded,sans-serif}
@@ -48,12 +48,12 @@ button.back{background:none;color:var(--blue);padding:4px 0}
 .cm{background:var(--cmbg);border-left:3px solid var(--coral);border-radius:6px;padding:6px 10px;margin-top:6px;font-size:.92rem}
 .inl{display:flex;gap:8px;margin-top:8px}
 .chip{background:var(--card);color:var(--ink);border:1px solid var(--bd);padding:8px 16px}
-.chip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.chip.on{background:var(--blue);color:#fff;border-color:var(--ta)}
 input[type=checkbox]{width:22px;height:22px}
 .ph{display:flex;justify-content:space-between;align-items:center;color:var(--mute);font-size:.88rem}
 .pt{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:4px 0}
 .pt b{font:700 1.1rem Unbounded,sans-serif}
-.tot{font:700 1rem Unbounded,sans-serif;color:var(--blue)}
+.tot{font:700 1rem Unbounded,sans-serif;color:var(--ta)}
 .pre{white-space:pre-wrap}
 .bdg{border:1px solid var(--c);color:var(--c);padding:2px 10px;border-radius:99px;font-weight:600;font-size:.8rem;display:inline-block;margin-top:8px}
 .sts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
@@ -64,12 +64,12 @@ input[type=checkbox]{width:22px;height:22px}
 .ai.on{background:var(--blue);color:#fff}
 .ai .cnt{background:var(--coral);color:#fff;border-radius:99px;padding:0 8px;font-style:normal;font-size:.75rem}
 .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.tile .mid{font-size:2rem;color:var(--blue)}
+.tile .mid{font-size:2rem;color:var(--ta)}
 .arow{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;background:var(--card);color:var(--ink);border:1px solid var(--line);margin-bottom:10px;text-align:start;padding:12px 14px;border-radius:12px}
 .arow .bdg{margin:0;flex:none}
 .pbs{display:grid;gap:10px;margin-bottom:12px}
 .pbr{display:grid;grid-template-columns:52px 1fr 1fr;gap:10px;align-items:center}
-.quote{background:linear-gradient(135deg,#2230E8,#4B2BD8);color:#fff;border-radius:14px;padding:26px 22px;font:800 clamp(1.2rem,4.5vw,1.9rem)/1.25 Unbounded,sans-serif}
+.quote{background:linear-gradient(135deg,#001A9E,#0A3BFF);color:#fff;border-radius:14px;padding:26px 22px;font:800 clamp(1.2rem,4.5vw,1.9rem)/1.25 Unbounded,sans-serif}
 .quote small{display:block;font:600 .85rem "DM Sans",sans-serif;opacity:.85;margin-bottom:10px}
 .bar{display:grid;grid-template-columns:90px 1fr 52px;gap:10px;align-items:center;margin:6px 0}
 .bar span{font-size:.85rem;color:var(--mute)}
@@ -82,7 +82,7 @@ input[type=checkbox]{width:22px;height:22px}
 .ai{flex:1;justify-content:center;padding:10px 2px;font-size:.72rem;text-align:center}
 .tiles{grid-template-columns:1fr}}
 @media(max-width:560px){.grid{grid-template-columns:minmax(0,1fr)}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stats>:first-child{grid-column:1/-1}main{padding:16px 14px 30px}}
-:root[data-theme=dark]{color-scheme:dark;--bg:#0A0D24;--ink:#EEF0FB;--mute:#9AA1C8;--line:#222850;--card:#131839;--nav:#070A1C;--bd:#2D3563;--cmbg:#3A1E2C;--blue:#6B78FF}
+:root[data-theme=dark]{color-scheme:dark;--bg:#00083A;--ink:#F2F5FF;--mute:#AEBBF0;--line:rgba(255,255,255,.13);--card:#08155E;--nav:#00063A;--bd:rgba(255,255,255,.28);--cmbg:#18237A;--blue:#E24400;--ta:#FF8A3D;--inp:#050F4A;--red:#FF9A8F;--ok:#4ADE9A;--warn:#FFB454;--pl:#5C74E0}
 .dk{display:inline}.mb{display:none}@media(max-width:820px){.dk{display:none}.mb{display:inline;font-size:1.1rem}}
 .three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .pbr2{display:grid;grid-template-columns:52px minmax(0,1.6fr) minmax(0,1fr);gap:10px;align-items:center}
@@ -94,7 +94,7 @@ input[type=checkbox]{width:22px;height:22px}
 .cb{display:flex;gap:4px;align-items:flex-end;height:150px}
 .cb div{width:28px;border-radius:5px 5px 0 0;height:0;transition:height .9s cubic-bezier(.2,.8,.2,1);position:relative}
 .cb div span{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-size:.72rem;white-space:nowrap}
-.cb .pl{background:#c3c8e0}.cb .dn{background:var(--blue)}
+.cb .pl{background:var(--pl)}.cb .dn{background:var(--blue)}
 .cc small{margin-top:6px;font-size:.68rem;color:var(--mute);text-align:center;line-height:1.25}
 .top .row{flex-wrap:wrap}#who{flex-wrap:wrap;justify-content:flex-end}input[type=date]{-webkit-appearance:none;appearance:none;min-height:44px}
 @media(max-width:560px){.top{padding:10px 14px}.brand{font-size:1rem}.brand small{display:none}.rc{display:none}#who>span:first-child{max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}button.ghost{padding:5px 9px;font-size:.8rem}main{padding-left:12px;padding-right:12px}}
@@ -104,7 +104,7 @@ button.ghost{white-space:nowrap}
 .ov{position:fixed;inset:0;background:rgba(7,10,28,.6);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}.dg{width:100%;max-width:420px}
 .spl{display:grid;grid-template-columns:minmax(0,1.2fr) 76px minmax(0,1.4fr) auto;gap:8px;align-items:center;margin-top:8px}.spl .spt{grid-column:1/-1;margin-top:-2px}.spl .su{padding-left:8px;padding-right:4px}
 @media(max-width:560px){.spl{grid-template-columns:minmax(0,1fr) 76px 36px}.spl .two{grid-column:1/-1;order:5}.spl .spt{order:6}}
-.pdfb{background:#fff;color:#0B1033;width:700px;padding:6px 8px;font:400 15px/1.5 "DM Sans",system-ui,sans-serif}.pdfb .m{color:#B9C8FF}
+.pdfb{background:#fff;color:#0B1033;width:700px;padding:6px 8px;font:400 15px/1.5 "DM Sans",system-ui,sans-serif}.pdfb .m{color:#C9D6FF;font-weight:600}
 
 .spl{grid-template-columns:minmax(0,1fr) 76px minmax(0,1.3fr) minmax(0,1.3fr) auto;align-items:end}.spl .stm .m,.spl .spc .m{display:block;font-size:.75rem}
 @media(max-width:560px){.spl{grid-template-columns:minmax(0,1fr) 76px 36px}.spl .stm,.spl .spc{grid-column:1/-1;order:5}.spl .x{align-self:center}}
@@ -117,7 +117,7 @@ button.ghost{white-space:nowrap}
 .prh{padding:10px 0;border-bottom:1px solid var(--line)}.prh:last-child{border:0}
 .prh>b{display:block;font:700 .95rem Unbounded,sans-serif;margin-bottom:4px}
 .prl{display:flex;justify-content:space-between;gap:4px 12px;flex-wrap:wrap;padding:3px 0;font-size:.92rem}
-.prl .m{white-space:nowrap}.prl.cur b{color:var(--blue)}
+.prl .m{white-space:nowrap}.prl.cur b{color:var(--ta)}
 .prn{font-size:.85rem;color:var(--mute);margin:0 0 12px}
 .stv{display:inline-flex;align-items:center;gap:8px;margin-top:12px;background:#FC4C02;color:#fff;padding:9px 18px;border-radius:99px;font-weight:600;text-decoration:none}
 .ab{margin:0;padding-inline-start:20px}.ab li{margin:6px 0}
@@ -126,6 +126,15 @@ button.ghost{white-space:nowrap}
 .ci:hover{transform:scale(1.08)}
 .ci svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:560px){.brand{font-size:.95rem}.brand small{display:inline-block;font-size:.58rem;padding:2px 7px;margin-inline-start:6px}#who>span:first-child{max-width:72px}}
+
+/* round 5: blue + orange look, same as the RUNOVA posts */
+html{background:var(--bg)}
+.top{border-bottom:1px solid rgba(255,255,255,.08)}
+.brand small{background:linear-gradient(180deg,#FF6A00,#FF4500)}
+:root[data-theme=dark] body{background:transparent}
+:root[data-theme=dark] body::before{content:"";position:fixed;inset:0;z-index:-1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 1000' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%232F5BFF' stroke-opacity='.4' stroke-width='2.5'%3E%3Cpath d='M0 260L1000 60' vector-effect='non-scaling-stroke'/%3E%3Cpath d='M0 520L1000 320' vector-effect='non-scaling-stroke'/%3E%3Cpath d='M0 780L1000 580' vector-effect='non-scaling-stroke'/%3E%3Cpath d='M0 1040L1000 840' vector-effect='non-scaling-stroke'/%3E%3C/g%3E%3C/svg%3E") 0 0/100% 100% no-repeat,linear-gradient(165deg,#00083A 0%,#00157F 55%,#0027B5 100%)}
+:root[data-theme=dark] .card,:root[data-theme=dark] .pc,:root[data-theme=dark] .tile,:root[data-theme=dark] .arow{box-shadow:0 8px 28px rgba(0,4,40,.35)}
+.wa{background:#128C4A}
 </style>
 </head>
 <body>
@@ -136,17 +145,16 @@ button.ghost{white-space:nowrap}
 const sb=supabase.createClient('https://fsgawcqntgvfpbxytwhx.supabase.co','sb_publishable_8heKxg7yMRJrV2qbB1hH-Q_ZJqxktXZ');
 const ABOUT={mission:'RUNOVA Coaching helps runners train with structure and see real progress. Every athlete gets a plan built for their level and goals, and a coach who follows every session.',
 why:'Every runner is different. A plan that works for one runner may not work for another. That’s why we build individual plans and track the results, so each athlete knows where they are and what comes next.',
-get:['A weekly plan built for you','A place to log every run, with distance, time and notes','Your progress in one place: weekly km, results and personal bests','A coach who follows each session and gives feedback'],
-coach:'Seif Hatem, founder of RUNOVA, has been running since 2014. More than 12 years of experience, now shared with the athletes he coaches in running, strength and stretching.'};
+get:['A weekly plan built for you','A place to log every run, with distance, time and notes','Your progress in one place: weekly km, results and personal bests','A coach who follows each session and gives feedback']};
 const MSGS=["Start slow. Finish proud.", "Every kilometer is a promise you keep to yourself.", "Show up today. Future you says thanks.", "Small steps still cover the distance.", "You don’t need a perfect day, just a started one.", "Consistency beats intensity.", "Easy days make hard days possible.", "The hardest step is the first one. Take it.", "Trust the plan and the plan will carry you.", "Strong legs are built on ordinary mornings.", "Progress is quiet. Keep going anyway.", "Run today like you’re racing your best self.", "Tired is a feeling. Moving is a choice.", "Be patient. Fitness is built in layers.", "Breathe, relax your shoulders, run tall.", "You’re closer than you were yesterday.", "Rest is part of the training. Respect it.", "Discipline is choosing what you want most over what you want now.", "Run with your head up and your heart open.", "Fast is fun, but steady wins.", "Every runner started as a beginner.", "Your only competition is who you were last week.", "Make today’s effort count, not just today’s distance.", "Hills are just speed in disguise.", "The track doesn’t care about excuses. Neither do you.", "Be proud of the work nobody sees.", "A bad run is still a run you finished.", "Fuel well. Sleep well. Run well.", "Quiet confidence is built mile by mile.", "Let the rhythm of your steps clear your mind.", "Race day rewards the weeks you showed up.", "You are stronger than your last thought of quitting.", "Cadence, posture, breath. Simple and strong.", "Today’s sweat is tomorrow’s strength.", "Aim for better, not perfect.", "Find your pace, then protect it.", "Every session adds a brick to your foundation.", "The finish line is just the start of the next goal.", "Believe in the miles you’ve already run.", "Run happy. The results will follow.", "Pain passes. Pride stays.", "Focus on this step, then the next.", "The best pace is the one you can hold with a smile.", "Warm up well. Cool down well. Recover well.", "Growth lives just outside your comfort zone.", "You’ve got a plan. Now go and live it.", "Be the runner who keeps showing up.", "Stay relaxed when it gets hard.", "Today is a good day for a good run.", "Great things are built on repeat.", "Run your race, not someone else’s.", "Strength work today means faster legs tomorrow.", "Stretch like you mean it.", "Respect the easy run. It does more than you think.", "Your goals are waiting at the end of your habits.", "Courage is lacing up on a day you don’t feel like it.", "The road remembers every effort.", "Go gently on the start, strongly on the finish.", "Little by little, the distance gets shorter.", "Keep your form when the effort rises.", "Celebrate every session you complete.", "Your body can do more than your mind believes.", "Make your next run your best reason to smile.", "The work you do now is your race-day advantage.", "Be kind to your body. It carries you.", "A steady effort beats a heroic one.", "You didn’t come this far to only come this far.", "Run toward the person you want to become.", "Every step forward is a step you earned.", "Listen to your body, then lead your mind.", "Good habits make great runners.", "Chase the feeling of finishing, not the fear of starting.", "Today’s plan is small enough to start and big enough to matter.", "When it burns, relax and keep your rhythm.", "There are no shortcuts, only smarter steps.", "Run with gratitude for the legs that carry you.", "Your coach believes in you. Believe in yourself too.", "Let the miles teach you patience.", "Another session done is another win banked.", "Don’t count the days. Make the days count.", "Strong mind, steady stride.", "Hold your pace. Hold your nerve.", "Every finish line began with a single decision.", "Be consistent now, be amazed later.", "Recovery is where the strength is built.", "Today is another chance to get it right.", "Smooth is fast. Relaxed is faster.", "Run like the finish line is waiting just for you.", "Get comfortable being uncomfortable.", "The harder you work, the sweeter the finish.", "Take the day one stride at a time.", "Your effort today writes your story tomorrow.", "Fresh air, open road, free mind.", "Stay curious about how far you can go.", "Train with purpose and race with joy.", "You are building something that lasts.", "Strength isn’t only in the legs. It’s in showing up.", "Keep the promise you made at the start of this plan.", "Today’s run is a gift to your future self.", "Every mile you log is proof you can."];
 const $=s=>document.querySelector(s);
-let cur=(()=>{try{return localStorage.getItem('runova_theme')}catch(e){return null}})()||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+let cur=(()=>{try{return localStorage.getItem('runova_theme')}catch(e){return null}})()||'dark';
 const setTh=t=>{document.documentElement.dataset.theme=t;$('#th').textContent=t=='dark'?'☀️ Day':'🌙 Night'};
 setTh(cur);$('#th').onclick=()=>{cur=cur=='dark'?'light':'dark';setTh(cur);try{localStorage.setItem('runova_theme',cur)}catch(e){}};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const TYPES={easy:'Easy Run',long:'Long Run',tempo:'Tempo',interval:'Intervals',fartlek:'Fartlek',race:'Race',strength:'Strength',stretch:'Stretching'};
 const RUN=['easy','long','tempo','interval','fartlek','race'],isRun=t=>RUN.includes(t);
-const ST={pending:['Pending','#5A6086'],finished:['Completed','#2230E8'],less:['Partial','#B26A00'],not_finished:['Missed','#C62828']};
+const ST={pending:['Pending','var(--mute)'],finished:['Completed','var(--ok)'],less:['Partial','var(--warn)'],not_finished:['Missed','var(--red)']};
 const dupMsg=m=>/^That username is already taken/i.test(m)?'That username is already taken. Choose a different one (the display name can stay the same).':m;
 const PBD=['2K','5K','10K','21K','42K'];
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -156,7 +164,7 @@ const fmt=n=>Number.isInteger(n)?n:n.toFixed(1);
 const nm=a=>a.full_name||a.username;
 const pcs=p=>{const q=String(p||'').split(':'),z=n=>String(n).padStart(2,'0');return z(+q[0]||0)+':'+z(+q[1]||0)};
 const url=u=>{u=(u||'').trim();if(!u)return '';if(!/^https?:\/\//i.test(u))u='https://'+u;try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return ''}};
-const linkHTML=(u,l)=>String(u||'').split('\n').map(x=>url(x)).filter(Boolean).map((h,i,a)=>`<div style="margin-top:8px"><a href="${esc(h)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-weight:600">${l}${a.length>1?' '+(i+1):''} ↗</a></div>`).join('');
+const linkHTML=(u,l)=>String(u||'').split('\n').map(x=>url(x)).filter(Boolean).map((h,i,a)=>`<div style="margin-top:8px"><a href="${esc(h)}" target="_blank" rel="noopener noreferrer" style="color:var(--ta);font-weight:600">${l}${a.length>1?' '+(i+1):''} ↗</a></div>`).join('');
 const dl=d=>{const n=Math.round((new Date(d)-new Date(iso(new Date())))/864e5);return n>0?n+' days to go':n==0?'Today':''};
 const dur=m=>{const t=Math.round(+m*60),h=Math.floor(t/3600),mm=Math.floor(t%3600/60),ss=t%60,z=n=>String(n).padStart(2,'0');return (h?h+' h ':'')+z(mm)+' min '+z(ss)+' sec'};
 const durIn=(a,b)=>(num(a)||0)+(num(b)||0)/60;
@@ -178,6 +186,8 @@ const tt=m=>{const t=Math.round(m*60),h=Math.floor(t/3600),mm=Math.floor(t%3600/
 const addDays=(x,n)=>{const d=new Date(x+'T00:00:00');d.setDate(d.getDate()+n);return iso(d)};
 const wkOf=x=>{const d=new Date(x+'T00:00:00');d.setDate(d.getDate()-((d.getDay()+1)%7));return iso(d)};
 const sumPts=m=>Object.values(m).reduce((t,v)=>t+(+v||0),0);
+const waNum=v=>{let d=String(v||'').replace(/[^\d+]/g,'');if(d.startsWith('+'))d=d.slice(1);else if(d.startsWith('00'))d=d.slice(2);else if(/^0\d{10}$/.test(d))d='20'+d.slice(1);else if(/^1[0125]\d{8}$/.test(d))d='20'+d;d=d.replace(/\D/g,'');return /^\d{8,15}$/.test(d)?d:''};
+const dlBlob=(b,n)=>{const u=URL.createObjectURL(b),l=document.createElement('a');l.href=u;l.download=n;document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)};
 const stravaLink=()=>{const u=sUrl(me&&me.strava);return u?`<a class="stv" href="${esc(u)}" target="_blank" rel="noopener noreferrer">Strava Account ↗</a>`:''};
 const sUrl=v=>{v=(v||'').trim();if(!v)return '';if(/^\d+$/.test(v))return 'https://www.strava.com/athletes/'+v;const u=url(v);if(!u)return '';try{const h=new URL(u).hostname;return /(^|\.)strava\.com$|(^|\.)strava\.app\.link$/.test(h)?u:''}catch(e){return ''}};
 const splitsHTML=sp=>!Array.isArray(sp)||!sp.length?'':`<div style="margin:6px 0">${sp.map((x,i)=>`<div class="m" style="display:flex;justify-content:space-between;gap:10px;padding:3px 0"><span>${i+1}. ${fmtD(+x.km,x.u)}</span><span>${dur((x.sec||+x.km*paceMin(x.pace)*60)/60)} • ${pcs(x.pace)} /km</span></div>`).join('')}</div>`;
@@ -194,7 +204,7 @@ function spUpdate(){const rows=[...document.querySelectorAll('#psp .spl')];let t
 function collectSplits(){const out=[];for(const r of document.querySelectorAll('#psp .spl')){const v=c=>r.querySelector('.'+c).value,d=num(v('sd')),u=v('su'),t1=num(v('st1'))||0,t2=num(v('st2'))||0,p1=num(v('sp1'))||0,p2s=num(v('sp2'))||0;if(d==null&&!t1&&!t2&&!p1&&!p2s)continue;const km=toKm(d,u);if(!(km>0)||t2>59||p2s>59)return false;let t=t1*60+t2,pc=p1*60+p2s;if(!(t>0)&&!(pc>0))return false;if(!(t>0))t=Math.round(pc*km);if(!(pc>0))pc=Math.round(t/km);out.push({km:Math.round(km*1e5)/1e5,u,sec:t,pace:Math.floor(pc/60)+':'+p2(pc%60)})}return out}
 function pbSugs(ws,pbm){let no=[];try{no=JSON.parse(localStorage.getItem('runova_pbno')||'[]')}catch(e){}const out=[];PBD.forEach(d=>{const dk=parseFloat(d),c=ws.filter(w=>w.type=='race'&&w.distance_km!=null&&w.duration_min>0&&w.distance_km>=dk*0.99&&w.distance_km<=dk*1.02&&!no.includes(String(w.id)));if(!c.length)return;const b=c.reduce((x,y)=>y.duration_min<x.duration_min?y:x),cur=pbm[d],cm=cur?parseHMS(cur.time_text):NaN;if(!cur||isNaN(cm)||Math.round(b.duration_min*60)<Math.round(cm*60))out.push({d,w:b,cur:cur?cur.time_text:''})});return out}
 const loadJs=src=>new Promise((ok,no)=>{if(document.querySelector('script[src="'+src+'"]'))return ok();const e=document.createElement('script');e.src=src;e.onload=ok;e.onerror=()=>no(new Error('Could not load a PDF library. Check your internet.'));document.head.appendChild(e)});
-async function planPdf(a,w0){
+async function planPdf(a,w0,opt){
  const {data,error}=await sb.from('plans').select('*').eq('athlete_id',a.id).gte('plan_date',w0).lte('plan_date',addDays(w0,6)).order('plan_date');
  if(error)throw error;
  let coachName='';
@@ -202,22 +212,22 @@ async function planPdf(a,w0){
  await Promise.all([loadJs('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'),loadJs('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js')]);
  const ps=data||[],nice=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'});
  const km=ps.reduce((t,p)=>t+(+p.target_km||0),0);
- const cell=(h,b,hot)=>`<div style="border:1.5px solid ${hot?'#FF6A00':'rgba(255,255,255,.22)'};background:${hot?'linear-gradient(160deg,#FF6A00,#FF3D00)':'rgba(255,255,255,.07)'};border-radius:14px;padding:14px;min-height:190px;color:#fff"><div style="font-weight:700;color:${hot?'#fff':'#FF8A3D'};margin-bottom:8px;font-size:15px">${h}</div>${b}</div>`;
+ const cell=(h,b,hot)=>`<div style="border:1.5px solid ${hot?'#FF6A00':'rgba(255,255,255,.22)'};background:${hot?'linear-gradient(160deg,#FF6A00,#FF3D00)':'rgba(255,255,255,.07)'};border-radius:14px;padding:14px;min-height:190px;color:#fff;font-weight:600"><div style="font-weight:700;color:${hot?'#fff':'#FF8A3D'};margin-bottom:8px;font-size:15px">${h}</div>${b}</div>`;
  const cells=[];
  for(let i=0;i<7;i++){const d=addDays(w0,i),l=ps.filter(p=>p.plan_date==d);cells.push(cell(nice(d),l.length?l.map(p=>`<div style="margin-bottom:10px"><b>${esc(p.title)}</b>${tot(p)?`<div class="m">${tot(p)}</div>`:''}${splitsHTML(p.splits)}${p.details?`<div dir="auto" style="white-space:pre-wrap;font-size:13px;margin-top:3px">${esc(p.details)}</div>`:''}</div>`).join(''):'<div class="m">Rest</div>'))}
  cells.push(cell('Week total',`<div style="font:800 26px Unbounded,sans-serif">${fmtD(km,'km')}</div><div style="color:rgba(255,255,255,.88)">planned distance</div>`,true));
  const lines=['M0 190 L1100 20','M0 400 L1100 230','M0 610 L1100 440','M0 820 L1100 650'].map(d=>`<path d="${d}"/>`).join('');
  const bgSvg='data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 780" preserveAspectRatio="none"><g fill="none" stroke="#2F5BFF" stroke-opacity=".55" stroke-width="2.5">${lines}</g></svg>`);
  const html=`<div style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden"><img src="${bgSvg}" style="width:100%;height:100%;display:block" alt=""></div>
- <div style="position:relative"><div style="display:flex;align-items:center;gap:14px"><span style="font:800 italic 40px Unbounded,sans-serif;color:#fff;letter-spacing:-.02em">RUNOVA</span><span style="background:linear-gradient(180deg,#FF6A00,#FF4000);color:#fff;font:600 italic 17px 'DM Sans',sans-serif;padding:5px 18px;border-radius:99px">Coaching</span></div>
- <div style="margin-top:10px;font:800 italic 17px Unbounded,sans-serif;color:#fff">YOUR PLAN. YOUR PACE. <span style="color:#FF6A00">YOUR PROGRESS.</span></div>
- <div style="margin-top:16px;font-size:16px;line-height:1.7;color:#fff"><div dir="auto"><b>Coach:</b> ${esc(coachName||'-')}</div><div dir="auto"><b>Athlete:</b> ${esc(nm(a))}</div></div>
- <div class="m" style="margin:6px 0 16px">Weekly plan · ${fd(w0)} to ${fd(addDays(w0,6))}</div>
- <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">${cells.join('')}</div></div>`;
- const el=document.createElement('div');el.className='pdfb';el.style.cssText+='position:fixed;left:-9999px;top:0;width:1100px;min-height:777px;padding:34px 36px;box-sizing:border-box;color:#fff;background:linear-gradient(135deg,#000646 0%,#001A9E 60%,#0A3BFF 100%)';el.innerHTML=html;document.body.appendChild(el);
+ <div style="position:relative;flex:1;display:flex;flex-direction:column"><div style="display:flex;align-items:center;gap:14px"><span style="font:800 italic 40px Unbounded,sans-serif;color:#fff;letter-spacing:-.02em">RUNOVA</span><span style="background:linear-gradient(180deg,#FF6A00,#FF4000);color:#fff;font:600 italic 17px 'DM Sans',sans-serif;padding:5px 18px;border-radius:99px">Coaching</span></div>
+ <div style="margin-top:16px;font-size:16px;line-height:1.7;color:#fff;font-weight:600"><div dir="auto"><b>Coach:</b> ${esc(coachName||'-')}</div><div dir="auto"><b>Athlete:</b> ${esc(nm(a))}</div></div>
+ <div style="margin:8px 0 18px;font-size:16px;font-weight:700;color:#fff"><span style="letter-spacing:.04em">WEEKLY PLAN:</span> <span style="color:#C9D6FF">${fd(w0)} to ${fd(addDays(w0,6))}</span></div>
+ <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">${cells.join('')}</div><div style="margin-top:auto;padding-top:28px;text-align:center;font:800 italic 22px Unbounded,sans-serif;color:#fff;letter-spacing:.01em">YOUR PLAN. YOUR PACE. <span style="color:#FF6A00">YOUR PROGRESS.</span></div></div>`;
+ const el=document.createElement('div');el.className='pdfb';el.style.cssText+='position:fixed;left:-9999px;top:0;display:flex;flex-direction:column;width:1100px;min-height:777px;padding:34px 36px;box-sizing:border-box;color:#fff;background:linear-gradient(135deg,#000646 0%,#001A9E 60%,#0A3BFF 100%)';el.innerHTML=html;document.body.appendChild(el);
  let cv;try{if(document.fonts&&document.fonts.ready)await document.fonts.ready;cv=await html2canvas(el,{scale:2,backgroundColor:'#000646'})}finally{el.remove()}
  const {jsPDF}=window.jspdf,PW=842,PH=Math.max(595,Math.round(PW*cv.height/cv.width)),pdf=new jsPDF({orientation:PH>PW?'p':'l',unit:'pt',format:[PW,PH]});
  pdf.addImage(cv.toDataURL('image/jpeg',.92),'JPEG',0,0,PW,PH);
+ if(opt&&opt.blob)return {blob:pdf.output('blob'),name:'RUNOVA Coaching - '+nm(a)+'\'s Plan from '+fd(w0)+' to '+fd(addDays(w0,6))+'.pdf'};
  pdf.save('RUNOVA Coaching-'+(a.username||'athlete')+'-'+w0+'.pdf')}
 const sk=()=>'runova_seen_'+(me?me.id:'');
 const getSeen=()=>{try{return localStorage.getItem(sk())||seed()}catch(e){return seed()}};
@@ -225,7 +235,7 @@ const setSeen=()=>{try{localStorage.setItem(sk(),new Date().toISOString())}catch
 const H=t=>`<h2 style="margin-top:0;font-size:1.5rem">${t}</h2>`;
 const typeOpts=ex=>Object.entries(TYPES).filter(([k])=>k!=ex).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
 let jump=null;const doJump=()=>{if(!jump)return;const el=document.getElementById(jump);jump=null;if(el){el.scrollIntoView({block:'center'});el.classList.add('hl')}};
-let me=null,view='home',picked=null,adding=false,flash='';
+let me=null,view='home',picked=null,adding=false,flash='',pbFlash='';
 
 function msg(e){const m=(e&&e.message)||'';
  if(/Invalid login/i.test(m))return 'Wrong username or password.';
@@ -428,7 +438,8 @@ async function cAthletes(mn,fl){
  if(adding)bindAdd();else $('#addb').onclick=()=>{adding=true;coachView()}}
 
 async function cAthlete(mn,fl){
- const {data:a}=await sb.from('profiles').select('id,full_name,username,coach_id,coach_from,coach_until,active,strava').eq('id',picked).single();
+ let {data:a,error:ea}=await sb.from('profiles').select('id,full_name,username,coach_id,coach_from,coach_until,active,strava,phone').eq('id',picked).single();
+ if(ea)({data:a}=await sb.from('profiles').select('id,full_name,username,coach_id,coach_from,coach_until,active,strava').eq('id',picked).single());
  const cs=me.role=='admin'?await coachesList():null;
  const [ps,ws,pb,rc,ar,ph,pp,mine]=await Promise.all([fetchPlans(a.id),fetchWs(a.id),sb.from('personal_bests').select('*').eq('athlete_id',a.id),sb.from('races').select('*').order('race_date'),sb.from('athlete_races').select('*').eq('athlete_id',a.id),sb.from('pr_history').select('*').eq('athlete_id',a.id).order('set_on',{ascending:false}).order('created_at',{ascending:false}),sb.from('workout_points').select('workout_id,points').eq('athlete_id',a.id),myAthletes()]);
  const cm=await fetchComments(ws),pbm={};(pb.data||[]).forEach(x=>pbm[x.distance]=x);
@@ -439,10 +450,11 @@ async function cAthlete(mn,fl){
  const sugs=pbSugs(ws,pbm);
  const sugHTML=sugs.length?`<h2>PR Suggestions</h2><div class="card">${sugs.map(g=>`<div class="rl"><div><b>${esc(g.d)}</b> ${esc(tt(g.w.duration_min))} <span class="m">(${esc(g.w.workout_date)} • Race)</span><div class="m">${g.cur?'Current PR: '+esc(g.cur):'No PR saved yet'}</div></div><span style="white-space:nowrap"><button class="sm" data-pbup="${esc(g.d)}|${esc(g.w.id)}" style="margin:0">Update</button> <button class="chip sm" data-pbno="${esc(g.w.id)}" style="margin:0">Dismiss</button></span></div>`).join('')}</div>`:'';
  const stv=sUrl(a.strava);
- const stravaCard=`<div class="card" style="margin-bottom:14px"><label for="stv">Strava Account (profile link)</label><div class="inl" style="margin-top:0"><input id="stv" value="${esc(a.strava||'')}" placeholder="https://www.strava.com/athletes/12345" autocapitalize="none"><button id="stsave" style="margin:0">Save</button></div>${stv?`<div style="margin-top:8px"><a href="${esc(stv)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-weight:600">Strava Account ↗</a></div>`:''}</div>`;
+ const stravaCard=`<div class="card" style="margin-bottom:14px"><label for="stv">Strava Account (profile link)</label><div class="inl" style="margin-top:0"><input id="stv" value="${esc(a.strava||'')}" placeholder="https://www.strava.com/athletes/12345" autocapitalize="none"><button id="stsave" style="margin:0">Save</button></div>${stv?`<div style="margin-top:8px"><a href="${esc(stv)}" target="_blank" rel="noopener noreferrer" style="color:var(--ta);font-weight:600">Strava Account ↗</a></div>`:''}</div>`;
+ const phoneCard=`<div class="card" style="margin-bottom:14px"><label for="phn">WhatsApp Number</label><div class="inl" style="margin-top:0"><input id="phn" type="tel" inputmode="tel" value="${a.phone?'+'+esc(a.phone):''}" placeholder="01012345678 or +201012345678" autocomplete="off"><button id="phsave" style="margin:0">Save</button></div></div>`;
  const ptsC=`<div class="card" style="margin-top:14px;text-align:center"><div class="big" id="ptot">${sumPts(pmap)}<span>points</span></div><div class="lbl">Total points given by the coach</div></div>`;
- const wkTools=`<h2>Week Tools</h2><div class="card"><div class="lbl" style="margin-bottom:6px">Weekly plan PDF</div><div class="grid"><div><label for="pdfd">Any date in the week</label><input type="date" id="pdfd" value="${weekStart()}"></div><div style="align-self:end"><button id="pdfgo" style="width:100%">Download PDF</button></div></div>${me.role=='admin'?'':`<div class="lbl" style="margin:16px 0 6px">Copy a whole week</div><div class="grid"><div><label for="cwf">From week (any date in it)</label><input type="date" id="cwf" value="${weekStart()}"></div><div><label for="cwt">To week (any date in it)</label><input type="date" id="cwt" value="${addDays(weekStart(),7)}"></div><div class="full"><label for="cwa">To athlete</label><select id="cwa">${mine.map(x=>`<option value="${esc(x.id)}"${x.id==a.id?' selected':''}>${esc(nm(x))}</option>`).join('')}</select></div><div class="full"><button id="cwgo">Copy Week</button></div></div>`}</div>`;
- mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${H(esc(nm(a)))}${cs?'<button class="sm" id="ren" style="margin:0">Edit Name</button>':''}</div>${cs?`<div class="card" style="margin-bottom:14px"><label for="acs2">Coach</label><select id="acs2">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==a.coach_id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select><div class="grid" style="margin-top:10px"><div><label for="cf">Coach From</label><input type="date" id="cf" value="${a.coach_from||''}"></div><div><label for="cu">Coach Until</label><input type="date" id="cu" value="${a.coach_until||''}"></div></div><p class="m">Leave dates empty for no limit. After the end date the coach no longer sees this athlete.</p><button class="sm" id="csave">Save Coach</button></div>`:''}${stravaCard}${ptsC}${loadHTML(ws,ps)}${chartHTML()}
+ const wkTools=`<h2>Week Tools</h2><div class="card"><div class="lbl" style="margin-bottom:6px">Weekly plan PDF</div><div class="grid"><div><label for="pdfd">Any date in the week</label><input type="date" id="pdfd" value="${weekStart()}"></div><div style="align-self:end"><button id="pdfgo" style="width:100%">Download PDF</button></div></div>${a.phone?`<button class="wa" id="pdfwa" style="width:100%;margin-top:10px">Send plan on WhatsApp</button><div style="margin-top:8px"><a href="https://wa.me/${esc(a.phone)}" target="_blank" rel="noopener noreferrer" style="color:var(--ta);font-weight:600">Open the WhatsApp chat only ↗</a></div>`:`<p class="m" style="margin:10px 0 0">Add the athlete’s WhatsApp number above to send the plan on WhatsApp.</p>`}${me.role=='admin'?'':`<div class="lbl" style="margin:16px 0 6px">Copy a whole week</div><div class="grid"><div><label for="cwf">From week (any date in it)</label><input type="date" id="cwf" value="${weekStart()}"></div><div><label for="cwt">To week (any date in it)</label><input type="date" id="cwt" value="${addDays(weekStart(),7)}"></div><div class="full"><label for="cwa">To athlete</label><select id="cwa">${mine.map(x=>`<option value="${esc(x.id)}"${x.id==a.id?' selected':''}>${esc(nm(x))}</option>`).join('')}</select></div><div class="full"><button id="cwgo">Copy Week</button></div></div>`}</div>`;
+ mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${H(esc(nm(a)))}${cs?'<button class="sm" id="ren" style="margin:0">Edit Name</button>':''}</div>${cs?`<div class="card" style="margin-bottom:14px"><label for="acs2">Coach</label><select id="acs2">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==a.coach_id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select><div class="grid" style="margin-top:10px"><div><label for="cf">Coach From</label><input type="date" id="cf" value="${a.coach_from||''}"></div><div><label for="cu">Coach Until</label><input type="date" id="cu" value="${a.coach_until||''}"></div></div><p class="m">Leave dates empty for no limit. After the end date the coach no longer sees this athlete.</p><button class="sm" id="csave">Save Coach</button></div>`:''}${phoneCard}${stravaCard}${ptsC}${loadHTML(ws,ps)}${chartHTML()}
  ${me.role=='admin'?'':` <h2>Plan a Session</h2><div class="card"><div class="grid"><div><label for="pd">Date *</label><input id="pd" type="date"></div>
  <div><label for="pt">Session *</label><select id="pt"><option value="">Choose Session</option>${typeOpts('')}</select></div>
  <div class="rf"><label for="pk">Distance *</label><div class="two"><input id="pk" type="number" step="0.01" min="0" inputmode="decimal"><select id="pku" aria-label="Unit"><option value="km">km</option><option value="m">m</option></select></div></div>
@@ -458,11 +470,18 @@ async function cAthlete(mn,fl){
  ${(ar.data||[]).map(x=>rm[x.race_id]?`<div class="rl"><div><b>${esc(rm[x.race_id].name)}</b> <span class="m">${esc(rm[x.race_id].race_date)}</span>${x.goal?`<div class="n">Goal: ${esc(x.goal)}</div>`:''}</div><button class="x" data-rdel="${esc(x.id)}" aria-label="Remove race">×</button></div>`:'').join('')}</div>
  ${sugHTML}<h2>PRs</h2><div class="card"><div class="pbs">${PBD.map(d=>`<div class="pbr2"><b>${d}</b><div class="three">${['hr','min','sec'].map((u,k)=>`<input type="number" min="0"${k?' max="59"':''} inputmode="numeric" placeholder="${u}" data-pt${u}="${d}" aria-label="${d} ${u}" value="${esc(pbm[d]?tparts(pbm[d].time_text)[k].replace(/^0(?=\d)/,''):'')}">`).join('')}</div><input type="date" data-pd="${d}" aria-label="${d} date" value="${pbm[d]&&pbm[d].set_on?pbm[d].set_on:''}"></div>`).join('')}</div><button id="pbsave">Save PRs</button><p class="err" id="pberr" role="status"></p>${prH?`<h2 style="font-size:.85rem">PR History</h2><p class="prn">Each line is a PR time that was saved, newest first. A new line is added only when a PR time or date changes (from Save PRs or an approved suggestion).</p>${prH}`:''}</div>
  <div style="margin-top:32px;display:flex;gap:10px;flex-wrap:wrap">${me.role=='admin'?`<button class="chip" id="rpw">Reset Password</button><button class="chip" id="tgl">${a.active===false?'Reactivate Account':'Deactivate Account'}</button>`:''}<button class="danger" id="rm">Remove Athlete</button></div>`;
- $('#bk').onclick=()=>{picked=null;coachView()};initChart(ps,ws);doJump();
+ $('#bk').onclick=()=>{picked=null;coachView()};initChart(ps,ws);doJump();if(pbFlash){const pe=$('#pberr');if(pe){pe.className='ok';pe.textContent=pbFlash;pe.scrollIntoView({block:'center'})}pbFlash=''}
  $('#stsave').onclick=async()=>{const v=$('#stv').value.trim(),u=v?sUrl(v):'';if(v&&!u)return alert('Paste the athlete’s Strava profile link, for example https://www.strava.com/athletes/12345');const {error}=await sb.rpc('set_strava',{a:a.id,s:u});if(error)return alert(msg(error));flash=u?'Strava account saved.':'Strava account removed.';coachView()};
  document.querySelectorAll('[data-wpt]').forEach(sel=>sel.onchange=async()=>{const id=sel.dataset.wpt,v=sel.value;let e;if(v==='')e=(await sb.from('workout_points').delete().eq('workout_id',id)).error;else e=(await sb.from('workout_points').upsert({workout_id:id,athlete_id:a.id,coach_id:me.id,points:+v},{onConflict:'workout_id'})).error;if(e){alert(msg(e));return coachView()}if(v==='')delete pmap[id];else pmap[id]=+v;$('#ptot').firstChild.nodeValue=sumPts(pmap)});
  document.querySelectorAll('[data-pbup]').forEach(b=>b.onclick=async()=>{const [d,wid]=b.dataset.pbup.split('|'),w=ws.find(x=>String(x.id)==wid);if(!w)return;const r={athlete_id:a.id,distance:d,time_text:tt(w.duration_min),set_on:w.workout_date};b.disabled=true;const e1=(await sb.from('personal_bests').upsert([r],{onConflict:'athlete_id,distance'})).error,e2=e1?null:(await sb.from('pr_history').insert([r])).error,e=e1||e2;if(e){b.disabled=false;return alert(msg(e))}flash=d+' PR updated to '+r.time_text+'.';coachView()});
  document.querySelectorAll('[data-pbno]').forEach(b=>b.onclick=()=>{try{const l=JSON.parse(localStorage.getItem('runova_pbno')||'[]');l.push(b.dataset.pbno);localStorage.setItem('runova_pbno',JSON.stringify(l))}catch(e){}coachView()});
+ $('#phsave').onclick=async()=>{const v=$('#phn').value.trim(),n=v?waNum(v):'';if(v&&!n)return alert('Enter a valid WhatsApp number, for example 01012345678 or +201012345678.');const {error}=await sb.rpc('set_phone',{a:a.id,p:n||null});if(error)return alert(msg(error));flash=n?'WhatsApp number saved.':'WhatsApp number removed.';coachView()};
+ if($('#pdfwa'))$('#pdfwa').onclick=async()=>{const d=$('#pdfd').value;if(!d)return alert('Choose a date in the week.');const b=$('#pdfwa'),w0=wkOf(d),touch=matchMedia('(pointer:coarse)').matches&&typeof navigator.canShare=='function';let tab=null;if(!touch)tab=window.open('','_blank');b.disabled=true;b.textContent='Preparing…';
+  try{const {blob,name}=await planPdf(a,w0,{blob:true}),file=new File([blob],name,{type:'application/pdf'}),text='Hi '+(nm(a).split(' ')[0])+', here is your RUNOVA Coaching plan for '+fd(w0)+' to '+fd(addDays(w0,6))+'. 💪',url='https://wa.me/'+a.phone+'?text='+encodeURIComponent(text);
+   let shared=false;if(touch&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],text});shared=true}catch(e){if(e&&e.name=='AbortError'){shared=true}}}
+   if(!shared){dlBlob(blob,name);if(tab)tab.location.href=url;else window.open(url,'_blank')}else if(tab)tab.close()}
+  catch(e){if(tab)tab.close();alert('Couldn’t prepare the plan: '+(e.message||e))}
+  b.disabled=false;b.textContent='Send plan on WhatsApp'};
  $('#pdfgo').onclick=async()=>{const d=$('#pdfd').value;if(!d)return alert('Choose a date in the week.');const b=$('#pdfgo');b.disabled=true;b.textContent='Preparing…';try{await planPdf(a,wkOf(d))}catch(e){alert('Couldn’t make the PDF: '+(e.message||e))}b.disabled=false;b.textContent='Download PDF'};
  if($('#cwgo'))$('#cwgo').onclick=async()=>{const f=$('#cwf').value,t=$('#cwt').value,to=$('#cwa').value;if(!f||!t)return alert('Choose both weeks.');const s0=wkOf(f),t0=wkOf(t),off=Math.round((new Date(t0+'T00:00:00')-new Date(s0+'T00:00:00'))/864e5);if(to==a.id&&off==0)return alert('Choose a different week or a different athlete.');
   const {data:src,error:e0}=await sb.from('plans').select('*').eq('athlete_id',a.id).gte('plan_date',s0).lte('plan_date',addDays(s0,6));if(e0)return alert(msg(e0));if(!src||!src.length)return alert('There are no sessions in that week.');
@@ -471,17 +490,19 @@ async function cAthlete(mn,fl){
   const {error}=await sb.from('plans').insert(rows);if(error)return alert(msg(error));flash=rows.length+' session(s) copied to '+nm(who)+'.';coachView()};
  if($('#csave'))$('#csave').onclick=async()=>{const {error}=await sb.from('profiles').update({coach_id:$('#acs2').value,coach_from:$('#cf').value||null,coach_until:$('#cu').value||null}).eq('id',a.id);alert(error?msg(error):'Coach updated.')};
  if($('#ren'))$('#ren').onclick=async()=>{const v=prompt('New name',nm(a));if(v==null||!v.trim())return;const {error}=await sb.from('profiles').update({full_name:v.trim()}).eq('id',a.id);if(error)return alert(msg(error));coachView()};
- $('#pbsave').onclick=async()=>{const up=[],del=[],hi=[],el=$('#pberr');let bad=false;
+ $('#pbsave').onclick=async()=>{const up=[],del=[],hi=[],el=$('#pberr');let bad=false,nod=false;document.querySelectorAll('[data-pd]').forEach(i=>i.style.borderColor='');
   PBD.forEach(d=>{const g=u=>num(document.querySelector('[data-pt'+u+'="'+d+'"]').value),h=g('hr'),m=g('min'),x=g('sec'),w=document.querySelector('[data-pd="'+d+'"]').value;
    if(h==null&&m==null&&x==null){del.push(d);return}
    if((m||0)>59||(x||0)>59||!((h||0)*3600+(m||0)*60+(x||0)>0)){bad=true;return}
+   if(!w){nod=true;document.querySelector('[data-pd="'+d+'"]').style.borderColor='var(--red)';return}
    const z=n=>String(n||0).padStart(2,'0'),t=h?h+':'+z(m)+':'+z(x):(m||0)+':'+z(x),r={athlete_id:a.id,distance:d,time_text:t,set_on:w||null};up.push(r);if(!pbm[d]||pbm[d].time_text!==t||(pbm[d].set_on||'')!==(w||''))hi.push(r)});
   if(bad){el.className='err';return el.textContent='Minutes and seconds must be 0 to 59, and each time needs a value.'}
+  if(nod){el.className='err';return el.textContent='Add the date for each PR time before saving.'}
   let e1=null,e2=null,e3=null;
   if(up.length)e1=(await sb.from('personal_bests').upsert(up,{onConflict:'athlete_id,distance'})).error;
   if(hi.length)e3=(await sb.from('pr_history').insert(hi)).error;
   if(del.length)e2=(await sb.from('personal_bests').delete().eq('athlete_id',a.id).in('distance',del)).error;
-  const e=e1||e2||e3;el.className=e?'err':'ok';el.textContent=e?msg(e):'Saved.'};
+  const e=e1||e2||e3;if(e){el.className='err';el.textContent=msg(e);return}pbFlash='Saved.';await coachView()};
  if($('#rassign'))$('#rassign').onclick=async()=>{const g=goalTxt();if(g=='bad')return alert('Minutes and seconds must be 0 to 59.');const {error}=await sb.from('athlete_races').upsert({athlete_id:a.id,race_id:$('#rs').value,goal:g},{onConflict:'athlete_id,race_id'});if(error)return alert(msg(error));coachView()};
  document.querySelectorAll('[data-rdel]').forEach(b=>b.onclick=async()=>{await sb.from('athlete_races').delete().eq('id',b.dataset.rdel);coachView()});
  const tg=()=>{document.querySelectorAll('.rf').forEach(e=>e.style.display=isRun($('#pt').value)?'':'none')};if($('#padd')){
@@ -588,12 +609,12 @@ async function aNotes(mn){
 async function pgAbout(mn){
  const ic=(href,label,svg,ext)=>`<a class="ci" href="${href}"${ext?' target="_blank" rel="noopener noreferrer"':''} aria-label="${label}" title="${label}">${svg}</a>`;
  const card=(t,b)=>`<div class="card" style="margin-top:14px"><h2 style="margin-top:0">${t}</h2>${b}</div>`;
- mn.innerHTML=`<div class="narrow">${H('About')}<div class="card"><h2 style="margin-top:0">Our mission</h2><p class="pre">${esc(ABOUT.mission)}</p></div>
- ${card('Why RUNOVA',`<p class="pre">${esc(ABOUT.why)}</p>`)}
- ${card('What you get',`<ul class="ab">${ABOUT.get.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`)}
- ${card('Your coach',`<p class="pre">${esc(ABOUT.coach)}</p><p class="m" style="margin:0">Founded in November 2026</p>`)}
- <div class="quote" style="margin-top:14px">YOUR PLAN. YOUR PACE. YOUR PROGRESS.</div>
- ${card('Contact us',`<div class="cis">${ic('https://ig.me/m/runovacoaching','Instagram','<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg>',1)}${ic('https://wa.me/201090981498','WhatsApp','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path transform="translate(7.4 7.4) scale(.4)" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',1)}${ic('mailto:runovacoaching@gmail.com','Email','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>',0)}</div>`)}</div>`}
+ mn.innerHTML=`<div class="narrow">${H('About')}<div class="card"><h2 style="margin-top:0">OUR MISSION</h2><p class="pre">${esc(ABOUT.mission)}</p></div>
+ ${card('WHY RUNOVA',`<p class="pre">${esc(ABOUT.why)}</p>`)}
+ ${card('WHAT YOU GET',`<ul class="ab">${ABOUT.get.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`)}
+ ${card('CONTACT US',`<div class="cis">${ic('https://ig.me/m/runovacoaching','Instagram','<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg>',1)}${ic('https://wa.me/201090981498','WhatsApp','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path transform="translate(7.4 7.4) scale(.4)" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',1)}${ic('mailto:runovacoaching@gmail.com','Email','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>',0)}</div>`)}</div>`;
+ const em=mn.querySelector('a[href^="mailto:"]');
+ if(em)em.onclick=e=>{if(!matchMedia('(pointer:coarse)').matches){e.preventDefault();window.open('https://mail.google.com/mail/?view=cm&fs=1&to=runovacoaching@gmail.com','_blank','noopener')}}}
 
 boot();
 </script>
