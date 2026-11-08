@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#0B1033"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Runova">
-<title>RUNOVA</title>
+<title>RUNOVA Coaching</title>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{--card:#fff;--bd:#cfd4ea;--cmbg:#FFF0F1;--bg:#F3F5FB;--ink:#0B1033;--mute:#6A7194;--line:#E4E8F4;--blue:#2230E8;--coral:#FF4F5E;--red:#C62828;--nav:#0B1033}
@@ -104,10 +104,28 @@ button.ghost{white-space:nowrap}
 .ov{position:fixed;inset:0;background:rgba(7,10,28,.6);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}.dg{width:100%;max-width:420px}
 .spl{display:grid;grid-template-columns:minmax(0,1.2fr) 76px minmax(0,1.4fr) auto;gap:8px;align-items:center;margin-top:8px}.spl .spt{grid-column:1/-1;margin-top:-2px}.spl .su{padding-left:8px;padding-right:4px}
 @media(max-width:560px){.spl{grid-template-columns:minmax(0,1fr) 76px 36px}.spl .two{grid-column:1/-1;order:5}.spl .spt{order:6}}
-.pdfb{background:#fff;color:#0B1033;width:700px;padding:6px 8px;font:400 15px/1.5 "DM Sans",system-ui,sans-serif}.pdfb .m{color:#4a5070}
+.pdfb{background:#fff;color:#0B1033;width:700px;padding:6px 8px;font:400 15px/1.5 "DM Sans",system-ui,sans-serif}.pdfb .m{color:#B9C8FF}
 
 .spl{grid-template-columns:minmax(0,1fr) 76px minmax(0,1.3fr) minmax(0,1.3fr) auto;align-items:end}.spl .stm .m,.spl .spc .m{display:block;font-size:.75rem}
 @media(max-width:560px){.spl{grid-template-columns:minmax(0,1fr) 76px 36px}.spl .stm,.spl .spc{grid-column:1/-1;order:5}.spl .x{align-self:center}}
+
+/* round 3 */
+.inl button,button.sm,button.chip{white-space:nowrap}
+.inl input,.inl textarea{flex:1 1 auto;width:auto;min-width:0}.inl button{flex:none}
+.rl b{flex:none;white-space:nowrap}
+.brand{white-space:nowrap}
+.prh{padding:10px 0;border-bottom:1px solid var(--line)}.prh:last-child{border:0}
+.prh>b{display:block;font:700 .95rem Unbounded,sans-serif;margin-bottom:4px}
+.prl{display:flex;justify-content:space-between;gap:4px 12px;flex-wrap:wrap;padding:3px 0;font-size:.92rem}
+.prl .m{white-space:nowrap}.prl.cur b{color:var(--blue)}
+.prn{font-size:.85rem;color:var(--mute);margin:0 0 12px}
+.stv{display:inline-flex;align-items:center;gap:8px;margin-top:12px;background:#FC4C02;color:#fff;padding:9px 18px;border-radius:99px;font-weight:600;text-decoration:none}
+.ab{margin:0;padding-inline-start:20px}.ab li{margin:6px 0}
+.cis{display:flex;gap:16px;margin-top:8px}
+.ci{width:52px;height:52px;border-radius:50%;background:var(--coral);display:inline-flex;align-items:center;justify-content:center;color:#fff;transition:transform .15s}
+.ci:hover{transform:scale(1.08)}
+.ci svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:560px){.brand{font-size:.95rem}.brand small{display:inline-block;font-size:.58rem;padding:2px 7px;margin-inline-start:6px}#who>span:first-child{max-width:72px}}
 </style>
 </head>
 <body>
@@ -116,7 +134,10 @@ button.ghost{white-space:nowrap}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 const sb=supabase.createClient('https://fsgawcqntgvfpbxytwhx.supabase.co','sb_publishable_8heKxg7yMRJrV2qbB1hH-Q_ZJqxktXZ');
-const ABOUT={mission:'',why:''}; // paste your text between the quotes
+const ABOUT={mission:'RUNOVA Coaching helps runners train with structure and see real progress. Every athlete gets a plan built for their level and goals, and a coach who follows every session.',
+why:'Every runner is different. A plan that works for one runner may not work for another. That’s why we build individual plans and track the results, so each athlete knows where they are and what comes next.',
+get:['A weekly plan built for you','A place to log every run, with distance, time and notes','Your progress in one place: weekly km, results and personal bests','A coach who follows each session and gives feedback'],
+coach:'Seif Hatem, founder of RUNOVA, has been running since 2014. More than 12 years of experience, now shared with the athletes he coaches in running, strength and stretching.'};
 const MSGS=["Start slow. Finish proud.", "Every kilometer is a promise you keep to yourself.", "Show up today. Future you says thanks.", "Small steps still cover the distance.", "You don’t need a perfect day, just a started one.", "Consistency beats intensity.", "Easy days make hard days possible.", "The hardest step is the first one. Take it.", "Trust the plan and the plan will carry you.", "Strong legs are built on ordinary mornings.", "Progress is quiet. Keep going anyway.", "Run today like you’re racing your best self.", "Tired is a feeling. Moving is a choice.", "Be patient. Fitness is built in layers.", "Breathe, relax your shoulders, run tall.", "You’re closer than you were yesterday.", "Rest is part of the training. Respect it.", "Discipline is choosing what you want most over what you want now.", "Run with your head up and your heart open.", "Fast is fun, but steady wins.", "Every runner started as a beginner.", "Your only competition is who you were last week.", "Make today’s effort count, not just today’s distance.", "Hills are just speed in disguise.", "The track doesn’t care about excuses. Neither do you.", "Be proud of the work nobody sees.", "A bad run is still a run you finished.", "Fuel well. Sleep well. Run well.", "Quiet confidence is built mile by mile.", "Let the rhythm of your steps clear your mind.", "Race day rewards the weeks you showed up.", "You are stronger than your last thought of quitting.", "Cadence, posture, breath. Simple and strong.", "Today’s sweat is tomorrow’s strength.", "Aim for better, not perfect.", "Find your pace, then protect it.", "Every session adds a brick to your foundation.", "The finish line is just the start of the next goal.", "Believe in the miles you’ve already run.", "Run happy. The results will follow.", "Pain passes. Pride stays.", "Focus on this step, then the next.", "The best pace is the one you can hold with a smile.", "Warm up well. Cool down well. Recover well.", "Growth lives just outside your comfort zone.", "You’ve got a plan. Now go and live it.", "Be the runner who keeps showing up.", "Stay relaxed when it gets hard.", "Today is a good day for a good run.", "Great things are built on repeat.", "Run your race, not someone else’s.", "Strength work today means faster legs tomorrow.", "Stretch like you mean it.", "Respect the easy run. It does more than you think.", "Your goals are waiting at the end of your habits.", "Courage is lacing up on a day you don’t feel like it.", "The road remembers every effort.", "Go gently on the start, strongly on the finish.", "Little by little, the distance gets shorter.", "Keep your form when the effort rises.", "Celebrate every session you complete.", "Your body can do more than your mind believes.", "Make your next run your best reason to smile.", "The work you do now is your race-day advantage.", "Be kind to your body. It carries you.", "A steady effort beats a heroic one.", "You didn’t come this far to only come this far.", "Run toward the person you want to become.", "Every step forward is a step you earned.", "Listen to your body, then lead your mind.", "Good habits make great runners.", "Chase the feeling of finishing, not the fear of starting.", "Today’s plan is small enough to start and big enough to matter.", "When it burns, relax and keep your rhythm.", "There are no shortcuts, only smarter steps.", "Run with gratitude for the legs that carry you.", "Your coach believes in you. Believe in yourself too.", "Let the miles teach you patience.", "Another session done is another win banked.", "Don’t count the days. Make the days count.", "Strong mind, steady stride.", "Hold your pace. Hold your nerve.", "Every finish line began with a single decision.", "Be consistent now, be amazed later.", "Recovery is where the strength is built.", "Today is another chance to get it right.", "Smooth is fast. Relaxed is faster.", "Run like the finish line is waiting just for you.", "Get comfortable being uncomfortable.", "The harder you work, the sweeter the finish.", "Take the day one stride at a time.", "Your effort today writes your story tomorrow.", "Fresh air, open road, free mind.", "Stay curious about how far you can go.", "Train with purpose and race with joy.", "You are building something that lasts.", "Strength isn’t only in the legs. It’s in showing up.", "Keep the promise you made at the start of this plan.", "Today’s run is a gift to your future self.", "Every mile you log is proof you can."];
 const $=s=>document.querySelector(s);
 let cur=(()=>{try{return localStorage.getItem('runova_theme')}catch(e){return null}})()||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
@@ -133,18 +154,19 @@ const weekStart=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate(
 const num=v=>v===''||v==null?null:Number(v);
 const fmt=n=>Number.isInteger(n)?n:n.toFixed(1);
 const nm=a=>a.full_name||a.username;
+const pcs=p=>{const q=String(p||'').split(':'),z=n=>String(n).padStart(2,'0');return z(+q[0]||0)+':'+z(+q[1]||0)};
 const url=u=>{u=(u||'').trim();if(!u)return '';if(!/^https?:\/\//i.test(u))u='https://'+u;try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return ''}};
 const linkHTML=(u,l)=>String(u||'').split('\n').map(x=>url(x)).filter(Boolean).map((h,i,a)=>`<div style="margin-top:8px"><a href="${esc(h)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-weight:600">${l}${a.length>1?' '+(i+1):''} ↗</a></div>`).join('');
 const dl=d=>{const n=Math.round((new Date(d)-new Date(iso(new Date())))/864e5);return n>0?n+' days to go':n==0?'Today':''};
-const dur=m=>{const t=Math.round(+m*60),h=Math.floor(t/3600),mm=Math.floor(t%3600/60),ss=t%60;return (h?h+' h ':'')+mm+' min'+(ss?' '+ss+' s':'')};
+const dur=m=>{const t=Math.round(+m*60),h=Math.floor(t/3600),mm=Math.floor(t%3600/60),ss=t%60,z=n=>String(n).padStart(2,'0');return (h?h+' h ':'')+z(mm)+' min '+z(ss)+' sec'};
 const durIn=(a,b)=>(num(a)||0)+(num(b)||0)/60;
 const durIn3=(h,m,x)=>(num(h)||0)*60+(num(m)||0)+(num(x)||0)/60;
 const hms=m=>{const t=Math.round(+m*60);return Math.floor(t/3600)+':'+String(Math.floor(t%3600/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0')};
 const parseHMS=v=>{const q=String(v).split(':').map(x=>Number(x.trim()));if(q.some(isNaN)||q.length>3)return NaN;const [h,m,x]=q.length==3?q:q.length==2?[0,...q]:[0,q[0],0];return m>59||x>59?NaN:h*60+m+x/60};
 const tparts=t=>{const q=String(t||'').split(':');while(q.length<3)q.unshift('');return q.slice(-3)};
 const goalTxt=()=>{const h=num($('#rgh').value),m=num($('#rgm').value),x=num($('#rgs').value);if(h==null&&m==null&&x==null)return null;if((m||0)>59||(x||0)>59)return 'bad';const z=n=>String(n||0).padStart(2,'0');return h?h+':'+z(m)+':'+z(x):(m||0)+':'+z(x)};
-const paceOf=(km,min)=>{if(!(km>0)||!(min>0))return '';const t=Math.round(min/km*60);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' /km'};
-const tot=p=>[p.target_km!=null?fmtD(+p.target_km,p.distance_unit):'',p.target_min!=null?dur(p.target_min):'',p.target_pace?esc(p.target_pace)+' /km':''].filter(Boolean).join(' • ');
+const paceOf=(km,min)=>{if(!(km>0)||!(min>0))return '';const t=Math.round(min/km*60);return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0')+' /km'};
+const tot=p=>[p.target_km!=null?fmtD(+p.target_km,p.distance_unit):'',p.target_min!=null?dur(p.target_min):'',p.target_pace?pcs(p.target_pace)+' /km':''].filter(Boolean).join(' • ');
 const seed=()=>new Date(Date.now()-7*864e5).toISOString();
 const p2=n=>String(n).padStart(2,'0');
 document.addEventListener('input',e=>{const t=e.target;if(t.classList&&t.classList.contains('t2')){const v=t.value.replace(/\D/g,'').slice(0,2);if(v!==t.value)t.value=v}});
@@ -156,8 +178,9 @@ const tt=m=>{const t=Math.round(m*60),h=Math.floor(t/3600),mm=Math.floor(t%3600/
 const addDays=(x,n)=>{const d=new Date(x+'T00:00:00');d.setDate(d.getDate()+n);return iso(d)};
 const wkOf=x=>{const d=new Date(x+'T00:00:00');d.setDate(d.getDate()-((d.getDay()+1)%7));return iso(d)};
 const sumPts=m=>Object.values(m).reduce((t,v)=>t+(+v||0),0);
+const stravaLink=()=>{const u=sUrl(me&&me.strava);return u?`<a class="stv" href="${esc(u)}" target="_blank" rel="noopener noreferrer">Strava Account ↗</a>`:''};
 const sUrl=v=>{v=(v||'').trim();if(!v)return '';if(/^\d+$/.test(v))return 'https://www.strava.com/athletes/'+v;const u=url(v);if(!u)return '';try{const h=new URL(u).hostname;return /(^|\.)strava\.com$|(^|\.)strava\.app\.link$/.test(h)?u:''}catch(e){return ''}};
-const splitsHTML=sp=>!Array.isArray(sp)||!sp.length?'':`<div style="margin:6px 0">${sp.map((x,i)=>`<div class="m" style="display:flex;justify-content:space-between;gap:10px;padding:3px 0"><span>${i+1}. ${fmtD(+x.km,x.u)}</span><span>${dur((x.sec||+x.km*paceMin(x.pace)*60)/60)} • ${esc(x.pace)} /km</span></div>`).join('')}</div>`;
+const splitsHTML=sp=>!Array.isArray(sp)||!sp.length?'':`<div style="margin:6px 0">${sp.map((x,i)=>`<div class="m" style="display:flex;justify-content:space-between;gap:10px;padding:3px 0"><span>${i+1}. ${fmtD(+x.km,x.u)}</span><span>${dur((x.sec||+x.km*paceMin(x.pace)*60)/60)} • ${pcs(x.pace)} /km</span></div>`).join('')}</div>`;
 const ptsCard=rows=>{const l=rows||[],n=l.reduce((t,x)=>t+(+x.points||0),0);return `<div class="card" style="margin-top:14px;text-align:center"><div class="big">${n}<span>points</span></div><div class="lbl">From your coach · ${l.length} rated ${l.length==1?'activity':'activities'}</div></div>`};
 function bindPace(k,u,h,m,sc,pm,ps,lock){const g=i=>document.getElementById(i),f=()=>{const km=toKm(num(g(k).value),g(u).value),min=durIn3(g(h).value,g(m).value,g(sc).value);if(km>0&&min>0){const t=Math.round(min/km*60);g(pm).value=p2(Math.floor(t/60));g(ps).value=p2(t%60)}else if(lock){g(pm).value='';g(ps).value=''}};[k,u,h,m,sc].forEach(i=>{g(i).addEventListener('input',f);g(i).addEventListener('change',f)});if(lock){g(pm).readOnly=true;g(ps).readOnly=true}}
 function dlg(html){const o=document.createElement('div');o.className='ov';o.innerHTML='<div class="card dg">'+html+'</div>';o.onclick=e=>{if(e.target==o)o.remove()};document.body.appendChild(o);return o}
@@ -179,20 +202,23 @@ async function planPdf(a,w0){
  await Promise.all([loadJs('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'),loadJs('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js')]);
  const ps=data||[],nice=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'});
  const km=ps.reduce((t,p)=>t+(+p.target_km||0),0);
- const cell=(h,b)=>`<div style="border:1.5px solid #2230E8;border-radius:12px;padding:12px;min-height:190px"><div style="font-weight:700;color:#2230E8;margin-bottom:6px">${h}</div>${b}</div>`;
+ const cell=(h,b,hot)=>`<div style="border:1.5px solid ${hot?'#FF6A00':'rgba(255,255,255,.22)'};background:${hot?'linear-gradient(160deg,#FF6A00,#FF3D00)':'rgba(255,255,255,.07)'};border-radius:14px;padding:14px;min-height:190px;color:#fff"><div style="font-weight:700;color:${hot?'#fff':'#FF8A3D'};margin-bottom:8px;font-size:15px">${h}</div>${b}</div>`;
  const cells=[];
  for(let i=0;i<7;i++){const d=addDays(w0,i),l=ps.filter(p=>p.plan_date==d);cells.push(cell(nice(d),l.length?l.map(p=>`<div style="margin-bottom:10px"><b>${esc(p.title)}</b>${tot(p)?`<div class="m">${tot(p)}</div>`:''}${splitsHTML(p.splits)}${p.details?`<div dir="auto" style="white-space:pre-wrap;font-size:13px;margin-top:3px">${esc(p.details)}</div>`:''}</div>`).join(''):'<div class="m">Rest</div>'))}
- cells.push(cell('Week total',`<div style="font:800 26px Unbounded,sans-serif">${fmtD(km,'km')}</div><div class="m">planned distance</div>`));
- const sq='<i style="display:block;width:10px;height:10px;border-radius:2px;background:#2230E8"></i>'.repeat(9);
- const html=`<div style="display:flex;align-items:center;gap:12px"><div style="display:grid;grid-template-columns:repeat(3,10px);gap:3px">${sq}</div><span style="font:800 30px Unbounded,sans-serif">RUNOVA</span><span style="background:#FF4F5E;color:#fff;font:700 13px 'DM Sans',sans-serif;padding:3px 13px;border-radius:99px">Coaching</span></div>
- <div style="margin-top:12px;font-size:16px;line-height:1.7"><div dir="auto"><b>Coach:</b> ${esc(coachName||'-')}</div><div dir="auto"><b>Athlete:</b> ${esc(nm(a))}</div></div>
- <div class="m" style="margin:6px 0 14px">Weekly plan · ${fd(w0)} to ${fd(addDays(w0,6))}</div>
- <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">${cells.join('')}</div>`;
- const el=document.createElement('div');el.className='pdfb';el.style.cssText+='position:fixed;left:-9999px;top:0;width:1100px;padding:14px';el.innerHTML=html;document.body.appendChild(el);
- let cv;try{if(document.fonts&&document.fonts.ready)await document.fonts.ready;cv=await html2canvas(el,{scale:2,backgroundColor:'#ffffff'})}finally{el.remove()}
- const {jsPDF}=window.jspdf,pdf=new jsPDF('l','pt','a4'),W=pdf.internal.pageSize.getWidth(),PH=pdf.internal.pageSize.getHeight(),M=24,k=Math.min((W-2*M)/cv.width,(PH-2*M)/cv.height);
- pdf.addImage(cv.toDataURL('image/jpeg',.92),'JPEG',(W-cv.width*k)/2,M,cv.width*k,cv.height*k);
- pdf.save('RUNOVA-'+(a.username||'athlete')+'-'+w0+'.pdf')}
+ cells.push(cell('Week total',`<div style="font:800 26px Unbounded,sans-serif">${fmtD(km,'km')}</div><div style="color:rgba(255,255,255,.88)">planned distance</div>`,true));
+ const lines=['M0 190 L1100 20','M0 400 L1100 230','M0 610 L1100 440','M0 820 L1100 650'].map(d=>`<path d="${d}"/>`).join('');
+ const bgSvg='data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 780" preserveAspectRatio="none"><g fill="none" stroke="#2F5BFF" stroke-opacity=".55" stroke-width="2.5">${lines}</g></svg>`);
+ const html=`<div style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden"><img src="${bgSvg}" style="width:100%;height:100%;display:block" alt=""></div>
+ <div style="position:relative"><div style="display:flex;align-items:center;gap:14px"><span style="font:800 italic 40px Unbounded,sans-serif;color:#fff;letter-spacing:-.02em">RUNOVA</span><span style="background:linear-gradient(180deg,#FF6A00,#FF4000);color:#fff;font:600 italic 17px 'DM Sans',sans-serif;padding:5px 18px;border-radius:99px">Coaching</span></div>
+ <div style="margin-top:10px;font:800 italic 17px Unbounded,sans-serif;color:#fff">YOUR PLAN. YOUR PACE. <span style="color:#FF6A00">YOUR PROGRESS.</span></div>
+ <div style="margin-top:16px;font-size:16px;line-height:1.7;color:#fff"><div dir="auto"><b>Coach:</b> ${esc(coachName||'-')}</div><div dir="auto"><b>Athlete:</b> ${esc(nm(a))}</div></div>
+ <div class="m" style="margin:6px 0 16px">Weekly plan · ${fd(w0)} to ${fd(addDays(w0,6))}</div>
+ <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">${cells.join('')}</div></div>`;
+ const el=document.createElement('div');el.className='pdfb';el.style.cssText+='position:fixed;left:-9999px;top:0;width:1100px;min-height:777px;padding:34px 36px;box-sizing:border-box;color:#fff;background:linear-gradient(135deg,#000646 0%,#001A9E 60%,#0A3BFF 100%)';el.innerHTML=html;document.body.appendChild(el);
+ let cv;try{if(document.fonts&&document.fonts.ready)await document.fonts.ready;cv=await html2canvas(el,{scale:2,backgroundColor:'#000646'})}finally{el.remove()}
+ const {jsPDF}=window.jspdf,PW=842,PH=Math.max(595,Math.round(PW*cv.height/cv.width)),pdf=new jsPDF({orientation:PH>PW?'p':'l',unit:'pt',format:[PW,PH]});
+ pdf.addImage(cv.toDataURL('image/jpeg',.92),'JPEG',0,0,PW,PH);
+ pdf.save('RUNOVA Coaching-'+(a.username||'athlete')+'-'+w0+'.pdf')}
 const sk=()=>'runova_seen_'+(me?me.id:'');
 const getSeen=()=>{try{return localStorage.getItem(sk())||seed()}catch(e){return seed()}};
 const setSeen=()=>{try{localStorage.setItem(sk(),new Date().toISOString())}catch(e){}};
@@ -264,10 +290,6 @@ function initChart(ps,ws){const sum=(l,k)=>l.reduce((t,x)=>t+(+x[k]||0),0),draw=
  g.innerHTML=rows.map(r=>`<div class="cc"><div class="cb"><div class="pl" data-h="${h(r.pl)}"><span>${lb(r.pl)}</span></div><div class="dn" data-h="${h(r.dn)}"><span>${lb(r.dn)}</span></div></div><small>${fd(r.a)}<br>${fd(r.b)}</small></div>`).join('');
  requestAnimationFrame(()=>requestAnimationFrame(()=>g.querySelectorAll('[data-h]').forEach(x=>x.style.height=x.dataset.h+'px')))};
  $('#cfrom').onchange=draw;$('#cto').onchange=draw;draw()}
-const csvOf=rows=>{if(!rows.length)return '';const k=Object.keys(rows[0]),q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';return k.join(',')+'\n'+rows.map(r=>k.map(c=>q(r[c])).join(',')).join('\n')};
-const dlFile=(n,t)=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv'}));a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
-async function exportAll(){const as=await myAthletes(),nmx={};as.forEach(a=>nmx[a.id]=nm(a));for(const [t,f] of [['plans','plans.csv'],['workouts','activities.csv']]){let all=[];for(let i=0;;i+=1000){const {data,error}=await sb.from(t).select('*').range(i,i+999);if(error)return alert(msg(error));all=all.concat(data||[]);if(!data||data.length<1000)break}dlFile(f,csvOf(all.map(r=>({athlete:nmx[r.athlete_id]||r.athlete_id,...r}))))}}
-document.addEventListener('click',e=>{if(e.target&&e.target.id=='exp')exportAll()});
 const askPw=async id=>{const p=prompt('New password (at least 8 characters)');if(p===null)return;if(p.length<8)return alert('Password must be at least 8 characters.');const {data,error}=await sb.functions.invoke('add-athlete',{body:{action:'password',athlete_id:id,password:p}});if(error||(data&&data.error))return alert((data&&data.error)||error.message);alert('Password changed. Share it with them: '+p)};
 function weekHTML(ps,ws){
  const a=weekStart(),e=new Date(a+'T00:00:00');e.setDate(e.getDate()+6);const b=iso(e);
@@ -284,7 +306,7 @@ function planCard(p,coach){
  return `<div class="pc" id="pc-${id}"><div class="ph"><span>${tag?`<b>${tag}</b> · `:''}${esc(p.plan_date)}</span>${coach?`<span style="white-space:nowrap">${me.role!='admin'?`<button class="x" data-pedit="${id}" aria-label="Edit session" style="font-size:1rem">✎</button>`:''}<button class="x" data-pcopy="${id}" aria-label="Copy session" style="font-size:1rem">⧉</button><button class="x" data-pdel="${id}" aria-label="Remove from plan">×</button></span>`:''}</div>
  <div class="pt"><b>${esc(p.title)}</b>${t?`<span class="tot">${t}</span>`:''}</div>${splitsHTML(p.splits)}${p.details?`<div class="pre">${esc(p.details)}</div>`:''}${linkHTML(p.link,'Open Link')}${ctl}</div>`}
 
-const wTxt=w=>[w.distance_km!=null?fmtD(+w.distance_km,w.distance_unit):'',w.duration_min!=null?dur(+w.duration_min):'',(w.avg_pace?esc(w.avg_pace)+' /km':paceOf(+w.distance_km,+w.duration_min))].filter(Boolean).join(' • ');
+const wTxt=w=>[w.distance_km!=null?fmtD(+w.distance_km,w.distance_unit):'',w.duration_min!=null?dur(+w.duration_min):'',(w.avg_pace?pcs(w.avg_pace)+' /km':paceOf(+w.distance_km,+w.duration_min))].filter(Boolean).join(' • ');
 function wRow(w,cm,coach,pm){pm=pm||{};const id=esc(w.id),pv=pm[w.id];
  return `<div class="w" id="w-${id}"><div style="flex:1;min-width:0"><b>${esc(TYPES[w.type]||w.type)}</b> <span class="m">${esc(w.workout_date)}</span><div class="m">${wTxt(w)}</div>${w.notes?`<div class="n pre">${esc(w.notes)}</div>`:''}
  ${(cm[w.id]||[]).map(c=>`<div class="cm"><b>Coach:</b> ${esc(c.body)}</div>`).join('')}
@@ -320,7 +342,7 @@ async function aHome(mn){
  const rr=ids.length?((await sb.from('races').select('*').in('id',ids).order('race_date')).data||[]):[];
  const goal={};(ar.data||[]).forEach(x=>goal[x.race_id]=x.goal);
  const pbs=(pb.data||[]).sort((a,b)=>PBD.indexOf(a.distance)-PBD.indexOf(b.distance));
- mn.innerHTML=`<div class="narrow"><div class="quote"><small>Welcome back, ${esc(nm(me).split(' ')[0])}</small>${esc(MSGS[Math.floor(Math.random()*MSGS.length)])}</div><div style="margin-top:16px">${weekHTML(ps,ws)}</div>${ptsCard(pp.data)}
+ mn.innerHTML=`<div class="narrow"><div class="quote"><small>Welcome back, ${esc(nm(me).split(' ')[0])}</small>${esc(MSGS[Math.floor(Math.random()*MSGS.length)])}</div>${stravaLink()}<div style="margin-top:16px">${weekHTML(ps,ws)}</div>${ptsCard(pp.data)}
  <h2>Today</h2>${s.today.length?s.today.map(p=>planCard(p,false)).join(''):'<div class="card empty">Nothing planned for today.</div>'}
  ${rr.length?`<h2>My Races</h2><div class="card">${rr.map(r=>`<div class="rl"><div><b>${esc(r.name)}</b> <span class="m">${esc(r.race_date)}${r.distance?' • '+esc(r.distance):''}</span>${goal[r.id]?`<div class="n">Goal: ${esc(goal[r.id])}</div>`:''}${linkHTML(r.link,'Race Page')}</div><span class="tot">${dl(r.race_date)}</span></div>`).join('')}</div>`:''}
  ${pbs.length?`<h2>PRs</h2><div class="card">${pbs.map(x=>`<div class="rl"><b>${esc(x.distance)}</b><span>${esc(x.time_text)} <span class="m">${esc(x.set_on||'')}</span></span></div>`).join('')}</div>`:''}</div>`;
@@ -397,7 +419,7 @@ async function cAthletes(mn,fl){
  const as=await myAthletes(),cs=me.role=='admin'?await coachesList():null,cn={};(cs||[]).forEach(c=>cn[c.id]=nm(c));
  const {data}=await sb.from('plans').select('athlete_id,status,athlete_notes').eq('plan_date',iso(new Date()));
  const tm={};const tn={};(data||[]).forEach(p=>{tm[p.athlete_id]=p.status;if(p.athlete_notes)tn[p.athlete_id]=1});
- mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+H('Athletes')+'<button class="chip sm" id="exp" style="margin:0 0 12px">Export Data (CSV)</button>'+(adding?addHTML(cs):'')+
+ mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+H('Athletes')+(adding?addHTML(cs):'')+
  `<input id="q" placeholder="Search athletes" aria-label="Search athletes" style="margin-bottom:14px">
  ${as.map(a=>`<button class="arow" data-a="${esc(a.id)}"><span><b>${esc(nm(a))}</b> <span class="m">@${esc(a.username)}${a.active===false?' · Inactive':''}${cs?' · '+esc(cn[a.coach_id]||'No coach'):''}</span></span><span>${tn[a.id]?'📝 ':''}${tm[a.id]?badge(tm[a.id]):'<span class="m">No session today</span>'}</span></button>`).join('')||'<div class="card empty">No athletes yet.</div>'}
  ${adding?'':'<div style="margin-top:18px"><button id="addb">Create New Athlete</button></div>'}`;
@@ -410,7 +432,7 @@ async function cAthlete(mn,fl){
  const cs=me.role=='admin'?await coachesList():null;
  const [ps,ws,pb,rc,ar,ph,pp,mine]=await Promise.all([fetchPlans(a.id),fetchWs(a.id),sb.from('personal_bests').select('*').eq('athlete_id',a.id),sb.from('races').select('*').order('race_date'),sb.from('athlete_races').select('*').eq('athlete_id',a.id),sb.from('pr_history').select('*').eq('athlete_id',a.id).order('set_on',{ascending:false}).order('created_at',{ascending:false}),sb.from('workout_points').select('workout_id,points').eq('athlete_id',a.id),myAthletes()]);
  const cm=await fetchComments(ws),pbm={};(pb.data||[]).forEach(x=>pbm[x.distance]=x);
- const prH=PBD.map(d=>{const l=(ph.data||[]).filter(x=>x.distance==d);return l.length>1?`<div class="rl"><b>${d}</b><span>${l.map(x=>esc(x.time_text)+(x.set_on?` <span class="m">(${esc(x.set_on)})</span>`:'')).join(' ← ')}</span></div>`:''}).join('');
+ const prH=PBD.map(d=>{const raw=(ph.data||[]).filter(x=>x.distance==d),seen=new Set(),l=raw.filter(x=>{const k=x.time_text+'|'+(x.set_on||'');if(seen.has(k))return false;seen.add(k);return true});if(l.length<2)return '';return `<div class="prh"><b>${d}</b>${l.map((x,i)=>{const a=parseHMS(x.time_text),b=l[i+1]?parseHMS(l[i+1].time_text):NaN,df=!isNaN(a)&&!isNaN(b)&&Math.round(a*60)!==Math.round(b*60)?(a<b?'Improved by ':'Slower by ')+tt(Math.abs(b-a)):'',dt=x.set_on?String(x.set_on).split('-').reverse().join('/'):'';return `<div class="prl${i?'':' cur'}"><span><b>${esc(x.time_text)}</b>${dt?` <span class="m">(${esc(dt)})</span>`:''}</span><span class="m">${i?'':'Current'}${i&&!df?'':(i&&df?'':df?' · ':'')}${df}</span></div>`}).join('')}</div>`}).join('');
  const races=rc.data||[],rm={};races.forEach(r=>rm[r.id]=r);
  const s=split(ps);
  const pmap={};(pp.data||[]).forEach(x=>pmap[x.workout_id]=x.points);
@@ -434,7 +456,7 @@ async function cAthlete(mn,fl){
  <h2>Activity Logged by ${esc(nm(a).split(' ')[0])}</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,true,pmap)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div>
  <h2>Races and Goals</h2><div class="card">${races.length?`<div class="grid"><div><label for="rs">Race</label><select id="rs">${races.map(r=>`<option value="${esc(r.id)}">${esc(r.name)} · ${esc(r.race_date)}</option>`).join('')}</select></div><div><label>Goal Time</label><div class="three"><input id="rgh" type="number" min="0" placeholder="hr"><input id="rgm" type="number" min="0" max="59" placeholder="min"><input id="rgs" type="number" min="0" max="59" placeholder="sec"></div></div><div class="full"><button id="rassign">Assign Race</button></div></div>`:'<div class="empty">Ask the admin to add races first.</div>'}
  ${(ar.data||[]).map(x=>rm[x.race_id]?`<div class="rl"><div><b>${esc(rm[x.race_id].name)}</b> <span class="m">${esc(rm[x.race_id].race_date)}</span>${x.goal?`<div class="n">Goal: ${esc(x.goal)}</div>`:''}</div><button class="x" data-rdel="${esc(x.id)}" aria-label="Remove race">×</button></div>`:'').join('')}</div>
- ${sugHTML}<h2>PRs</h2><div class="card"><div class="pbs">${PBD.map(d=>`<div class="pbr2"><b>${d}</b><div class="three">${['hr','min','sec'].map((u,k)=>`<input type="number" min="0"${k?' max="59"':''} inputmode="numeric" placeholder="${u}" data-pt${u}="${d}" aria-label="${d} ${u}" value="${esc(pbm[d]?tparts(pbm[d].time_text)[k].replace(/^0(?=\d)/,''):'')}">`).join('')}</div><input type="date" data-pd="${d}" aria-label="${d} date" value="${pbm[d]&&pbm[d].set_on?pbm[d].set_on:''}"></div>`).join('')}</div><button id="pbsave">Save PRs</button><p class="err" id="pberr" role="status"></p>${prH?`<h2 style="font-size:.85rem">PR History</h2>${prH}`:''}</div>
+ ${sugHTML}<h2>PRs</h2><div class="card"><div class="pbs">${PBD.map(d=>`<div class="pbr2"><b>${d}</b><div class="three">${['hr','min','sec'].map((u,k)=>`<input type="number" min="0"${k?' max="59"':''} inputmode="numeric" placeholder="${u}" data-pt${u}="${d}" aria-label="${d} ${u}" value="${esc(pbm[d]?tparts(pbm[d].time_text)[k].replace(/^0(?=\d)/,''):'')}">`).join('')}</div><input type="date" data-pd="${d}" aria-label="${d} date" value="${pbm[d]&&pbm[d].set_on?pbm[d].set_on:''}"></div>`).join('')}</div><button id="pbsave">Save PRs</button><p class="err" id="pberr" role="status"></p>${prH?`<h2 style="font-size:.85rem">PR History</h2><p class="prn">Each line is a PR time that was saved, newest first. A new line is added only when a PR time or date changes (from Save PRs or an approved suggestion).</p>${prH}`:''}</div>
  <div style="margin-top:32px;display:flex;gap:10px;flex-wrap:wrap">${me.role=='admin'?`<button class="chip" id="rpw">Reset Password</button><button class="chip" id="tgl">${a.active===false?'Reactivate Account':'Deactivate Account'}</button>`:''}<button class="danger" id="rm">Remove Athlete</button></div>`;
  $('#bk').onclick=()=>{picked=null;coachView()};initChart(ps,ws);doJump();
  $('#stsave').onclick=async()=>{const v=$('#stv').value.trim(),u=v?sUrl(v):'';if(v&&!u)return alert('Paste the athlete’s Strava profile link, for example https://www.strava.com/athletes/12345');const {error}=await sb.rpc('set_strava',{a:a.id,s:u});if(error)return alert(msg(error));flash=u?'Strava account saved.':'Strava account removed.';coachView()};
@@ -453,7 +475,7 @@ async function cAthlete(mn,fl){
   PBD.forEach(d=>{const g=u=>num(document.querySelector('[data-pt'+u+'="'+d+'"]').value),h=g('hr'),m=g('min'),x=g('sec'),w=document.querySelector('[data-pd="'+d+'"]').value;
    if(h==null&&m==null&&x==null){del.push(d);return}
    if((m||0)>59||(x||0)>59||!((h||0)*3600+(m||0)*60+(x||0)>0)){bad=true;return}
-   const z=n=>String(n||0).padStart(2,'0'),t=h?h+':'+z(m)+':'+z(x):(m||0)+':'+z(x),r={athlete_id:a.id,distance:d,time_text:t,set_on:w||null};up.push(r);if(!pbm[d]||pbm[d].time_text!==t)hi.push(r)});
+   const z=n=>String(n||0).padStart(2,'0'),t=h?h+':'+z(m)+':'+z(x):(m||0)+':'+z(x),r={athlete_id:a.id,distance:d,time_text:t,set_on:w||null};up.push(r);if(!pbm[d]||pbm[d].time_text!==t||(pbm[d].set_on||'')!==(w||''))hi.push(r)});
   if(bad){el.className='err';return el.textContent='Minutes and seconds must be 0 to 59, and each time needs a value.'}
   let e1=null,e2=null,e3=null;
   if(up.length)e1=(await sb.from('personal_bests').upsert(up,{onConflict:'athlete_id,distance'})).error;
@@ -564,8 +586,14 @@ async function aNotes(mn){
  document.querySelectorAll('[data-v]').forEach(e=>e.onclick=()=>{view=e.dataset.v;jump=e.dataset.t||null;athleteView()})}
 
 async function pgAbout(mn){
- const ph='<span class="empty">Text goes here.</span>';
- mn.innerHTML=`<div class="narrow">${H('About')}<div class="card"><h2 style="margin-top:0">Our mission</h2><p class="pre">${esc(ABOUT.mission)||ph}</p></div><div class="card" style="margin-top:14px"><h2 style="margin-top:0">Why RUNOVA</h2><p class="pre">${esc(ABOUT.why)||ph}</p></div></div>`}
+ const ic=(href,label,svg,ext)=>`<a class="ci" href="${href}"${ext?' target="_blank" rel="noopener noreferrer"':''} aria-label="${label}" title="${label}">${svg}</a>`;
+ const card=(t,b)=>`<div class="card" style="margin-top:14px"><h2 style="margin-top:0">${t}</h2>${b}</div>`;
+ mn.innerHTML=`<div class="narrow">${H('About')}<div class="card"><h2 style="margin-top:0">Our mission</h2><p class="pre">${esc(ABOUT.mission)}</p></div>
+ ${card('Why RUNOVA',`<p class="pre">${esc(ABOUT.why)}</p>`)}
+ ${card('What you get',`<ul class="ab">${ABOUT.get.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`)}
+ ${card('Your coach',`<p class="pre">${esc(ABOUT.coach)}</p><p class="m" style="margin:0">Founded in November 2026</p>`)}
+ <div class="quote" style="margin-top:14px">YOUR PLAN. YOUR PACE. YOUR PROGRESS.</div>
+ ${card('Contact us',`<div class="cis">${ic('https://ig.me/m/runovacoaching','Instagram','<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg>',1)}${ic('https://wa.me/201090981498','WhatsApp','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path transform="translate(7.4 7.4) scale(.4)" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',1)}${ic('mailto:runovacoaching@gmail.com','Email','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>',0)}</div>`)}</div>`}
 
 boot();
 </script>
