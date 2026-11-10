@@ -1,6 +1,8 @@
 {
   "name": "RUNOVA Coaching",
   "short_name": "RUNOVA",
+  "lang": "en",
+  "dir": "ltr",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
