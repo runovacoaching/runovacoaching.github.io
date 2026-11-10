@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#00063A"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Runova">
 <title>RUNOVA Coaching</title>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=DM+Sans:wght@400;600&family=Inter:ital,wght@0,400;0,600;0,700;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <style>
 :root{--card:#fff;--bd:#C8D2F2;--cmbg:#FFF1E8;--bg:#EDF2FF;--ink:#0A1240;--mute:#5B6699;--line:#DDE4F8;--blue:#E24400;--ta:#C93B00;--coral:#FF5A00;--red:#C62828;--nav:#00093F;--inp:#fff;--ok:#12794A;--warn:#A85F00;--pl:#C3C8E0}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}html,body{max-width:100%;overflow-x:hidden;overflow-x:clip}.card,.pc,.tile,.arow{min-width:0;overflow-wrap:anywhere}
@@ -135,10 +135,37 @@ html{background:var(--bg)}
 :root[data-theme=dark] body::before{content:"";position:fixed;inset:0;z-index:-1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 1000' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%232F5BFF' stroke-opacity='.4' stroke-width='2.5'%3E%3Cpath d='M0 260L1000 60' vector-effect='non-scaling-stroke'/%3E%3Cpath d='M0 520L1000 320' vector-effect='non-scaling-stroke'/%3E%3Cpath d='M0 780L1000 580' vector-effect='non-scaling-stroke'/%3E%3Cpath d='M0 1040L1000 840' vector-effect='non-scaling-stroke'/%3E%3C/g%3E%3C/svg%3E") 0 0/100% 100% no-repeat,linear-gradient(165deg,#00083A 0%,#00157F 55%,#0027B5 100%)}
 :root[data-theme=dark] .card,:root[data-theme=dark] .pc,:root[data-theme=dark] .tile,:root[data-theme=dark] .arow{box-shadow:0 8px 28px rgba(0,4,40,.35)}
 .wa{background:#128C4A}
+
+/* ===== round 6 ===== */
+html,body{touch-action:pan-y;overscroll-behavior-x:none}
+.cg{touch-action:pan-x pan-y}
+input[type=date]{min-width:0;max-width:100%}
+body{padding-top:calc(var(--hh,60px) + 12px)}
+.top{position:fixed;left:0;right:0;top:0;z-index:70;padding-top:calc(12px + env(safe-area-inset-top,0px))}
+.top .row{flex-wrap:nowrap}
+.lft{display:flex;align-items:center;gap:10px;min-width:0}
+#mnu{display:none;font-size:1.25rem;line-height:1;padding:6px 12px;position:relative}
+#mnu.dot::after{content:"";position:absolute;top:2px;right:2px;width:9px;height:9px;border-radius:50%;background:#FF4F5E}
+#mbd{display:none;position:fixed;inset:0;background:rgba(0,4,40,.6);z-index:55}
+.side{top:calc(var(--hh,60px) + 16px)}
+.inst{display:none}
+@media(max-width:820px){
+ body{padding-bottom:24px}
+ body.in #mnu{display:inline-flex}
+ .side{position:fixed;left:0;top:0;bottom:0;right:auto;width:min(80vw,300px);height:auto;transform:translateX(-105%);transition:transform .22s ease;z-index:60;flex-direction:column;border-radius:0 18px 18px 0;padding:calc(var(--hh,60px) + 14px) 12px 18px;background:#00063A;border-right:1px solid rgba(255,255,255,.12);overflow-y:auto}
+ body.menu-open .side{transform:none}
+ body.menu-open #mbd{display:block}
+ .ai{flex:none;justify-content:space-between;padding:14px;font-size:1rem;text-align:start}
+ .inst{display:flex;margin-top:auto;border:1px solid rgba(255,255,255,.25)}
+ #who{flex-wrap:nowrap}
+}
+@media(max-width:560px){.top{padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px))}}
+.ov{z-index:80}
 </style>
 </head>
 <body>
-<header class="top"><div class="row"><div class="brand">RUNOVA<small>Coaching</small></div><div style="display:flex;gap:10px;align-items:center"><button class="ghost" id="th" aria-label="Switch day and night mode"></button><div id="who"></div></div></div></header>
+<header class="top"><div class="row"><div class="lft"><button class="ghost" id="mnu" aria-label="Open menu">&#9776;</button><div class="brand">RUNOVA<small>Coaching</small></div></div><div id="who"></div></div></header>
+<div id="mbd"></div>
 <main id="app"></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
@@ -148,9 +175,7 @@ why:'Every runner is different. A plan that works for one runner may not work fo
 get:['A weekly plan built for you','A place to log every run, with distance, time and notes','Your progress in one place: weekly km, results and personal bests','A coach who follows each session and gives feedback']};
 const MSGS=["Start slow. Finish proud.", "Every kilometer is a promise you keep to yourself.", "Show up today. Future you says thanks.", "Small steps still cover the distance.", "You don’t need a perfect day, just a started one.", "Consistency beats intensity.", "Easy days make hard days possible.", "The hardest step is the first one. Take it.", "Trust the plan and the plan will carry you.", "Strong legs are built on ordinary mornings.", "Progress is quiet. Keep going anyway.", "Run today like you’re racing your best self.", "Tired is a feeling. Moving is a choice.", "Be patient. Fitness is built in layers.", "Breathe, relax your shoulders, run tall.", "You’re closer than you were yesterday.", "Rest is part of the training. Respect it.", "Discipline is choosing what you want most over what you want now.", "Run with your head up and your heart open.", "Fast is fun, but steady wins.", "Every runner started as a beginner.", "Your only competition is who you were last week.", "Make today’s effort count, not just today’s distance.", "Hills are just speed in disguise.", "The track doesn’t care about excuses. Neither do you.", "Be proud of the work nobody sees.", "A bad run is still a run you finished.", "Fuel well. Sleep well. Run well.", "Quiet confidence is built mile by mile.", "Let the rhythm of your steps clear your mind.", "Race day rewards the weeks you showed up.", "You are stronger than your last thought of quitting.", "Cadence, posture, breath. Simple and strong.", "Today’s sweat is tomorrow’s strength.", "Aim for better, not perfect.", "Find your pace, then protect it.", "Every session adds a brick to your foundation.", "The finish line is just the start of the next goal.", "Believe in the miles you’ve already run.", "Run happy. The results will follow.", "Pain passes. Pride stays.", "Focus on this step, then the next.", "The best pace is the one you can hold with a smile.", "Warm up well. Cool down well. Recover well.", "Growth lives just outside your comfort zone.", "You’ve got a plan. Now go and live it.", "Be the runner who keeps showing up.", "Stay relaxed when it gets hard.", "Today is a good day for a good run.", "Great things are built on repeat.", "Run your race, not someone else’s.", "Strength work today means faster legs tomorrow.", "Stretch like you mean it.", "Respect the easy run. It does more than you think.", "Your goals are waiting at the end of your habits.", "Courage is lacing up on a day you don’t feel like it.", "The road remembers every effort.", "Go gently on the start, strongly on the finish.", "Little by little, the distance gets shorter.", "Keep your form when the effort rises.", "Celebrate every session you complete.", "Your body can do more than your mind believes.", "Make your next run your best reason to smile.", "The work you do now is your race-day advantage.", "Be kind to your body. It carries you.", "A steady effort beats a heroic one.", "You didn’t come this far to only come this far.", "Run toward the person you want to become.", "Every step forward is a step you earned.", "Listen to your body, then lead your mind.", "Good habits make great runners.", "Chase the feeling of finishing, not the fear of starting.", "Today’s plan is small enough to start and big enough to matter.", "When it burns, relax and keep your rhythm.", "There are no shortcuts, only smarter steps.", "Run with gratitude for the legs that carry you.", "Your coach believes in you. Believe in yourself too.", "Let the miles teach you patience.", "Another session done is another win banked.", "Don’t count the days. Make the days count.", "Strong mind, steady stride.", "Hold your pace. Hold your nerve.", "Every finish line began with a single decision.", "Be consistent now, be amazed later.", "Recovery is where the strength is built.", "Today is another chance to get it right.", "Smooth is fast. Relaxed is faster.", "Run like the finish line is waiting just for you.", "Get comfortable being uncomfortable.", "The harder you work, the sweeter the finish.", "Take the day one stride at a time.", "Your effort today writes your story tomorrow.", "Fresh air, open road, free mind.", "Stay curious about how far you can go.", "Train with purpose and race with joy.", "You are building something that lasts.", "Strength isn’t only in the legs. It’s in showing up.", "Keep the promise you made at the start of this plan.", "Today’s run is a gift to your future self.", "Every mile you log is proof you can."];
 const $=s=>document.querySelector(s);
-let cur=(()=>{try{return localStorage.getItem('runova_theme')}catch(e){return null}})()||'dark';
-const setTh=t=>{document.documentElement.dataset.theme=t;$('#th').textContent=t=='dark'?'☀️ Day':'🌙 Night'};
-setTh(cur);$('#th').onclick=()=>{cur=cur=='dark'?'light':'dark';setTh(cur);try{localStorage.setItem('runova_theme',cur)}catch(e){}};
+document.documentElement.dataset.theme='dark';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const TYPES={easy:'Easy Run',long:'Long Run',tempo:'Tempo',interval:'Intervals',fartlek:'Fartlek',race:'Race',strength:'Strength',stretch:'Stretching'};
 const RUN=['easy','long','tempo','interval','fartlek','race'],isRun=t=>RUN.includes(t);
@@ -191,7 +216,7 @@ const dlBlob=(b,n)=>{const u=URL.createObjectURL(b),l=document.createElement('a'
 const stravaLink=()=>{const u=sUrl(me&&me.strava);return u?`<a class="stv" href="${esc(u)}" target="_blank" rel="noopener noreferrer">Strava Account ↗</a>`:''};
 const sUrl=v=>{v=(v||'').trim();if(!v)return '';if(/^\d+$/.test(v))return 'https://www.strava.com/athletes/'+v;const u=url(v);if(!u)return '';try{const h=new URL(u).hostname;return /(^|\.)strava\.com$|(^|\.)strava\.app\.link$/.test(h)?u:''}catch(e){return ''}};
 const splitsHTML=sp=>!Array.isArray(sp)||!sp.length?'':`<div style="margin:6px 0">${sp.map((x,i)=>`<div class="m" style="display:flex;justify-content:space-between;gap:10px;padding:3px 0"><span>${i+1}. ${fmtD(+x.km,x.u)}</span><span>${dur((x.sec||+x.km*paceMin(x.pace)*60)/60)} • ${pcs(x.pace)} /km</span></div>`).join('')}</div>`;
-const ptsCard=rows=>{const l=rows||[],n=l.reduce((t,x)=>t+(+x.points||0),0);return `<div class="card" style="margin-top:14px;text-align:center"><div class="big">${n}<span>points</span></div><div class="lbl">From your coach · ${l.length} rated ${l.length==1?'activity':'activities'}</div></div>`};
+const ptsCard=(rows,ex)=>{const l=rows||[],e=ex||[],n=l.reduce((t,x)=>t+(+x.points||0),0),xs=e.reduce((t,x)=>t+(+x.points||0),0);return `<div class="card" style="margin-top:14px;text-align:center"><div class="big">${n+xs}<span>points</span></div><div class="lbl">From your coach · ${l.length} rated ${l.length==1?'activity':'activities'}${xs?` · ${xs} extra`:''}</div>${e.length?`<div style="margin-top:10px;text-align:start">${e.map(x=>`<div class="rl"><div><span class="bdg" style="--c:#B26A00;margin:0">⭐ Extra +${esc(x.points)}</span>${x.reason?` <span class="n">${esc(x.reason)}</span>`:''}</div><span class="m">${esc(fd(String(x.created_at).slice(0,10)))}</span></div>`).join('')}</div>`:''}</div>`};
 function bindPace(k,u,h,m,sc,pm,ps,lock){const g=i=>document.getElementById(i),f=()=>{const km=toKm(num(g(k).value),g(u).value),min=durIn3(g(h).value,g(m).value,g(sc).value);if(km>0&&min>0){const t=Math.round(min/km*60);g(pm).value=p2(Math.floor(t/60));g(ps).value=p2(t%60)}else if(lock){g(pm).value='';g(ps).value=''}};[k,u,h,m,sc].forEach(i=>{g(i).addEventListener('input',f);g(i).addEventListener('change',f)});if(lock){g(pm).readOnly=true;g(ps).readOnly=true}}
 function dlg(html){const o=document.createElement('div');o.className='ov';o.innerHTML='<div class="card dg">'+html+'</div>';o.onclick=e=>{if(e.target==o)o.remove()};document.body.appendChild(o);return o}
 function spRow(){const r=document.createElement('div');r.className='spl';
@@ -212,20 +237,23 @@ async function planPdf(a,w0,opt){
  await Promise.all([loadJs('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'),loadJs('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js')]);
  const ps=data||[],nice=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'});
  const km=ps.reduce((t,p)=>t+(+p.target_km||0),0);
- const cell=(h,b,hot)=>`<div style="border:1.5px solid ${hot?'#FF6A00':'rgba(255,255,255,.22)'};background:${hot?'linear-gradient(160deg,#FF6A00,#FF3D00)':'rgba(255,255,255,.07)'};border-radius:14px;padding:14px;min-height:190px;color:#fff;font-weight:600"><div style="font-weight:700;color:${hot?'#fff':'#FF8A3D'};margin-bottom:8px;font-size:15px">${h}</div>${b}</div>`;
+ const FF="Inter,'DM Sans',system-ui,sans-serif",cn0=String(coachName||'').replace(/^\s*coach\b[\s.:\-–]*/i,'').trim()||String(coachName||'').trim();
+ const cell=(h,b,hot)=>`<div style="border:1.5px solid ${hot?'#FF6A00':'rgba(255,255,255,.22)'};background:${hot?'linear-gradient(160deg,#FF6A00,#FF3D00)':'rgba(255,255,255,.07)'};border-radius:16px;padding:16px 18px;min-height:150px;color:#fff;font-weight:600;font-size:15px"><div style="font-weight:800;font-style:italic;color:${hot?'#fff':'#FF8A3D'};margin-bottom:8px;font-size:17px">${h}</div>${b}</div>`;
  const cells=[];
  for(let i=0;i<7;i++){const d=addDays(w0,i),l=ps.filter(p=>p.plan_date==d);cells.push(cell(nice(d),l.length?l.map(p=>`<div style="margin-bottom:10px"><b>${esc(p.title)}</b>${tot(p)?`<div class="m">${tot(p)}</div>`:''}${splitsHTML(p.splits)}${p.details?`<div dir="auto" style="white-space:pre-wrap;font-size:13px;margin-top:3px">${esc(p.details)}</div>`:''}</div>`).join(''):'<div class="m">Rest</div>'))}
- cells.push(cell('Week total',`<div style="font:800 26px Unbounded,sans-serif">${fmtD(km,'km')}</div><div style="color:rgba(255,255,255,.88)">planned distance</div>`,true));
- const lines=['M0 190 L1100 20','M0 400 L1100 230','M0 610 L1100 440','M0 820 L1100 650'].map(d=>`<path d="${d}"/>`).join('');
- const bgSvg='data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 780" preserveAspectRatio="none"><g fill="none" stroke="#2F5BFF" stroke-opacity=".55" stroke-width="2.5">${lines}</g></svg>`);
+ cells.push(cell('Week total',`<div style="font:900 italic 34px ${FF}">${fmtD(km,'km')}</div><div style="color:rgba(255,255,255,.9)">planned distance</div>`,true));
+ const TIPS=['Stay hydrated. Drink water throughout the day and carry a bottle to training.','Sleep 7 to 9 hours. Recovery happens while you sleep.','Warm up before every session. 5 to 10 minutes lowers your injury risk.','Fuel your runs. Eat a light meal before, and protein with carbs after.','Respect rest days. Rest is part of the plan, and tell your coach if something hurts.'];
+ const tipsHTML=`<div style="margin-top:20px;border:1.5px solid rgba(255,255,255,.22);background:rgba(255,255,255,.07);border-radius:16px;padding:18px 22px"><div style="font:800 italic 20px ${FF};color:#FF8A3D;margin-bottom:8px">Tips for the week</div>${TIPS.map((t,i)=>{const q=t.split('. ');return `<div style="display:flex;gap:10px;font-size:15px;line-height:1.5;margin:6px 0;font-weight:600"><span style="flex:none;width:20px;color:#FF8A3D;font-weight:800">${i+1}.</span><span><b>${q[0]}.</b> ${q.slice(1).join('. ')}</span></div>`}).join('')}</div>`;
+ const lines=['M0 230 L794 60','M0 520 L794 350','M0 810 L794 640','M0 1100 L794 930'].map(d=>`<path d="${d}"/>`).join('');
+ const bgSvg='data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 794 1123" preserveAspectRatio="none"><g fill="none" stroke="#2F5BFF" stroke-opacity=".55" stroke-width="2.5">${lines}</g></svg>`);
  const html=`<div style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden"><img src="${bgSvg}" style="width:100%;height:100%;display:block" alt=""></div>
- <div style="position:relative;flex:1;display:flex;flex-direction:column"><div style="display:flex;align-items:center;gap:14px"><span style="font:800 italic 40px Unbounded,sans-serif;color:#fff;letter-spacing:-.02em">RUNOVA</span><span style="background:linear-gradient(180deg,#FF6A00,#FF4000);color:#fff;font:600 italic 17px 'DM Sans',sans-serif;padding:5px 18px;border-radius:99px">Coaching</span></div>
- <div style="margin-top:16px;font-size:16px;line-height:1.7;color:#fff;font-weight:600"><div dir="auto"><b>Coach:</b> ${esc(coachName||'-')}</div><div dir="auto"><b>Athlete:</b> ${esc(nm(a))}</div></div>
- <div style="margin:8px 0 18px;font-size:16px;font-weight:700;color:#fff"><span style="letter-spacing:.04em">WEEKLY PLAN:</span> <span style="color:#C9D6FF">${fd(w0)} to ${fd(addDays(w0,6))}</span></div>
- <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">${cells.join('')}</div><div style="margin-top:auto;padding-top:28px;text-align:center;font:800 italic 22px Unbounded,sans-serif;color:#fff;letter-spacing:.01em">YOUR PLAN. YOUR PACE. <span style="color:#FF6A00">YOUR PROGRESS.</span></div></div>`;
- const el=document.createElement('div');el.className='pdfb';el.style.cssText+='position:fixed;left:-9999px;top:0;display:flex;flex-direction:column;width:1100px;min-height:777px;padding:34px 36px;box-sizing:border-box;color:#fff;background:linear-gradient(135deg,#000646 0%,#001A9E 60%,#0A3BFF 100%)';el.innerHTML=html;document.body.appendChild(el);
- let cv;try{if(document.fonts&&document.fonts.ready)await document.fonts.ready;cv=await html2canvas(el,{scale:2,backgroundColor:'#000646'})}finally{el.remove()}
- const {jsPDF}=window.jspdf,PW=842,PH=Math.max(595,Math.round(PW*cv.height/cv.width)),pdf=new jsPDF({orientation:PH>PW?'p':'l',unit:'pt',format:[PW,PH]});
+ <div style="position:relative;flex:1;display:flex;flex-direction:column"><div style="display:flex;align-items:center;gap:14px"><span style="font:900 italic 46px ${FF};color:#fff;letter-spacing:-.02em">RUNOVA</span><span style="background:linear-gradient(180deg,#FF6A00,#FF4000);color:#fff;font:700 italic 18px ${FF};padding:6px 20px;border-radius:99px">Coaching</span></div>
+ <div style="margin-top:18px;font-size:17px;line-height:1.7;color:#fff;font-weight:600"><div dir="auto"><b>Coach:</b> ${esc(cn0||'-')}</div><div dir="auto"><b>Athlete:</b> ${esc(nm(a))}</div></div>
+ <div style="margin:10px 0 20px;font-size:17px;font-weight:800;color:#fff"><span style="letter-spacing:.04em;font-style:italic">WEEKLY PLAN:</span> <span style="color:#C9D6FF">${fd(w0)} to ${fd(addDays(w0,6))}</span></div>
+ <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">${cells.join('')}</div>${tipsHTML}<div style="margin-top:auto;padding-top:30px;text-align:center;font:900 italic 24px ${FF};color:#fff">YOUR PLAN. YOUR PACE. <span style="color:#FF6A00">YOUR PROGRESS.</span></div></div>`;
+ const el=document.createElement('div');el.className='pdfb';el.style.cssText+=`position:fixed;left:-9999px;top:0;display:flex;flex-direction:column;width:794px;min-height:1123px;padding:36px 38px;box-sizing:border-box;color:#fff;background:linear-gradient(160deg,#000646 0%,#001A9E 60%,#0A3BFF 100%);font-family:${FF}`;el.innerHTML=html;document.body.appendChild(el);
+ let cv;try{try{await Promise.all(['italic 900 46px Inter','italic 800 20px Inter','italic 700 18px Inter','600 15px Inter','700 15px Inter'].map(f=>document.fonts.load(f)))}catch(e){}if(document.fonts&&document.fonts.ready)await document.fonts.ready;cv=await html2canvas(el,{scale:2,backgroundColor:'#000646'})}finally{el.remove()}
+ const {jsPDF}=window.jspdf,PW=595.28,PH=Math.max(841.89,PW*cv.height/cv.width),pdf=new jsPDF({orientation:'p',unit:'pt',format:[PW,PH]});
  pdf.addImage(cv.toDataURL('image/jpeg',.92),'JPEG',0,0,PW,PH);
  if(opt&&opt.blob)return {blob:pdf.output('blob'),name:'RUNOVA Coaching - '+nm(a)+'\'s Plan from '+fd(w0)+' to '+fd(addDays(w0,6))+'.pdf'};
  pdf.save('RUNOVA Coaching-'+(a.username||'athlete')+'-'+w0+'.pdf')}
@@ -242,7 +270,7 @@ function msg(e){const m=(e&&e.message)||'';
  return 'Something went wrong: '+m}
 
 function authView(){
- $('#who').innerHTML='';
+ $('#who').innerHTML='';document.body.classList.remove('in','menu-open');setHH();
  $('#app').innerHTML=`<div class="narrow"><div class="card"><h2 style="margin-top:0">Log In</h2><div class="grid">
  <div class="full"><label for="un">Username</label><input id="un" autocapitalize="none" autocomplete="username"></div>
  <div class="full"><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password"></div>
@@ -262,7 +290,7 @@ async function boot(){
  if(!session)return authView();
  const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
  if(error||!data){await sb.auth.signOut();return authView()}
- me=data;
+ me=data;document.body.classList.add('in');
  try{const o=JSON.parse(localStorage.getItem('runova_nav')||'null'),ok=me.role=='athlete'?['home','plan','load','notes','about']:me.role=='admin'?['home','coaches','athletes','races','about']:['home','athletes','notes','races','about'];if(o&&o.u==me.id&&ok.includes(o.view)){view=o.view;picked=me.role=='athlete'?null:(o.picked||null)}}catch(e){}
  $('#who').innerHTML=`<span>${esc(nm(me))}</span><span class="rc">${esc(me.role)}</span>${me.role=='admin'?'<button class="ghost" id="myn">Edit name</button>':''}<button class="ghost" id="out">Log Out</button>`;
  $('#out').onclick=async()=>{localStorage.removeItem('runova_nav');await sb.auth.signOut();me=null;picked=null;adding=false;view='home';authView()};
@@ -334,27 +362,29 @@ function bindPlan(redo){
   b.disabled=true;const {error}=await sb.from('plans').update(u).eq('id',id).eq('status','pending');b.disabled=false;
   if(error)return alert(msg(error));redo()})}
 
-const shell=(items,n)=>`<div class="shell"><nav class="side" aria-label="Main">${items.map(([k,l])=>`<button class="ai ${view==k?'on':''}" data-v="${k}"><span>${l}</span>${k=='notes'&&n?`<i class="cnt">${n}</i>`:''}</button>`).join('')}</nav><section id="mn"></section></div>`;
-const bindNav=re=>document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{view=b.dataset.v;picked=null;adding=false;re()});
+let lastN=0,dip=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e});
+const standalone=()=>(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone;
+function installApp(){document.body.classList.remove('menu-open');if(dip){dip.prompt();dip=null;return}const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);dlg(`<h2 style="margin-top:0">Install RUNOVA</h2><p>${ios?'Tap the Share button in Safari, then choose <b>Add to Home Screen</b>.':'Open your browser menu (the three dots), then choose <b>Install app</b> or <b>Add to Home screen</b>.'}</p><button onclick="this.closest('.ov').remove()">Got it</button>`)}
+const shell=(items,n)=>(lastN=n,`<div class="shell"><nav class="side" aria-label="Main">${items.map(([k,l])=>`<button class="ai ${view==k?'on':''}" data-v="${k}"><span>${l}</span>${k=='notes'&&n?`<i class="cnt">${n}</i>`:''}</button>`).join('')}${standalone()?'':'<button class="ai inst" id="inst"><span>Install App</span></button>'}</nav><section id="mn"></section></div>`);
+const bindNav=re=>{document.querySelectorAll('.side [data-v]').forEach(b=>b.onclick=()=>{view=b.dataset.v;picked=null;adding=false;document.body.classList.remove('menu-open');re()});const m=$('#mnu');if(m)m.classList.toggle('dot',!!lastN);const i=$('#inst');if(i)i.onclick=installApp};
 
 /* ---------- athlete ---------- */
 async function athleteView(){
  try{localStorage.setItem('runova_nav',JSON.stringify({u:me.id,view,picked:null}))}catch(e){}
- const sn=getSeen();
- const [a,b,c,d]=await Promise.all([sb.from('plans').select('id',{count:'exact',head:true}).gt('created_at',sn),sb.from('comments').select('id',{count:'exact',head:true}).gt('created_at',sn),sb.from('athlete_races').select('id',{count:'exact',head:true}).gt('created_at',sn),sb.from('workouts').select('id',{count:'exact',head:true}).gt('edited_at',sn)]);
- const n=view=='notes'?0:(a.count||0)+(b.count||0)+(c.count||0)+(d.count||0);
- $('#app').innerHTML=shell([['home','Home'],['plan','My Plan'],['load','Activity Log'],['notes','<span class="dk">Notifications</span><span class="mb">🔔</span>'],['about','About']],n);bindNav(athleteView);
+ await loadReads();NI=await aItems();const n=NI.filter(isNew).length;
+ $('#app').innerHTML=shell([['home','Home'],['plan','My Plan'],['load','Activity Log'],['notes','Notifications'],['about','About']],n);bindNav(athleteView);
  await ({home:aHome,plan:aPlan,load:aLoad,notes:aNotes,about:pgAbout}[view])($('#mn'));doJump()}
 
 async function aHome(mn){
- const [ps,ws,pb,ar,pp]=await Promise.all([fetchPlans(me.id),fetchWs(me.id),sb.from('personal_bests').select('*').eq('athlete_id',me.id),sb.from('athlete_races').select('*').eq('athlete_id',me.id),sb.from('workout_points').select('points').eq('athlete_id',me.id)]);
+ const [ps,ws,pb,ar,pp,ex]=await Promise.all([fetchPlans(me.id),fetchWs(me.id),sb.from('personal_bests').select('*').eq('athlete_id',me.id),sb.from('athlete_races').select('*').eq('athlete_id',me.id),sb.from('workout_points').select('points').eq('athlete_id',me.id),sb.from('extra_points').select('*').eq('athlete_id',me.id).order('created_at',{ascending:false})]);
  const s=split(ps),ids=(ar.data||[]).map(x=>x.race_id);
  const rr=ids.length?((await sb.from('races').select('*').in('id',ids).order('race_date')).data||[]):[];
- const goal={};(ar.data||[]).forEach(x=>goal[x.race_id]=x.goal);
+ const goal={},dist={};(ar.data||[]).forEach(x=>{goal[x.race_id]=x.goal;dist[x.race_id]=x.distance});
  const pbs=(pb.data||[]).sort((a,b)=>PBD.indexOf(a.distance)-PBD.indexOf(b.distance));
- mn.innerHTML=`<div class="narrow"><div class="quote"><small>Welcome back, ${esc(nm(me).split(' ')[0])}</small>${esc(MSGS[Math.floor(Math.random()*MSGS.length)])}</div>${stravaLink()}<div style="margin-top:16px">${weekHTML(ps,ws)}</div>${ptsCard(pp.data)}
+ mn.innerHTML=`<div class="narrow"><div class="quote"><small>Welcome back, ${esc(nm(me).split(' ')[0])}</small>${esc(MSGS[Math.floor(Math.random()*MSGS.length)])}</div>${stravaLink()}<div style="margin-top:16px">${weekHTML(ps,ws)}</div>${ptsCard(pp.data,ex.data)}
  <h2>Today</h2>${s.today.length?s.today.map(p=>planCard(p,false)).join(''):'<div class="card empty">Nothing planned for today.</div>'}
- ${rr.length?`<h2>My Races</h2><div class="card">${rr.map(r=>`<div class="rl"><div><b>${esc(r.name)}</b> <span class="m">${esc(r.race_date)}${r.distance?' • '+esc(r.distance):''}</span>${goal[r.id]?`<div class="n">Goal: ${esc(goal[r.id])}</div>`:''}${linkHTML(r.link,'Race Page')}</div><span class="tot">${dl(r.race_date)}</span></div>`).join('')}</div>`:''}
+ ${rr.length?`<h2>My Races</h2><div class="card">${rr.map(r=>`<div class="rl"><div><b>${esc(r.name)}</b> <span class="m">${esc(r.race_date)}${(dist[r.id]||r.distance)?' • '+esc(dist[r.id]||r.distance):''}</span>${goal[r.id]?`<div class="n">Goal: ${esc(goal[r.id])}</div>`:''}${linkHTML(r.link,'Race Page')}</div><span class="tot">${dl(r.race_date)}</span></div>`).join('')}</div>`:''}
  ${pbs.length?`<h2>PRs</h2><div class="card">${pbs.map(x=>`<div class="rl"><b>${esc(x.distance)}</b><span>${esc(x.time_text)} <span class="m">${esc(x.set_on||'')}</span></span></div>`).join('')}</div>`:''}</div>`;
  bindPlan(athleteView)}
 
@@ -406,10 +436,8 @@ function bindAdd(){
 
 async function coachView(){
  try{localStorage.setItem('runova_nav',JSON.stringify({u:me.id,view,picked}))}catch(e){}
- const s=getSeen();
- const [a,b]=await Promise.all([sb.from('plans').select('id',{count:'exact',head:true}).gt('updated_at',s).neq('status','pending'),sb.from('workouts').select('id',{count:'exact',head:true}).gt('created_at',s)]);
- const n=view=='notes'?0:(a.count||0)+(b.count||0);
- const ad=me.role=='admin';$('#app').innerHTML=shell(ad?[['home','Home'],['coaches','Coaches'],['athletes','Athletes'],['races','Races'],['about','About']]:[['home','Home'],['athletes','Athletes'],['notes','<span class="dk">Notifications</span><span class="mb">🔔</span>'],['races','Races'],['about','About']],n);bindNav(coachView);
+ let n=0;if(me.role!='admin'){await loadReads();NI=await cItems();n=NI.filter(isNew).length}
+ const ad=me.role=='admin';$('#app').innerHTML=shell(ad?[['home','Home'],['coaches','Coaches'],['athletes','Athletes'],['races','Races'],['about','About']]:[['home','Home'],['athletes','Athletes'],['notes','Notifications'],['races','Races'],['about','About']],n);bindNav(coachView);
  const fl=flash;flash='';
  await ({home:cHome,coaches:cCoaches,athletes:cAthletes,notes:cNotes,races:cRaces,about:pgAbout}[view])($('#mn'),fl)}
 
@@ -441,7 +469,7 @@ async function cAthlete(mn,fl){
  let {data:a,error:ea}=await sb.from('profiles').select('id,full_name,username,coach_id,coach_from,coach_until,active,strava,phone').eq('id',picked).single();
  if(ea)({data:a}=await sb.from('profiles').select('id,full_name,username,coach_id,coach_from,coach_until,active,strava').eq('id',picked).single());
  const cs=me.role=='admin'?await coachesList():null;
- const [ps,ws,pb,rc,ar,ph,pp,mine]=await Promise.all([fetchPlans(a.id),fetchWs(a.id),sb.from('personal_bests').select('*').eq('athlete_id',a.id),sb.from('races').select('*').order('race_date'),sb.from('athlete_races').select('*').eq('athlete_id',a.id),sb.from('pr_history').select('*').eq('athlete_id',a.id).order('set_on',{ascending:false}).order('created_at',{ascending:false}),sb.from('workout_points').select('workout_id,points').eq('athlete_id',a.id),myAthletes()]);
+ const [ps,ws,pb,rc,ar,ph,pp,mine,cn,ex]=await Promise.all([fetchPlans(a.id),fetchWs(a.id),sb.from('personal_bests').select('*').eq('athlete_id',a.id),sb.from('races').select('*').order('race_date'),sb.from('athlete_races').select('*').eq('athlete_id',a.id),sb.from('pr_history').select('*').eq('athlete_id',a.id).order('set_on',{ascending:false}).order('created_at',{ascending:false}),sb.from('workout_points').select('workout_id,points').eq('athlete_id',a.id),myAthletes(),sb.from('coach_notes').select('body').eq('athlete_id',a.id).eq('coach_id',me.id).maybeSingle(),sb.from('extra_points').select('*').eq('athlete_id',a.id).order('created_at',{ascending:false})]);
  const cm=await fetchComments(ws),pbm={};(pb.data||[]).forEach(x=>pbm[x.distance]=x);
  const prH=PBD.map(d=>{const raw=(ph.data||[]).filter(x=>x.distance==d),seen=new Set(),l=raw.filter(x=>{const k=x.time_text+'|'+(x.set_on||'');if(seen.has(k))return false;seen.add(k);return true});if(l.length<2)return '';return `<div class="prh"><b>${d}</b>${l.map((x,i)=>{const a=parseHMS(x.time_text),b=l[i+1]?parseHMS(l[i+1].time_text):NaN,df=!isNaN(a)&&!isNaN(b)&&Math.round(a*60)!==Math.round(b*60)?(a<b?'Improved by ':'Slower by ')+tt(Math.abs(b-a)):'',dt=x.set_on?String(x.set_on).split('-').reverse().join('/'):'';return `<div class="prl${i?'':' cur'}"><span><b>${esc(x.time_text)}</b>${dt?` <span class="m">(${esc(dt)})</span>`:''}</span><span class="m">${i?'':'Current'}${i&&!df?'':(i&&df?'':df?' · ':'')}${df}</span></div>`}).join('')}</div>`}).join('');
  const races=rc.data||[],rm={};races.forEach(r=>rm[r.id]=r);
@@ -452,9 +480,12 @@ async function cAthlete(mn,fl){
  const stv=sUrl(a.strava);
  const stravaCard=`<div class="card" style="margin-bottom:14px"><label for="stv">Strava Account (profile link)</label><div class="inl" style="margin-top:0"><input id="stv" value="${esc(a.strava||'')}" placeholder="https://www.strava.com/athletes/12345" autocapitalize="none"><button id="stsave" style="margin:0">Save</button></div>${stv?`<div style="margin-top:8px"><a href="${esc(stv)}" target="_blank" rel="noopener noreferrer" style="color:var(--ta);font-weight:600">Strava Account ↗</a></div>`:''}</div>`;
  const phoneCard=`<div class="card" style="margin-bottom:14px"><label for="phn">WhatsApp Number</label><div class="inl" style="margin-top:0"><input id="phn" type="tel" inputmode="tel" value="${a.phone?'+'+esc(a.phone):''}" placeholder="01012345678 or +201012345678" autocomplete="off"><button id="phsave" style="margin:0">Save</button></div></div>`;
- const ptsC=`<div class="card" style="margin-top:14px;text-align:center"><div class="big" id="ptot">${sumPts(pmap)}<span>points</span></div><div class="lbl">Total points given by the coach</div></div>`;
+ const exl=ex.data||[],exSum=exl.reduce((t,x)=>t+(+x.points||0),0),isAd=me.role=='admin';
+ const ptsC=`<div class="card" style="margin-top:14px;text-align:center"><div class="big" id="ptot">${sumPts(pmap)+exSum}<span>points</span></div><div class="lbl">Total points (activity points + extra points)</div></div>`;
+ const exC=`<h2>Extra Points</h2><div class="card" style="margin-bottom:14px">${isAd?'':'<button class="sm" id="exadd" style="margin:0 0 6px">+ Add Extra Points</button>'}${exl.length?exl.map(x=>`<div class="rl"><div><span class="bdg" style="--c:#B26A00;margin:0">⭐ Extra +${esc(x.points)}</span>${x.reason?` <span class="n">${esc(x.reason)}</span>`:''} <span class="m">${esc(fd(String(x.created_at).slice(0,10)))}</span></div>${isAd?'':`<button class="x" data-exdel="${esc(x.id)}" aria-label="Remove extra points">×</button>`}</div>`).join(''):'<div class="empty">No extra points yet.</div>'}</div>`;
+ const notesC=isAd?'':`<div class="card" style="margin-top:14px"><label for="cnb">Private notes (only you can see these, the athlete cannot)</label><textarea id="cnb" rows="4" maxlength="1500" placeholder="Your private notes about this athlete">${esc(cn&&cn.data?cn.data.body:'')}</textarea><button class="sm" id="cnsave">Save Notes</button></div>`;
  const wkTools=`<h2>Week Tools</h2><div class="card"><div class="lbl" style="margin-bottom:6px">Weekly plan PDF</div><div class="grid"><div><label for="pdfd">Any date in the week</label><input type="date" id="pdfd" value="${weekStart()}"></div><div style="align-self:end"><button id="pdfgo" style="width:100%">Download PDF</button></div></div>${a.phone?`<button class="wa" id="pdfwa" style="width:100%;margin-top:10px">Send plan on WhatsApp</button><div style="margin-top:8px"><a href="https://wa.me/${esc(a.phone)}" target="_blank" rel="noopener noreferrer" style="color:var(--ta);font-weight:600">Open the WhatsApp chat only ↗</a></div>`:`<p class="m" style="margin:10px 0 0">Add the athlete’s WhatsApp number above to send the plan on WhatsApp.</p>`}${me.role=='admin'?'':`<div class="lbl" style="margin:16px 0 6px">Copy a whole week</div><div class="grid"><div><label for="cwf">From week (any date in it)</label><input type="date" id="cwf" value="${weekStart()}"></div><div><label for="cwt">To week (any date in it)</label><input type="date" id="cwt" value="${addDays(weekStart(),7)}"></div><div class="full"><label for="cwa">To athlete</label><select id="cwa">${mine.map(x=>`<option value="${esc(x.id)}"${x.id==a.id?' selected':''}>${esc(nm(x))}</option>`).join('')}</select></div><div class="full"><button id="cwgo">Copy Week</button></div></div>`}</div>`;
- mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${H(esc(nm(a)))}${cs?'<button class="sm" id="ren" style="margin:0">Edit Name</button>':''}</div>${cs?`<div class="card" style="margin-bottom:14px"><label for="acs2">Coach</label><select id="acs2">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==a.coach_id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select><div class="grid" style="margin-top:10px"><div><label for="cf">Coach From</label><input type="date" id="cf" value="${a.coach_from||''}"></div><div><label for="cu">Coach Until</label><input type="date" id="cu" value="${a.coach_until||''}"></div></div><p class="m">Leave dates empty for no limit. After the end date the coach no longer sees this athlete.</p><button class="sm" id="csave">Save Coach</button></div>`:''}${phoneCard}${stravaCard}${ptsC}${loadHTML(ws,ps)}${chartHTML()}
+ mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${H(esc(nm(a)))}${cs?'<button class="sm" id="ren" style="margin:0">Edit Name</button>':''}</div>${cs?`<div class="card" style="margin-bottom:14px"><label for="acs2">Coach</label><select id="acs2">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==a.coach_id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select><div class="grid" style="margin-top:10px"><div><label for="cf">Coach From</label><input type="date" id="cf" value="${a.coach_from||''}"></div><div><label for="cu">Coach Until</label><input type="date" id="cu" value="${a.coach_until||''}"></div></div><p class="m">Leave dates empty for no limit. After the end date the coach no longer sees this athlete.</p><button class="sm" id="csave">Save Coach</button></div>`:''}${phoneCard}${stravaCard}${notesC}${ptsC}${exC}${loadHTML(ws,ps)}${chartHTML()}
  ${me.role=='admin'?'':` <h2>Plan a Session</h2><div class="card"><div class="grid"><div><label for="pd">Date *</label><input id="pd" type="date"></div>
  <div><label for="pt">Session *</label><select id="pt"><option value="">Choose Session</option>${typeOpts('')}</select></div>
  <div class="rf"><label for="pk">Distance *</label><div class="two"><input id="pk" type="number" step="0.01" min="0" inputmode="decimal"><select id="pku" aria-label="Unit"><option value="km">km</option><option value="m">m</option></select></div></div>
@@ -466,13 +497,16 @@ async function cAthlete(mn,fl){
  <div class="full"><button id="padd">Add to Plan</button> <button type="button" class="back" id="pcancel" style="display:none">Cancel edit</button></div></div><p class="err" id="err" role="alert"></p></div>`}${wkTools}
  ${sec('Today',s.today,true)}${sec('Coming Up',s.up,true)}${sec('History',s.past,true)}
  <h2>Activity Logged by ${esc(nm(a).split(' ')[0])}</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,true,pmap)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div>
- <h2>Races and Goals</h2><div class="card">${races.length?`<div class="grid"><div><label for="rs">Race</label><select id="rs">${races.map(r=>`<option value="${esc(r.id)}">${esc(r.name)} · ${esc(r.race_date)}</option>`).join('')}</select></div><div><label>Goal Time</label><div class="three"><input id="rgh" type="number" min="0" placeholder="hr"><input id="rgm" type="number" min="0" max="59" placeholder="min"><input id="rgs" type="number" min="0" max="59" placeholder="sec"></div></div><div class="full"><button id="rassign">Assign Race</button></div></div>`:'<div class="empty">Ask the admin to add races first.</div>'}
- ${(ar.data||[]).map(x=>rm[x.race_id]?`<div class="rl"><div><b>${esc(rm[x.race_id].name)}</b> <span class="m">${esc(rm[x.race_id].race_date)}</span>${x.goal?`<div class="n">Goal: ${esc(x.goal)}</div>`:''}</div><button class="x" data-rdel="${esc(x.id)}" aria-label="Remove race">×</button></div>`:'').join('')}</div>
+ <h2>Races and Goals</h2><div class="card">${races.length?`<div class="grid"><div class="full"><label for="rs">Race</label><select id="rs">${races.map(r=>`<option value="${esc(r.id)}">${esc(r.name)} · ${esc(r.race_date)}</option>`).join('')}</select></div><div><label for="rds">Distance</label><select id="rds"></select></div><div><label>Goal Time</label><div class="three"><input id="rgh" type="number" min="0" placeholder="hr"><input id="rgm" type="number" min="0" max="59" placeholder="min"><input id="rgs" type="number" min="0" max="59" placeholder="sec"></div></div><div class="full"><button id="rassign">Assign Race</button></div></div>`:'<div class="empty">Ask the admin to add races first.</div>'}
+ ${(ar.data||[]).map(x=>rm[x.race_id]?`<div class="rl"><div><b>${esc(rm[x.race_id].name)}</b> <span class="m">${esc(rm[x.race_id].race_date)}${x.distance?' • '+esc(x.distance):''}</span>${x.goal?`<div class="n">Goal: ${esc(x.goal)}</div>`:''}</div><button class="x" data-rdel="${esc(x.id)}" aria-label="Remove race">×</button></div>`:'').join('')}</div>
  ${sugHTML}<h2>PRs</h2><div class="card"><div class="pbs">${PBD.map(d=>`<div class="pbr2"><b>${d}</b><div class="three">${['hr','min','sec'].map((u,k)=>`<input type="number" min="0"${k?' max="59"':''} inputmode="numeric" placeholder="${u}" data-pt${u}="${d}" aria-label="${d} ${u}" value="${esc(pbm[d]?tparts(pbm[d].time_text)[k].replace(/^0(?=\d)/,''):'')}">`).join('')}</div><input type="date" data-pd="${d}" aria-label="${d} date" value="${pbm[d]&&pbm[d].set_on?pbm[d].set_on:''}"></div>`).join('')}</div><button id="pbsave">Save PRs</button><p class="err" id="pberr" role="status"></p>${prH?`<h2 style="font-size:.85rem">PR History</h2><p class="prn">Each line is a PR time that was saved, newest first. A new line is added only when a PR time or date changes (from Save PRs or an approved suggestion).</p>${prH}`:''}</div>
  <div style="margin-top:32px;display:flex;gap:10px;flex-wrap:wrap">${me.role=='admin'?`<button class="chip" id="rpw">Reset Password</button><button class="chip" id="tgl">${a.active===false?'Reactivate Account':'Deactivate Account'}</button>`:''}<button class="danger" id="rm">Remove Athlete</button></div>`;
  $('#bk').onclick=()=>{picked=null;coachView()};initChart(ps,ws);doJump();if(pbFlash){const pe=$('#pberr');if(pe){pe.className='ok';pe.textContent=pbFlash;pe.scrollIntoView({block:'center'})}pbFlash=''}
+ if($('#cnsave'))$('#cnsave').onclick=async()=>{const {error}=await sb.from('coach_notes').upsert({athlete_id:a.id,coach_id:me.id,body:$('#cnb').value.trim(),updated_at:new Date().toISOString()},{onConflict:'athlete_id,coach_id'});alert(error?msg(error):'Notes saved.')};
+ if($('#exadd'))$('#exadd').onclick=()=>{const o=dlg(`<h2 style="margin-top:0">Add Extra Points</h2><label for="exp">Points (1 to 100)</label><input id="exp" type="number" min="1" max="100" inputmode="numeric"><label for="exr" style="margin-top:10px">Reason (optional)</label><input id="exr" maxlength="50" placeholder="For example: great consistency this month"><p class="err" id="exe" role="alert"></p><div class="inl"><button id="exgo">Add</button><button class="back" id="exx">Cancel</button></div>`);o.querySelector('#exx').onclick=()=>o.remove();o.querySelector('#exgo').onclick=async()=>{const p=Math.round(+o.querySelector('#exp').value);if(!(p>=1&&p<=100))return o.querySelector('#exe').textContent='Enter points from 1 to 100.';const {error}=await sb.from('extra_points').insert({athlete_id:a.id,coach_id:me.id,points:p,reason:o.querySelector('#exr').value.trim()||null});if(error)return o.querySelector('#exe').textContent=msg(error);o.remove();flash='Extra points added.';coachView()}};
+ document.querySelectorAll('[data-exdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Remove these extra points?'))return;const {error}=await sb.from('extra_points').delete().eq('id',b.dataset.exdel);if(error)return alert(msg(error));coachView()});
  $('#stsave').onclick=async()=>{const v=$('#stv').value.trim(),u=v?sUrl(v):'';if(v&&!u)return alert('Paste the athlete’s Strava profile link, for example https://www.strava.com/athletes/12345');const {error}=await sb.rpc('set_strava',{a:a.id,s:u});if(error)return alert(msg(error));flash=u?'Strava account saved.':'Strava account removed.';coachView()};
- document.querySelectorAll('[data-wpt]').forEach(sel=>sel.onchange=async()=>{const id=sel.dataset.wpt,v=sel.value;let e;if(v==='')e=(await sb.from('workout_points').delete().eq('workout_id',id)).error;else e=(await sb.from('workout_points').upsert({workout_id:id,athlete_id:a.id,coach_id:me.id,points:+v},{onConflict:'workout_id'})).error;if(e){alert(msg(e));return coachView()}if(v==='')delete pmap[id];else pmap[id]=+v;$('#ptot').firstChild.nodeValue=sumPts(pmap)});
+ document.querySelectorAll('[data-wpt]').forEach(sel=>sel.onchange=async()=>{const id=sel.dataset.wpt,v=sel.value;let e;if(v==='')e=(await sb.from('workout_points').delete().eq('workout_id',id)).error;else e=(await sb.from('workout_points').upsert({workout_id:id,athlete_id:a.id,coach_id:me.id,points:+v},{onConflict:'workout_id'})).error;if(e){alert(msg(e));return coachView()}if(v==='')delete pmap[id];else pmap[id]=+v;$('#ptot').firstChild.nodeValue=sumPts(pmap)+exSum});
  document.querySelectorAll('[data-pbup]').forEach(b=>b.onclick=async()=>{const [d,wid]=b.dataset.pbup.split('|'),w=ws.find(x=>String(x.id)==wid);if(!w)return;const r={athlete_id:a.id,distance:d,time_text:tt(w.duration_min),set_on:w.workout_date};b.disabled=true;const e1=(await sb.from('personal_bests').upsert([r],{onConflict:'athlete_id,distance'})).error,e2=e1?null:(await sb.from('pr_history').insert([r])).error,e=e1||e2;if(e){b.disabled=false;return alert(msg(e))}flash=d+' PR updated to '+r.time_text+'.';coachView()});
  document.querySelectorAll('[data-pbno]').forEach(b=>b.onclick=()=>{try{const l=JSON.parse(localStorage.getItem('runova_pbno')||'[]');l.push(b.dataset.pbno);localStorage.setItem('runova_pbno',JSON.stringify(l))}catch(e){}coachView()});
  $('#phsave').onclick=async()=>{const v=$('#phn').value.trim(),n=v?waNum(v):'';if(v&&!n)return alert('Enter a valid WhatsApp number, for example 01012345678 or +201012345678.');const {error}=await sb.rpc('set_phone',{a:a.id,p:n||null});if(error)return alert(msg(error));flash=n?'WhatsApp number saved.':'WhatsApp number removed.';coachView()};
@@ -503,7 +537,8 @@ async function cAthlete(mn,fl){
   if(hi.length)e3=(await sb.from('pr_history').insert(hi)).error;
   if(del.length)e2=(await sb.from('personal_bests').delete().eq('athlete_id',a.id).in('distance',del)).error;
   const e=e1||e2||e3;if(e){el.className='err';el.textContent=msg(e);return}pbFlash='Saved.';await coachView()};
- if($('#rassign'))$('#rassign').onclick=async()=>{const g=goalTxt();if(g=='bad')return alert('Minutes and seconds must be 0 to 59.');const {error}=await sb.from('athlete_races').upsert({athlete_id:a.id,race_id:$('#rs').value,goal:g},{onConflict:'athlete_id,race_id'});if(error)return alert(msg(error));coachView()};
+ if($('#rs')){const fdist=()=>{const r=rm[$('#rs').value],L=r&&r.distances&&r.distances.length?r.distances:String((r&&r.distance)||'').split(/[\/•,]+/).map(x=>x.trim()).filter(Boolean);$('#rds').innerHTML=L.length?L.map(d=>`<option>${esc(d)}</option>`).join(''):'<option value="">Not set</option>'};$('#rs').onchange=fdist;fdist()}
+ if($('#rassign'))$('#rassign').onclick=async()=>{const g=goalTxt();if(g=='bad')return alert('Minutes and seconds must be 0 to 59.');const {error}=await sb.from('athlete_races').upsert({athlete_id:a.id,race_id:$('#rs').value,goal:g,distance:$('#rds').value||null},{onConflict:'athlete_id,race_id'});if(error)return alert(msg(error));coachView()};
  document.querySelectorAll('[data-rdel]').forEach(b=>b.onclick=async()=>{await sb.from('athlete_races').delete().eq('id',b.dataset.rdel);coachView()});
  const tg=()=>{document.querySelectorAll('.rf').forEach(e=>e.style.display=isRun($('#pt').value)?'':'none')};if($('#padd')){
  $('#pt').onchange=tg;tg();
@@ -566,45 +601,56 @@ async function cCoaches(mn,fl){
  document.querySelectorAll('[data-ktg]').forEach(b=>b.onclick=async()=>{const on=b.dataset.on=='1';if(!confirm(on?'Reactivate this coach?':'Deactivate this coach? They cannot sign in, but data is kept.'))return;const {data,error}=await sb.functions.invoke('add-athlete',{body:{action:'status',athlete_id:b.dataset.ktg,active:on}});if(error||(data&&data.error))return alert((data&&data.error)||error.message);coachView()});
  document.querySelectorAll('[data-ren]').forEach(b=>b.onclick=async()=>{const v=prompt('New name',b.dataset.n);if(v==null||!v.trim())return;const {error}=await sb.from('profiles').update({full_name:v.trim()}).eq('id',b.dataset.ren);if(error)return alert(msg(error));if(b.dataset.ren==me.id)return boot();coachView()})}
 
-async function cNotes(mn){
- const prev=new Date(getSeen()),as=await myAthletes(),nmap={};as.forEach(a=>nmap[a.id]=nm(a));
+async function cItems(){
+ const as=await myAthletes(),nmap={};as.forEach(a=>nmap[a.id]=nm(a));
  const [pr,wr]=await Promise.all([sb.from('plans').select('*').neq('status','pending').not('updated_at','is',null).order('updated_at',{ascending:false}).limit(40),sb.from('workouts').select('*').order('created_at',{ascending:false}).limit(40)]);
- setSeen();
  const V={finished:'finished',less:'did less on',not_finished:'did not finish'};
- const items=[...(pr.data||[]).map(p=>({a:p.athlete_id,t:'pc-'+p.id,at:p.updated_at,h:`<b>${esc(nmap[p.athlete_id]||'Athlete')}</b> ${V[p.status]} ${esc(p.title)}${tot(p)?' • '+tot(p):''} <span class="m">(${esc(p.plan_date)})</span>${p.athlete_notes?`<div class="cm"><b>Note:</b> ${esc(p.athlete_notes)}</div>`:''}`})),
-  ...(wr.data||[]).map(w=>({a:w.athlete_id,t:'w-'+w.id,at:w.created_at,h:`<b>${esc(nmap[w.athlete_id]||'Athlete')}</b> logged ${esc(TYPES[w.type]||w.type)}${wTxt(w)?' • '+wTxt(w):''} <span class="m">(${esc(w.workout_date)})</span>${w.notes?`<div class="cm">${esc(w.notes)}</div>`:''}`}))].sort((x,y)=>new Date(y.at)-new Date(x.at)).slice(0,60);
- mn.innerHTML=H('Notifications')+(items.length?items.map(i=>{const nw=new Date(i.at)>prev;
-  return `<div class="pc ${nw?'new':''}" ${i.a?`data-go="${esc(i.a)}" data-t="${esc(i.t||'')}"`:''} style="cursor:pointer"><div class="ph"><span>${esc(new Date(i.at).toLocaleString())}</span>${nw?'<span class="bdg" style="--c:#FF4F5E;margin:0">New</span>':''}</div><div>${i.h}</div></div>`}).join(''):'<div class="card empty">No updates yet.</div>');
- document.querySelectorAll('[data-go]').forEach(e=>e.onclick=()=>{picked=e.dataset.go;jump=e.dataset.t||null;view='athletes';coachView()})}
+ return [...(pr.data||[]).map(p=>({k:'cp:'+p.id+'|'+p.updated_at,a:p.athlete_id,t:'pc-'+p.id,at:p.updated_at,h:`<b>${esc(nmap[p.athlete_id]||'Athlete')}</b> ${V[p.status]} ${esc(p.title)}${tot(p)?' • '+tot(p):''} <span class="m">(${esc(p.plan_date)})</span>${p.athlete_notes?`<div class="cm"><b>Note:</b> ${esc(p.athlete_notes)}</div>`:''}`})),
+  ...(wr.data||[]).map(w=>({k:'cw:'+w.id,a:w.athlete_id,t:'w-'+w.id,at:w.created_at,h:`<b>${esc(nmap[w.athlete_id]||'Athlete')}</b> logged ${esc(TYPES[w.type]||w.type)}${wTxt(w)?' • '+wTxt(w):''} <span class="m">(${esc(w.workout_date)})</span>${w.notes?`<div class="cm">${esc(w.notes)}</div>`:''}`}))].sort((x,y)=>new Date(y.at)-new Date(x.at)).slice(0,60)}
+async function cNotes(mn){
+ mn.innerHTML=H('Notifications')+(NI.length?NI.map((i,x)=>{const nw=isNew(i);
+  return `<div class="pc ${nw?'new':''}" data-x="${x}" style="cursor:pointer"><div class="ph"><span>${esc(new Date(i.at).toLocaleString())}</span>${nw?'<span class="bdg" style="--c:#FF4F5E;margin:0">New</span>':''}</div><div>${i.h}</div></div>`}).join(''):'<div class="card empty">No updates yet.</div>');
+ document.querySelectorAll('#mn [data-x]').forEach(e=>e.onclick=async()=>{const i=NI[+e.dataset.x];await markRead(i.k);picked=i.a;jump=i.t||null;view='athletes';coachView()})}
 
 async function cRaces(mn){
  const {data}=await sb.from('races').select('*').order('race_date');
  const rs=data||[];
  mn.innerHTML=H('Races')+(me.role=='admin'?`<div class="card"><div class="grid"><div class="full"><label for="rn">Race Name</label><input id="rn"></div>
- <div><label for="rd">Date</label><input id="rd" type="date"></div><div><label for="rk">Distance</label><select id="rk"><option>5K</option><option>10K</option><option>21K</option><option>42K</option></select></div>
+ <div class="full"><label for="rd">Date</label><input id="rd" type="date"></div><div class="full"><label>Distances (choose one or more)</label><div class="sts" id="rkd" style="margin-top:0">${['5K','10K','21K','42K'].map(d=>`<button type="button" class="chip" data-d="${d}">${d}</button>`).join('')}</div></div><div class="full"><label for="rko">Other distance (optional)</label><input id="rko" placeholder="For example: 15K, 30K"></div>
  <div class="full"><label for="rl">Location</label><input id="rl"></div><div class="full"><label>Links (Optional)</label><div id="rls"><input class="lk" placeholder="https://..." autocapitalize="none"></div><button type="button" class="sm" id="rladd">+ Add Link</button></div><div class="full"><button id="radd">Add Race</button></div></div><p class="err" id="rerr" role="alert"></p></div>`:'')+`<h2>All Races</h2>${rs.length?rs.map(r=>`<div class="pc"><div class="ph"><span>${esc(r.race_date)}</span>${me.role=='admin'?`<button class="x" data-del="${esc(r.id)}" aria-label="Delete race">×</button>`:''}</div>
- <div class="pt"><b>${esc(r.name)}</b><span class="tot">${dl(r.race_date)}</span></div><div class="m">${[r.distance,r.location].filter(Boolean).map(esc).join(' • ')}</div>${linkHTML(r.link,'Race Page')}</div>`).join(''):'<div class="card empty">No races yet.</div>'}`;
+ <div class="pt"><b>${esc(r.name)}</b><span class="tot">${dl(r.race_date)}</span></div><div class="m">${[(r.distances&&r.distances.length?r.distances.join(' / '):r.distance),r.location].filter(Boolean).map(esc).join(' • ')}</div>${linkHTML(r.link,'Race Page')}</div>`).join(''):'<div class="card empty">No races yet.</div>'}`;
+ document.querySelectorAll('#rkd .chip').forEach(b=>b.onclick=()=>b.classList.toggle('on'));
  if($('#rladd'))$('#rladd').onclick=()=>{const i=document.createElement('input');i.className='lk';i.placeholder='https://...';i.style.marginTop='8px';$('#rls').appendChild(i)};
  if($('#radd'))$('#radd').onclick=async()=>{
   if(!$('#rn').value.trim()||!$('#rd').value)return $('#rerr').textContent='Add a race name and a date.';
+  const ds=[...new Set([...document.querySelectorAll('#rkd .on')].map(b=>b.dataset.d).concat($('#rko').value.split(',').map(x=>x.trim().toUpperCase()).filter(Boolean)))];if(!ds.length)return $('#rerr').textContent='Choose at least one distance.';
   const rl=[...document.querySelectorAll('#rls .lk')].map(x=>x.value.trim()).filter(Boolean);if(rl.some(x=>!url(x)))return $('#rerr').textContent='That link doesn’t look right.';
-  const {error}=await sb.from('races').insert({name:$('#rn').value.trim(),race_date:$('#rd').value,distance:$('#rk').value.trim()||null,location:$('#rl').value.trim()||null,link:rl.map(url).join('\n')||null});
+  const {error}=await sb.from('races').insert({name:$('#rn').value.trim(),race_date:$('#rd').value,distance:ds.join(' / '),distances:ds,location:$('#rl').value.trim()||null,link:rl.map(url).join('\n')||null});
   if(error)return $('#rerr').textContent=msg(error);coachView()};
  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this race? It is removed from every athlete too.'))return;await sb.from('races').delete().eq('id',b.dataset.del);coachView()})}
 
-async function aNotes(mn){
- const prev=new Date(getSeen());
+let reads=null,NI=[];
+async function loadReads(){
+ const {data,error}=await sb.from('notif_reads').select('item_key,read_at').eq('user_id',me.id).limit(5000);
+ if(error){reads={keys:new Set(),init:new Date(getSeen()),off:true};return reads}
+ const keys=new Set((data||[]).map(x=>x.item_key)),ini=(data||[]).find(x=>x.item_key=='__init'),at=ini?ini.read_at:new Date().toISOString();
+ if(!ini)await sb.from('notif_reads').upsert({user_id:me.id,item_key:'__init',read_at:at},{onConflict:'user_id,item_key'});
+ reads={keys,init:new Date(at)};return reads}
+const isNew=i=>!!reads&&new Date(i.at)>reads.init&&!reads.keys.has(i.k);
+const markRead=async k=>{if(!k||!reads||reads.off||reads.keys.has(k))return;reads.keys.add(k);await sb.from('notif_reads').upsert({user_id:me.id,item_key:k},{onConflict:'user_id,item_key'})};
+async function aItems(){
  const [pr,cr,rr,er]=await Promise.all([sb.from('plans').select('*').order('created_at',{ascending:false}).limit(30),sb.from('comments').select('*').order('created_at',{ascending:false}).limit(30),sb.from('athlete_races').select('*').order('created_at',{ascending:false}).limit(20),sb.from('workouts').select('id,type,workout_date,edited_at').not('edited_at','is',null).order('edited_at',{ascending:false}).limit(30)]);
  const wid=[...new Set((cr.data||[]).map(c=>c.workout_id))],rid=[...new Set((rr.data||[]).map(x=>x.race_id))];
  const [wd,rd]=await Promise.all([wid.length?sb.from('workouts').select('id,type,workout_date').in('id',wid):{data:[]},rid.length?sb.from('races').select('id,name,race_date').in('id',rid):{data:[]}]);
- setSeen();
  const wm={},rm={};(wd.data||[]).forEach(w=>wm[w.id]=w);(rd.data||[]).forEach(r=>rm[r.id]=r);
- const items=[...(pr.data||[]).map(p=>({v:'plan',t:'pc-'+p.id,at:p.created_at,h:`Your coach added <b>${esc(p.title)}</b> for ${esc(p.plan_date)}${tot(p)?' • '+tot(p):''}`})),
-  ...(cr.data||[]).map(c=>{const w=wm[c.workout_id];return{v:'load',t:'w-'+c.workout_id,at:c.created_at,h:`Your coach commented on your ${esc(w?(TYPES[w.type]||w.type):'activity')}${w?' ('+esc(w.workout_date)+')':''}<div class="cm">${esc(c.body)}</div>`}}),
-  ...(rr.data||[]).filter(x=>rm[x.race_id]).map(x=>({v:'home',at:x.created_at,h:`You were assigned <b>${esc(rm[x.race_id].name)}</b> (${esc(rm[x.race_id].race_date)})${x.goal?' • Goal: '+esc(x.goal):''}`})),...(er.data||[]).map(w=>({v:'load',t:'w-'+w.id,at:w.edited_at,h:`Your coach edited your ${esc(TYPES[w.type]||w.type)} (${esc(w.workout_date)})`}))].filter(i=>i.at).sort((x,y)=>new Date(y.at)-new Date(x.at)).slice(0,50);
- mn.innerHTML=`<div class="narrow">${H('Notifications')}${items.length?items.map(i=>{const nw=new Date(i.at)>prev;
-  return `<div class="pc ${nw?'new':''}" data-v="${i.v}" data-t="${esc(i.t||'')}" style="cursor:pointer"><div class="ph"><span>${esc(new Date(i.at).toLocaleString())}</span>${nw?'<span class="bdg" style="--c:#FF4F5E;margin:0">New</span>':''}</div><div>${i.h}</div></div>`}).join(''):'<div class="card empty">No updates yet.</div>'}</div>`;
- document.querySelectorAll('[data-v]').forEach(e=>e.onclick=()=>{view=e.dataset.v;jump=e.dataset.t||null;athleteView()})}
+ return [...(pr.data||[]).map(p=>({k:'plan:'+p.id,v:'plan',t:'pc-'+p.id,at:p.created_at,h:`Your coach added <b>${esc(p.title)}</b> for ${esc(p.plan_date)}${tot(p)?' • '+tot(p):''}`})),
+  ...(cr.data||[]).map(c=>{const w=wm[c.workout_id];return{k:'cm:'+c.id,v:'load',t:'w-'+c.workout_id,at:c.created_at,h:`Your coach commented on your ${esc(w?(TYPES[w.type]||w.type):'activity')}${w?' ('+esc(w.workout_date)+')':''}<div class="cm">${esc(c.body)}</div>`}}),
+  ...(rr.data||[]).filter(x=>rm[x.race_id]).map(x=>({k:'race:'+x.id,v:'home',at:x.created_at,h:`You were assigned <b>${esc(rm[x.race_id].name)}</b> (${esc(rm[x.race_id].race_date)}${x.distance?' • '+esc(x.distance):''})${x.goal?' • Goal: '+esc(x.goal):''}`})),
+  ...(er.data||[]).map(w=>({k:'we:'+w.id+'|'+w.edited_at,v:'load',t:'w-'+w.id,at:w.edited_at,h:`Your coach edited your ${esc(TYPES[w.type]||w.type)} (${esc(w.workout_date)})`}))].filter(i=>i.at).sort((x,y)=>new Date(y.at)-new Date(x.at)).slice(0,50)}
+async function aNotes(mn){
+ mn.innerHTML=`<div class="narrow">${H('Notifications')}${NI.length?NI.map((i,x)=>{const nw=isNew(i);
+  return `<div class="pc ${nw?'new':''}" data-x="${x}" style="cursor:pointer"><div class="ph"><span>${esc(new Date(i.at).toLocaleString())}</span>${nw?'<span class="bdg" style="--c:#FF4F5E;margin:0">New</span>':''}</div><div>${i.h}</div></div>`}).join(''):'<div class="card empty">No updates yet.</div>'}</div>`;
+ document.querySelectorAll('#mn [data-x]').forEach(e=>e.onclick=async()=>{const i=NI[+e.dataset.x];await markRead(i.k);view=i.v;jump=i.t||null;athleteView()})}
 
 async function pgAbout(mn){
  const ic=(href,label,svg,ext)=>`<a class="ci" href="${href}"${ext?' target="_blank" rel="noopener noreferrer"':''} aria-label="${label}" title="${label}">${svg}</a>`;
@@ -612,10 +658,13 @@ async function pgAbout(mn){
  mn.innerHTML=`<div class="narrow">${H('About')}<div class="card"><h2 style="margin-top:0">OUR MISSION</h2><p class="pre">${esc(ABOUT.mission)}</p></div>
  ${card('WHY RUNOVA',`<p class="pre">${esc(ABOUT.why)}</p>`)}
  ${card('WHAT YOU GET',`<ul class="ab">${ABOUT.get.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`)}
- ${card('CONTACT US',`<div class="cis">${ic('https://ig.me/m/runovacoaching','Instagram','<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg>',1)}${ic('https://wa.me/201090981498','WhatsApp','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path transform="translate(7.4 7.4) scale(.4)" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',1)}${ic('mailto:runovacoaching@gmail.com','Email','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>',0)}</div>`)}</div>`;
+ ${card('CONTACT US',`<div class="cis">${ic('https://ig.me/m/runovacoaching','Instagram','<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg>',1)}${ic('mailto:runovacoaching@gmail.com','Email','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>',0)}</div>`)}</div>`;
  const em=mn.querySelector('a[href^="mailto:"]');
  if(em)em.onclick=e=>{if(!matchMedia('(pointer:coarse)').matches){e.preventDefault();window.open('https://mail.google.com/mail/?view=cm&fs=1&to=runovacoaching@gmail.com','_blank','noopener')}}}
 
+function setHH(){const t=$('.top');if(t)document.documentElement.style.setProperty('--hh',t.offsetHeight+'px')}
+$('#mnu').onclick=()=>document.body.classList.toggle('menu-open');$('#mbd').onclick=()=>document.body.classList.remove('menu-open');
+window.addEventListener('resize',()=>{setHH();if(innerWidth>820)document.body.classList.remove('menu-open')});setHH();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(setHH);if(window.ResizeObserver)new ResizeObserver(setHH).observe($('.top'));
 boot();
 </script>
 </body>
