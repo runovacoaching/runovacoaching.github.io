@@ -384,8 +384,9 @@ function loadHTML(ws0,ps){
  const wk=ws.filter(w=>w.workout_date>=weekStart()),km=wk.reduce((a,w)=>a+(+w.distance_km||0),0);
  const fin=(ps||[]).filter(p=>p.plan_date>=weekStart()&&p.plan_date<=iso(new Date())&&p.status=='finished').length;
  const w0=new Date(weekStart()+'T00:00:00');
- const bars=[3,2,1,0].map(i=>{const s=new Date(w0);s.setDate(s.getDate()-7*i);const e=new Date(s);e.setDate(e.getDate()+7);
-  return{l:i==0?'This week':i==1?'Last week':i+' weeks ago',k:ws.filter(w=>w.workout_date>=iso(s)&&w.workout_date<iso(e)).reduce((a,w)=>a+(+w.distance_km||0),0)}});
+ const cur0=new Date(weekStart()+'T00:00:00'),wst=new Date(WSTART+'T00:00:00');let st=new Date(cur0);st.setDate(st.getDate()-21);if(st<wst)st=new Date(wst);
+ const bars=[0,1,2,3].map(i=>{const s=new Date(st);s.setDate(s.getDate()+7*i);const e=new Date(s);e.setDate(e.getDate()+7);const l=new Date(e);l.setDate(l.getDate()-1);
+  return{l:fd(iso(s))+' - '+fd(iso(l))+(iso(s)==iso(cur0)?' (this week)':''),k:ws.filter(w=>w.workout_date>=iso(s)&&w.workout_date<iso(e)).reduce((a,w)=>a+(+w.distance_km||0),0)}});
  const mx=Math.max(1,...bars.map(b=>b.k));
  return `<div class="card stats"><div><div class="big">${fmt(km)}<span>km</span></div><div class="lbl">Logged this week (from Saturday)</div></div>
  <div><div class="mid">${wk.length}</div><div class="lbl">Activities</div></div><div><div class="mid">${fin}</div><div class="lbl">Plan Sessions Finished</div></div></div>
