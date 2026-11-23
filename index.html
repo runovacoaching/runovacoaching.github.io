@@ -226,6 +226,20 @@ html,body{overscroll-behavior:none}
  body.menu-open .side{box-shadow:0 0 0 100vmax rgba(0,4,40,.62)}
  body.menu-open #mn{pointer-events:none}
 }
+
+.tiles.t4{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:700px){.tiles.t4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile.tap{cursor:pointer}.tile.tap:focus-visible{outline:3px solid rgba(255,138,61,.6)}
+.tile .lbl{font-size:.8rem}
+.ov .dg{max-height:88vh;overflow-y:auto}
+.t3{background:#14288F;color:#fff;border-radius:14px;padding:16px 18px;font-family:Inter,"DM Sans",sans-serif;margin-top:14px}
+.t3h{display:flex;justify-content:space-between;gap:10px;font:italic 800 .75rem Inter,sans-serif;letter-spacing:.12em}.t3h b{color:#FF6A1A;font-weight:800}
+.t3r{display:flex;align-items:center;gap:10px;margin-top:10px}
+.t3n{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center;font:italic 800 .8rem Inter,sans-serif;flex:none}
+.t3b{flex:1;min-width:0}.t3f{height:24px;border-radius:4px;display:flex;align-items:center;padding-inline:6px}
+.t3f.c1{background:#FF6A1A}.t3f.c2{background:#4C7DFF}.t3f.c3{background:#fff}
+.t3y{background:#fff;color:#14288F;font:italic 800 .6rem Inter,sans-serif;padding:1px 8px;border-radius:99px}.t3f.c3 .t3y{background:#14288F;color:#fff}
+.t3p{font:italic 800 .95rem Inter,sans-serif;min-width:34px;text-align:end}
+.t3 small{display:block;margin-top:10px;opacity:.75;font-size:.72rem}.t3m{margin-top:10px;font:italic 800 .8rem Inter,sans-serif}.t3e{margin-top:10px;opacity:.85}
 </style>
 </head>
 <body>
@@ -254,6 +268,11 @@ const weekStart=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate(
 const num=v=>v===''||v==null?null:Number(v);
 const fmt=n=>Number.isInteger(n)?n:n.toFixed(1);
 const nm=a=>a.full_name||a.username;
+const fsat=(y,m)=>{const d=new Date(y,m,1);d.setDate(1+(6-d.getDay()+7)%7);return d};
+function period(off){const n=new Date(),t=new Date(n.getFullYear(),n.getMonth(),n.getDate());let y=t.getFullYear(),m=t.getMonth();if(t<fsat(y,m))m--;m-=(off||0);const a=fsat(y,m),b=fsat(y,m+1);b.setDate(b.getDate()-1);const f=d=>d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});return{s:iso(a),e:iso(b),name:new Date(y,m,1).toLocaleDateString('en-GB',{month:'long'}),rng:f(a)+' – '+f(b)}}
+const ordn=n=>{const t=['th','st','nd','rd'],v=n%100;return n+(t[(v-20)%10]||t[v]||t[0])};
+const EFF={easy:'Easy',medium:'Medium',hard:'Hard'};
+
 const pcs=p=>{const q=String(p||'').split(':'),z=n=>String(n).padStart(2,'0');return z(+q[0]||0)+':'+z(+q[1]||0)};
 const url=u=>{u=(u||'').trim();if(!u)return '';if(!/^https?:\/\//i.test(u))u='https://'+u;try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return ''}};
 const linkHTML=(u,l)=>String(u||'').split('\n').map(x=>url(x)).filter(Boolean).map((h,i,a)=>`<div style="margin-top:8px"><a href="${esc(h)}" target="_blank" rel="noopener noreferrer" style="color:var(--ta);font-weight:600">${l}${a.length>1?' '+(i+1):''} ↗</a></div>`).join('');
@@ -422,7 +441,7 @@ function planCard(p,coach){
  return `<div class="pc" id="pc-${id}"><div class="ph"><span>${tag?`<b>${tag}</b> · `:''}${esc(p.plan_date)}</span>${coach?`<span style="white-space:nowrap">${me.role!='admin'?`<button class="x" data-pedit="${id}" aria-label="Edit session" style="font-size:1rem">✎</button>`:''}<button class="x" data-pcopy="${id}" aria-label="Copy session" style="font-size:1rem">⧉</button><button class="x" data-pdel="${id}" aria-label="Remove from plan">×</button></span>`:''}</div>
  <div class="pt"><b>${esc(p.title)}</b>${t?`<span class="tot">${t}</span>`:''}</div>${splitsHTML(p.splits)}${p.details?`<div class="pre">${esc(p.details)}</div>`:''}${linkHTML(p.link,'Open Link')}${ctl}</div>`}
 
-const wTxt=w=>[w.distance_km!=null?fmtD(+w.distance_km,w.distance_unit):'',w.duration_min!=null?dur(+w.duration_min):'',(w.avg_pace?pcs(w.avg_pace)+' /km':paceOf(+w.distance_km,+w.duration_min))].filter(Boolean).join(' • ');
+const wTxt=w=>[w.distance_km!=null?fmtD(+w.distance_km,w.distance_unit):'',w.duration_min!=null?dur(+w.duration_min):'',(w.avg_pace?pcs(w.avg_pace)+' /km':paceOf(+w.distance_km,+w.duration_min)),EFF[w.feel]||''].filter(Boolean).join(' • ');
 function wRow(w,cm,coach,pm){pm=pm||{};const id=esc(w.id),pv=pm[w.id];
  return `<div class="w" id="w-${id}"><div style="flex:1;min-width:0"><b>${esc(TYPES[w.type]||w.type)}</b> <span class="m">${esc(w.workout_date)}</span><div class="m">${wTxt(w)}</div>${w.notes?`<div class="n pre">${esc(w.notes)}</div>`:''}
  ${(cm[w.id]||[]).map(c=>`<div class="cm"><b>Coach:</b> ${esc(c.body)}</div>`).join('')}
@@ -487,7 +506,7 @@ async function cEvents(mn,fl){
  mn.innerHTML=H('Events')+(fl?`<div class="card">${esc(fl)}</div>`:'')+`<div class="card" style="margin-bottom:16px"><h2 style="margin-top:0">Create Event</h2><div class="grid"><div class="full"><label for="et">Event Name</label><input id="et" maxlength="80"></div><div class="full"><label for="ed">Date</label><input id="ed" type="date"></div><div class="full"><label>Time</label><div class="inl"><select id="ehh" aria-label="Hour">${[12,1,2,3,4,5,6,7,8,9,10,11].map(h=>`<option>${h}</option>`).join('')}</select><select id="emm" aria-label="Minutes">${['00','05','10','15','20','25','30','35','40','45','50','55'].map(m=>`<option>${m}</option>`).join('')}</select><select id="eap" aria-label="AM or PM"><option>PM</option><option>AM</option></select></div></div><div class="full"><label for="ep">Place Name</label><input id="ep" maxlength="80"></div><div class="full"><label for="el">Location Link (Google Maps)</label><input id="el" placeholder="https://"></div><div><label for="ept">Event Points</label><input id="ept" type="number" min="0" value="10" inputmode="numeric"></div><div class="full"><label for="edc">Description (Optional)</label><input id="edc" maxlength="200"></div></div><p class="err" id="ee" role="alert"></p><button id="eadd">Add Event</button></div>
  ${pend.length?`<h2>Redeem Requests</h2>${pend.map(r=>`<div class="card" style="margin-bottom:8px"><b>${nmOf(r.athlete_id)}</b> • ${r.points} points${r.note?'<div class="m">'+esc(r.note)+'</div>':''}<div class="inl" style="margin-top:8px"><button data-rd="${r.id}|approved">Approve</button><button class="back" data-rd="${r.id}|rejected">Reject</button></div></div>`).join('')}`:''}
  <h2>Events</h2>${events.length?events.map(card).join(''):'<div class="card empty">No events yet.</div>'}
- <h2>Adjust Event Points</h2><div class="card"><div class="grid"><div><label for="aa">Athlete</label><select id="aa">${as.map(a=>`<option value="${esc(a.id)}">${esc(nm(a))}</option>`).join('')}</select></div><div><label for="ap">Points (+ or -)</label><input id="ap" type="number" inputmode="numeric"></div><div class="full"><label for="ar">Reason</label><input id="ar" maxlength="80"></div></div><p class="err" id="ae" role="alert"></p><button id="ago">Save</button></div>
+ <h2>Adjust Event Points</h2><div class="card"><div class="grid"><div class="full"><label for="aa">Athlete</label><select id="aa">${as.map(a=>`<option value="${esc(a.id)}">${esc(nm(a))}</option>`).join('')}</select></div><div><label for="asg">Add or subtract</label><select id="asg"><option value="1">Add (+)</option><option value="-1">Subtract (−)</option></select></div><div><label for="ap">Points</label><input id="ap" type="number" min="1" inputmode="numeric"></div><div class="full"><label for="ar">Reason</label><input id="ar" maxlength="80"></div></div><p class="err" id="ae" role="alert"></p><button id="ago">Save</button></div>
  <h2>Event Leaderboard</h2><div class="card">${((lb.data||[]).filter(x=>ids.has(x.athlete_id)).map((x,i)=>`<div class="lbr"><span class="rk">${i+1}</span><span class="nm" dir="auto">${esc(x.full_name)}</span><b>${x.pts}</b> <span class="m">&nbsp;${x.attended} ev</span></div>`).join(''))||'<div class="empty">No data yet.</div>'}</div>`;
  const go=async(q,m)=>{const {error}=await q;if(error)return alert(msg(error));flash=m||'';coachView()};
  $('#eadd').onclick=async()=>{const t=$('#et').value.trim(),d=$('#ed').value,e=$('#ee');if(!t||!d)return e.textContent='Add a name and a date.';const l=$('#el').value.trim(),{data,error}=await sb.from('events').insert({coach_id:me.id,title:t,event_date:d,event_time:$('#ehh').value+':'+$('#emm').value+' '+$('#eap').value,place:$('#ep').value.trim()||null,link:l?(/^https?:/i.test(l)?l:'https://'+l):null,description:$('#edc').value.trim()||null,points:Math.max(0,Math.round(+$('#ept').value||0))}).select().single();if(error)return e.textContent=msg(error);const code=Array.from(crypto.getRandomValues(new Uint8Array(9)),b=>'abcdefghijkmnpqrstuvwxyz23456789'[b%32]).join('');const r=await sb.from('event_codes').insert({event_id:data.id,code});if(r.error)return e.textContent=msg(r.error);flash='Event added.';coachView()};
@@ -498,7 +517,7 @@ async function cEvents(mn,fl){
  document.querySelectorAll('[data-ciadd]').forEach(b=>b.onclick=()=>{const i=b.dataset.ciadd;go(sb.from('event_checkins').insert({event_id:i,athlete_id:document.querySelector('[data-cia="'+i+'"]').value,source:'manual'}),'Attendee added.')});
  document.querySelectorAll('[data-rd]').forEach(b=>b.onclick=()=>{const [i,s]=b.dataset.rd.split('|');go(sb.from('event_redeems').update({status:s,decided_at:new Date().toISOString()}).eq('id',i),s=='approved'?'Redeem approved.':'Redeem rejected.')});
  document.querySelectorAll('[data-qr]').forEach(b=>b.onclick=async()=>{const {data}=await sb.from('event_codes').select('code').eq('event_id',b.dataset.qr).single();if(!data)return alert('No code for this event.');const url=location.origin+location.pathname+'?ci='+data.code,o=dlg(`<h2 style="margin-top:0">Check-in QR</h2><div id="qrb" style="background:#fff;padding:14px;display:inline-block;border-radius:10px"></div><p class="m">Athletes scan this with the phone camera. It works only while check-in is open, on the event day.</p><button class="back" id="qx">Close</button>`);new QRCode(o.querySelector('#qrb'),{text:url,width:230,height:230});o.querySelector('#qx').onclick=()=>o.remove()});
- $('#ago').onclick=async()=>{const p=Math.round(+$('#ap').value),r=$('#ar').value.trim(),e=$('#ae');if(!p||!r)return e.textContent='Enter points (not zero) and a reason.';go(sb.from('event_adjust').insert({athlete_id:$('#aa').value,coach_id:me.id,points:p,reason:r}),'Event points updated.')}}
+ $('#ago').onclick=async()=>{const p=Math.round(Math.abs(+$('#ap').value))*(+$('#asg').value||1),r=$('#ar').value.trim(),e=$('#ae');if(!p||!r)return e.textContent='Enter points (not zero) and a reason.';go(sb.from('event_adjust').insert({athlete_id:$('#aa').value,coach_id:me.id,points:p,reason:r}),'Event points updated.')}}
 
 async function athleteView(){
  try{localStorage.setItem('runova_nav',JSON.stringify({u:me.id,view,picked:null}))}catch(e){}
@@ -506,21 +525,48 @@ async function athleteView(){
  $('#app').innerHTML=shell([['home','Home'],['plan','My Plan'],['load','Activity Log'],['events','Events'],['notes','Notifications'],['about','About']],n);bindNav(athleteView);
  await ({home:aHome,plan:aPlan,load:aLoad,events:aEvents,notes:aNotes,about:pgAbout}[view])($('#mn'));doJump()}
 
-async function myRank(){
- try{const now=new Date(),ms=[];for(let i=0;i<6;i++){const d=new Date(now.getFullYear(),now.getMonth()-i,1);ms.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-01')}
- const rs=await Promise.all(ms.map(m=>sb.rpc('my_monthly_rank',{m})));if(rs[0].error)return '';
- const mname=m=>new Date(m+'T00:00:00').toLocaleDateString('en-GB',{month:'long',year:'numeric'}),ord=n=>{const t=['th','st','nd','rd'],v=n%100;return n+(t[(v-20)%10]||t[v]||t[0])};
- const cur=rs[0].data,hist=rs.slice(1).map((r,i)=>({m:ms[i+1],r:r.data})).filter(h=>h.r);
- return `<h2>My Rank · ${esc(mname(ms[0]))}</h2><div class="card" style="text-align:center">${cur?`<div class="big">${ord(cur)}</div><div class="lbl">Your rank this month</div>`:'<div class="empty">No points yet this month.</div>'}</div>${hist.length?`<div class="hh hsec" data-hx="1" role="button" tabindex="0"><b>Previous Months</b><span class="hd">${hist.length}</span><i class="pl2"></i></div><div class="hb" hidden><div class="card">${hist.map(h=>`<div class="lbr"><span class="nm">${esc(mname(h.m))}</span><b>${ord(h.r)}</b></div>`).join('')}</div></div>`:''}`}catch(e){return ''}}
+async function top3Home(){
+ try{const P=[0,1,2,3].map(period),rs=await Promise.all(P.map(p=>sb.rpc('period_top3',{s:p.s,e:p.e})));if(rs[0].error)return '';
+ const p=P[0],rows=rs[0].data||[],top=rows.filter(x=>x.rnk<=3).sort((x,y)=>x.rnk-y.rnk),mine=rows.find(x=>x.me&&x.rnk>3),mx=Math.max(1,...top.map(x=>+x.pts));
+ const hist=rs.slice(1).map((r,i)=>({p:P[i+1],m:(r.data||[]).find(x=>x.me)})).filter(h=>h.m);
+ const row=x=>`<div class="t3r"><i class="t3n">${x.rnk}</i><div class="t3b"><div class="t3f c${x.rnk}" style="width:${Math.max(22,Math.round(+x.pts/mx*100))}%">${x.me?'<span class="t3y">YOU</span>':''}</div></div><b class="t3p">${+x.pts}</b></div>`;
+ return `<div class="t3"><div class="t3h"><b>TOP 3 THIS MONTH</b><span>${esc(p.name.toUpperCase())}</span></div>${top.length?top.map(row).join(''):'<div class="t3e">No points yet this month.</div>'}${mine?`<div class="t3m">You: ${ordn(mine.rnk)} · ${+mine.pts} pts</div>`:''}<small>${esc(p.rng)}</small></div>${hist.length?`<div class="hh hsec" data-hx="1" role="button" tabindex="0"><b>Previous Months</b><span class="hd">${hist.length}</span><i class="pl2"></i></div><div class="hb" hidden><div class="card">${hist.map(h=>`<div class="lbr"><span class="nm">${esc(h.p.name)}</span><b>${ordn(h.m.rnk)}</b></div>`).join('')}</div></div>`:''}`}catch(e){return ''}}
 async function leaderboard(){
- if(me&&me.role=='athlete')return await myRank();
- try{const now=new Date(),ms=[];for(let i=0;i<6;i++){const d=new Date(now.getFullYear(),now.getMonth()-i,1);ms.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-01')}
- const rs=await Promise.all(ms.map(m=>sb.rpc('monthly_points',{m})));if(rs[0].error)return '';
- const mname=m=>new Date(m+'T00:00:00').toLocaleDateString('en-GB',{month:'long',year:'numeric'});
- const rows=r=>(r.data||[]).map(x=>({id:x.athlete_id,name:x.full_name,pts:(x.activity||0)+(x.extra||0)})).filter(x=>x.pts>0).sort((a,b)=>b.pts-a.pts||String(a.name).localeCompare(String(b.name)));
+ if(me&&me.role=='athlete')return await top3Home();
+ try{const P=[0,1,2,3].map(period),rs=await Promise.all(P.map(p=>sb.rpc('period_points',{s:p.s,e:p.e})));if(rs[0].error)return '';
+ const rows=r=>(r.data||[]).map(x=>({id:x.athlete_id,name:x.full_name,pts:(+x.activity||0)+(+x.extra||0)})).filter(x=>x.pts>0).sort((a,b)=>b.pts-a.pts||String(a.name).localeCompare(String(b.name)));
  const tbl=l=>l.length?l.slice(0,15).map((x,i)=>`<div class="lbr${me&&x.id==me.id?' me':''}"><span class="rk">${i+1}</span><span class="nm" dir="auto">${esc(x.name||'')}</span><b>${x.pts}</b></div>`).join(''):'<div class="empty">No points yet this month.</div>';
- const hist=rs.slice(1).map((r,i)=>({m:ms[i+1],l:rows(r)})).filter(h=>h.l.length);
- return `<h2>Leaderboard · ${esc(mname(ms[0]))}</h2><div class="card">${tbl(rows(rs[0]))}</div>${hist.length?`<div class="hh hsec" data-hx="1" role="button" tabindex="0"><b>Previous Months</b><span class="hd">${hist.length}</span><i class="pl2"></i></div><div class="hb" hidden>${hist.map(h=>`<div class="card" style="margin-bottom:12px"><div class="lbh">${esc(mname(h.m))}</div>${tbl(h.l)}</div>`).join('')}</div>`:''}`}catch(e){return ''}}
+ const hist=rs.slice(1).map((r,i)=>({p:P[i+1],l:rows(r)})).filter(h=>h.l.length);
+ return `<h2>Leaderboard · ${esc(P[0].name)}</h2><div class="m" style="margin:-6px 0 8px">${esc(P[0].rng)}</div><div class="card">${tbl(rows(rs[0]))}</div><div style="margin-top:10px"><button class="chip" id="t3card">Create Top 3 Card</button></div>${hist.length?`<div class="hh hsec" data-hx="1" role="button" tabindex="0"><b>Previous Months</b><span class="hd">${hist.length}</span><i class="pl2"></i></div><div class="hb" hidden>${hist.map(h=>`<div class="card" style="margin-bottom:12px"><div class="lbh">${esc(h.p.name)} <span class="m">${esc(h.p.rng)}</span></div>${tbl(h.l)}</div>`).join('')}</div>`:''}`}catch(e){return ''}}
+function openTop3Card(){
+ const P=[0,1,2,3].map(period);
+ const o=dlg(`<h2 style="margin-top:0">Top 3 Card</h2><label for="t3p">Month</label><select id="t3p">${P.map((p,i)=>`<option value="${i}">${esc(p.name)} (${esc(p.rng)})</option>`).join('')}</select><canvas id="t3c" width="1080" height="1920" style="width:100%;max-width:300px;height:auto;display:block;margin:12px auto;border-radius:10px"></canvas><p class="m" id="t3m"></p><div class="inl"><button id="t3d">Download</button><button class="back" id="t3x">Close</button></div>`);
+ const q=k=>o.querySelector(k);let rowsNow=[];
+ const draw=async()=>{
+  const p=P[+q('#t3p').value],r=await sb.rpc('period_points',{s:p.s,e:p.e});
+  if(r.error){q('#t3m').textContent='Could not load points.';return}
+  rowsNow=(r.data||[]).map(x=>({name:x.full_name||'',pts:(+x.activity||0)+(+x.extra||0)})).filter(x=>x.pts>0).sort((a,b)=>b.pts-a.pts||a.name.localeCompare(b.name)).slice(0,3);
+  q('#t3m').textContent=rowsNow.length?'':'No points in this period yet.';
+  try{await document.fonts.load('italic 800 40px Inter')}catch(e){}
+  const c=q('#t3c'),x=c.getContext('2d');x.setTransform(3,0,0,3,0,0);
+  const g=x.createLinearGradient(0,0,0,640);g.addColorStop(0,'#1B45E0');g.addColorStop(1,'#0A1560');x.fillStyle=g;x.fillRect(0,0,360,640);
+  const F=sz=>'italic 800 '+sz+'px Inter,Arial,sans-serif';
+  const T=(t,px,py,sz,col,al,mw)=>{let z=sz;x.font=F(z);while(mw&&z>8&&x.measureText(t).width>mw){z-=1;x.font=F(z)}x.fillStyle=col;x.textAlign=al||'center';x.fillText(t,px,py)};
+  T('RUNOVA',28,72,36,'#fff','left');
+  x.fillStyle='#FF6A1A';x.beginPath();if(x.roundRect)x.roundRect(28,80,54,16,8);else x.rect(28,80,54,16);x.fill();T('COACHING',55,92,9,'#fff');
+  T('TOP 3',180,190,80,'#fff');T(p.name.toUpperCase(),180,236,42,'#FF6A1A',null,320);T('MONTHLY LEADERBOARD',180,266,15,'#fff');
+  [[30,400,130,'#4C7DFF'],[130,350,180,'#FF6A1A'],[230,430,100,'#fff']].forEach(b=>{x.fillStyle=b[3];x.fillRect(b[0],b[1],100,b[2])});
+  T('2',80,476,56,'#fff');T('1',180,450,72,'#fff');T('3',280,496,50,'#0A1560');
+  const pos={1:[180,304,322,341,17,14],0:[80,354,371,389,16,13],2:[280,384,401,419,16,13]};
+  rowsNow.forEach((r2,i)=>{const [cx,y1,y2,yp,sz,sp]=pos[i],parts=r2.name.trim().split(/\s+/),f=parts[0]||'',l=parts.length>1?parts[parts.length-1]:'';
+   if(l){T(f,cx,y1,sz,'#fff',null,96);T(l,cx,y2,sz,'#fff',null,96)}else T(f,cx,y2,sz,'#fff',null,96);
+   T(r2.pts+' PTS',cx,yp,sp,'#FF6A1A')});
+  if(!rowsNow.length)T('No points yet',180,380,20,'#fff');
+  T('YOUR PLAN. YOUR PACE. YOUR PROGRESS.',180,600,12,'#fff');
+ };
+ q('#t3p').onchange=draw;draw();
+ q('#t3x').onclick=()=>o.remove();
+ q('#t3d').onclick=()=>{if(!rowsNow.length)return;const p=P[+q('#t3p').value];q('#t3c').toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='runova-top3-'+p.name.toLowerCase()+'.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)},'image/png')}}
 async function aHome(mn){
  const [ps,ws,pb,ar,pp,ex]=await Promise.all([fetchPlans(me.id),fetchWs(me.id),sb.from('personal_bests').select('*').eq('athlete_id',me.id),sb.from('athlete_races').select('*').eq('athlete_id',me.id),sb.from('workout_points').select('points').eq('athlete_id',me.id),sb.from('extra_points').select('*').eq('athlete_id',me.id).order('created_at',{ascending:false})]);
  const s=split(ps),ids=(ar.data||[]).map(x=>x.race_id);
@@ -546,7 +592,7 @@ async function aLoad(mn){
  <div><label for="wd">Date</label><input id="wd" type="date" value="${iso(new Date())}"></div><div><label for="wt">Activity</label><select id="wt"><option value="">Choose Activity</option>${typeOpts('')}</select></div>
  <div class="rd"><label for="wk">Distance *</label><div class="two"><input id="wk" type="number" step="0.01" min="0" inputmode="decimal"><select id="wku" aria-label="Unit"><option value="km">km</option><option value="m">m</option></select></div></div><div><label>Duration *</label><div class="three"><input id="wh" type="number" min="0" inputmode="numeric" placeholder="hr" aria-label="Hours"><input id="wm" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="wsec" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
  <div class="rd"><label>Average Pace (min/km), calculated automatically</label><div class="two"><input id="wpm" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="min"><input id="wps" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="sec"></div></div>
- <div class="full"><label for="wn" id="wnl">Notes</label><textarea id="wn" rows="2" maxlength="50" placeholder="Max 50 characters"></textarea></div><div class="full"><button id="wsave">Save Activity</button></div></div><p class="err" id="werr" role="alert"></p></div>
+ <div class="full"><label for="wef">How hard was it? *</label><select id="wef"><option value="">Choose</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></div><div class="full"><label for="wn" id="wnl">Notes</label><textarea id="wn" rows="2" maxlength="50" placeholder="Max 50 characters"></textarea></div><div class="full"><button id="wsave">Save Activity</button></div></div><p class="err" id="werr" role="alert"></p></div>
  <h2>Your Activities</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,false,pm)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div></div>`;
  const tg=()=>{const t=$('#wt').value;document.querySelectorAll('.rd').forEach(e=>e.style.display=isRun(t)?'':'none');$('#wnl').textContent=isRun(t)?'Notes':'Description (optional)'};
  $('#wt').onchange=tg;tg();bindPace('wk','wku','wh','wm','wsec','wpm','wps',true);
@@ -556,10 +602,12 @@ async function aLoad(mn){
   if(num($('#wsec').value)>59||num($('#wm').value)>59)return e.textContent='Minutes and seconds must be 0 to 59.';
   if(!t)return e.textContent='Choose the activity.';if(isRun(t)&&!(km>0))return e.textContent='Enter the distance.';
   if(!(dm>0))return e.textContent='Enter the duration.';
+  if(!$('#wef').value)return e.textContent='Choose how hard it was.';
   const pm=num($('#wpm').value),ps=num($('#wps').value);
   if(isRun(t)){if(!((pm||0)*60+(ps||0)>0))return e.textContent='Enter the average pace.';if((pm||0)>59||(ps||0)>59)return e.textContent='Pace minutes and seconds must be 0 to 59.'}
   $('#wsave').disabled=true;
-  const {error}=await sb.from('workouts').insert({athlete_id:me.id,workout_date:$('#wd').value,type:t,distance_km:isRun(t)?km:null,distance_unit:isRun(t)?$('#wku').value:'km',duration_min:dm,notes:nt||null,avg_pace:isRun(t)?(pm||0)+':'+String(ps||0).padStart(2,'0'):null});
+  const row={athlete_id:me.id,workout_date:$('#wd').value,type:t,distance_km:isRun(t)?km:null,distance_unit:isRun(t)?$('#wku').value:'km',duration_min:dm,notes:nt||null,avg_pace:isRun(t)?(pm||0)+':'+String(ps||0).padStart(2,'0'):null,feel:$('#wef').value};
+  let {error}=await sb.from('workouts').insert(row);if(error&&/feel/i.test(error.message||'')){delete row.feel;({error}=await sb.from('workouts').insert(row))}
   $('#wsave').disabled=false;if(error)return e.textContent=msg(error);athleteView()};
  document.querySelectorAll('[data-wdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this activity?'))return;await sb.from('workouts').delete().eq('id',b.dataset.wdel);athleteView()})}
 
@@ -589,14 +637,22 @@ async function coachView(){
  await ({home:cHome,coaches:cCoaches,athletes:cAthletes,events:cEvents,notes:cNotes,races:cRaces,about:pgAbout}[view])($('#mn'),fl)}
 
 async function cHome(mn){
- const as=await myAthletes(),t=iso(new Date()),d=new Date();d.setDate(d.getDate()-14);
- const [pr,wr]=await Promise.all([sb.from('plans').select('athlete_id,plan_date,status,title,target_km,athlete_notes').gte('plan_date',iso(d)).lte('plan_date',t),sb.from('workouts').select('athlete_id').gte('workout_date',iso(d))]);
- const ps=pr.data||[],today=ps.filter(p=>p.plan_date==t),done=today.filter(p=>p.status=='finished').length,nmap={};as.forEach(a=>nmap[a.id]=nm(a));
- const active=new Set([...ps.filter(p=>p.status=='finished'||p.status=='less').map(p=>p.athlete_id),...(wr.data||[]).map(w=>w.athlete_id)]).size;
- mn.innerHTML=H('Home')+`<div class="tiles"><div class="tile"><div class="mid">${as.filter(a=>a.active!==false).length}</div><div class="lbl">Total Athletes</div></div>
- <div class="tile"><div class="mid">${active}</div><div class="lbl">Active (trained in the last 14 days)</div></div>
- <div class="tile"><div class="mid">${done} / ${today.length}</div><div class="lbl">Sessions Completed Today</div></div></div>
+ const as=await myAthletes(),t=iso(new Date()),d=new Date();d.setDate(d.getDate()-14);const i7=iso(new Date(Date.now()-7*864e5));
+ const [pr,wr0]=await Promise.all([sb.from('plans').select('athlete_id,plan_date,status,title,target_km,athlete_notes').gte('plan_date',iso(d)).lte('plan_date',t),sb.from('workouts').select('athlete_id,workout_date,feel').gte('workout_date',iso(d)).order('workout_date',{ascending:false})]);
+ const wr=wr0.error?await sb.from('workouts').select('athlete_id,workout_date').gte('workout_date',iso(d)).order('workout_date',{ascending:false}):wr0;
+ const ps=pr.data||[],wd=wr.data||[],today=ps.filter(p=>p.plan_date==t),done=today.filter(p=>p.status=='finished').length,nmap={};as.forEach(a=>nmap[a.id]=nm(a));
+ const live=as.filter(a=>a.active!==false);
+ const actSet=new Set([...ps.filter(p=>p.plan_date>=i7&&(p.status=='finished'||p.status=='less')).map(p=>p.athlete_id),...wd.filter(w=>w.workout_date>=i7).map(w=>w.athlete_id)]);
+ const actL=live.filter(a=>actSet.has(a.id)),notL=live.filter(a=>!actSet.has(a.id));
+ const att=[];live.forEach(a=>{const r=[];if(!actSet.has(a.id))r.push('No activity in 7 days');const mp=ps.filter(p=>p.athlete_id==a.id&&p.status!='pending').sort((x,y)=>String(y.plan_date).localeCompare(String(x.plan_date)));if(mp.length>1&&mp[0].status=='not_finished'&&mp[1].status=='not_finished')r.push('Missed 2 sessions in a row');const mw=wd.filter(w=>w.athlete_id==a.id).slice(0,3);if(mw.length==3&&mw.every(w=>w.feel=='hard'))r.push('3 hard sessions in a row');if(r.length)att.push([a,r])});
+ const attn=att.length?`<h2>Needs Attention (${att.length})</h2><div class="card">${att.map(([a,r])=>`<div class="rl" data-go="${esc(a.id)}" style="cursor:pointer"><div><b>${esc(nm(a))}</b><div class="m">${r.map(esc).join(' · ')}</div></div></div>`).join('')}</div>`:'';
+ mn.innerHTML=H('Home')+`<div class="tiles t4"><div class="tile"><div class="mid">${live.length}</div><div class="lbl">Total Athletes</div></div>
+ <div class="tile tap" data-lst="a" role="button" tabindex="0"><div class="mid">${actL.length}</div><div class="lbl">Active (last 7 days)</div></div>
+ <div class="tile tap" data-lst="n" role="button" tabindex="0"><div class="mid">${notL.length}</div><div class="lbl">Not Active (last 7 days)</div></div>
+ <div class="tile"><div class="mid">${done} / ${today.length}</div><div class="lbl">Sessions Completed Today</div></div></div>${attn}
  ${me.role=='admin'?'':'<h2>Today’s Sessions</h2>'}${me.role=='admin'?'':today.length?`<div class="card">${today.map(p=>`<div class="rl" data-go="${esc(p.athlete_id)}" style="cursor:pointer"><div>${p.athlete_notes?'📝 ':''}<b>${esc(nmap[p.athlete_id]||'')}</b> <span class="m">${esc(p.title)}${p.target_km!=null?' • '+fmt(+p.target_km)+' km':''}</span></div>${badge(p.status)}</div>`).join('')}</div>`:'<div class="card empty">No sessions planned for today.</div>'}${await leaderboard()}`;
+ if($('#t3card'))$('#t3card').onclick=openTop3Card;
+ document.querySelectorAll('[data-lst]').forEach(e=>{const open=()=>{const isA=e.dataset.lst=='a',L=isA?actL:notL,o=dlg(`<h2 style="margin-top:0">${isA?'Active':'Not Active'} (${L.length})</h2>${L.length?L.map(a=>`<div class="rl" data-gp="${esc(a.id)}" style="cursor:pointer"><b>${esc(nm(a))}</b><span class="m">@${esc(a.username)}</span></div>`).join(''):'<div class="empty">Nobody here.</div>'}<button class="back" id="lx" style="margin-top:12px">Close</button>`);o.querySelector('#lx').onclick=()=>o.remove();o.querySelectorAll('[data-gp]').forEach(r=>r.onclick=()=>{o.remove();picked=r.dataset.gp;jump=null;view='athletes';coachView()})};e.onclick=open;e.onkeydown=ev=>{if(ev.key=='Enter'||ev.key==' '){ev.preventDefault();open()}}});
  document.querySelectorAll('[data-go]').forEach(e=>e.onclick=()=>{picked=e.dataset.go;jump=e.dataset.t||null;view='athletes';coachView()})}
 
 async function cAthletes(mn,fl){
