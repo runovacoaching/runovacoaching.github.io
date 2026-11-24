@@ -240,6 +240,7 @@ html,body{overscroll-behavior:none}
 .t3y{background:#fff;color:#14288F;font:italic 800 .6rem Inter,sans-serif;padding:1px 8px;border-radius:99px}.t3f.c3 .t3y{background:#14288F;color:#fff}
 .t3p{font:italic 800 .95rem Inter,sans-serif;min-width:34px;text-align:end}
 .t3 small{display:block;margin-top:10px;opacity:.75;font-size:.72rem}.t3m{margin-top:10px;font:italic 800 .8rem Inter,sans-serif}.t3e{margin-top:10px;opacity:.85}
+button.sent,button.sent:disabled{background:#1F9D55;border-color:#1F9D55;color:#fff;opacity:1}
 </style>
 </head>
 <body>
@@ -557,7 +558,7 @@ function openTop3Card(){
   T('TOP 3',180,190,80,'#fff');T(p.name.toUpperCase(),180,236,42,'#FF6A1A',null,320);T('MONTHLY LEADERBOARD',180,266,15,'#fff');
   [[30,400,130,'#4C7DFF'],[130,350,180,'#FF6A1A'],[230,430,100,'#fff']].forEach(b=>{x.fillStyle=b[3];x.fillRect(b[0],b[1],100,b[2])});
   T('2',80,476,56,'#fff');T('1',180,450,72,'#fff');T('3',280,496,50,'#0A1560');
-  const pos={1:[180,304,322,341,17,14],0:[80,354,371,389,16,13],2:[280,384,401,419,16,13]};
+  const pos={0:[180,304,322,341,17,14],1:[80,354,371,389,16,13],2:[280,384,401,419,16,13]};
   rowsNow.forEach((r2,i)=>{const [cx,y1,y2,yp,sz,sp]=pos[i],parts=r2.name.trim().split(/\s+/),f=parts[0]||'',l=parts.length>1?parts[parts.length-1]:'';
    if(l){T(f,cx,y1,sz,'#fff',null,96);T(l,cx,y2,sz,'#fff',null,96)}else T(f,cx,y2,sz,'#fff',null,96);
    T(r2.pts+' PTS',cx,yp,sp,'#FF6A1A')});
@@ -785,7 +786,7 @@ async function cAthlete(mn,fl){
    const {id,created_at,updated_at,status,athlete_notes,...r}=p;const {error}=await sb.from('plans').insert({...r,athlete_id:to,plan_date:d,status:'pending',athlete_notes:null});
    if(error)return o.querySelector('#cpe').textContent=msg(error);o.remove();flash='Session copied to '+nm(mine.find(x=>x.id==to)||a)+' ('+d+').';coachView()}});
  document.querySelectorAll('[data-pdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Remove this session from the plan?'))return;await sb.from('plans').delete().eq('id',b.dataset.pdel);coachView()});
- document.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{const i=document.querySelector('[data-ci="'+b.dataset.c+'"]'),t=i.value.trim();if(!t)return;const {error}=await sb.from('comments').insert({workout_id:b.dataset.c,coach_id:me.id,body:t});if(error)return alert(msg(error));coachView()});
+ document.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{const i=document.querySelector('[data-ci="'+b.dataset.c+'"]'),t=i.value.trim();if(!t)return;const {error}=await sb.from('comments').insert({workout_id:b.dataset.c,coach_id:me.id,body:t});if(error)return alert(msg(error));b.textContent='Sent ✓';b.classList.add('sent');b.disabled=true;i.disabled=true;setTimeout(coachView,1100)});
  document.querySelectorAll('[data-wdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete This Activity?'))return;const {error}=await sb.from('workouts').delete().eq('id',b.dataset.wdel);if(error)return alert(msg(error));coachView()});
  document.querySelectorAll('[data-wedit]').forEach(b=>b.onclick=async()=>{const w=ws.find(x=>x.id==b.dataset.wedit),d=w.distance_km!=null?prompt('Distance ('+(w.distance_unit=='m'?'m':'km')+')',w.distance_unit=='m'?Math.round(w.distance_km*1000):w.distance_km):null;if(w.distance_km!=null&&d===null)return;const t=prompt('Duration (H:M:S)',hms(w.duration_min));if(t===null)return;const n=prompt('Notes (max 50 characters)',w.notes||'');if(n===null)return;if(n.length>50)return alert('Notes can be 50 characters at most.');const m=parseHMS(t);if(!(m>0))return alert('Duration must look like 1:05:30 (minutes and seconds up to 59).');const {error}=await sb.from('workouts').update({distance_km:w.distance_km!=null?(num(d)==null?null:toKm(num(d),w.distance_unit)):null,duration_min:m,notes:n.trim()||null,edited_at:new Date().toISOString()}).eq('id',w.id);if(error)return alert(msg(error));coachView()});
  if($('#rpw'))$('#rpw').onclick=()=>askPw(a.id);
