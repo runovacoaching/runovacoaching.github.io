@@ -488,13 +488,9 @@ function bindPlan(redo){
    row={athlete_id:me.id,workout_date:bx.dataset.date,type:bx.dataset.type,distance_km:run?km:null,distance_unit:run?gv('.pd-ku'):'km',duration_min:dm,notes:null,avg_pace:run?(pm||0)+':'+String(ps||0).padStart(2,'0'):null,plan_id:id};
   }
   if(!confirm('Once you save, you can’t change this. Save?'))return;
-  b.disabled=true;let wid=null;
-  const old=PX.wbp[id];if(old)await sb.from('workouts').delete().eq('id',old.id);
-  if(full){const r=await sb.from('workouts').insert(row).select('id').single();if(r.error||!r.data){b.disabled=false;return alert(msg(r.error))}wid=r.data.id}
-  const u={status:st};if(fl&&full)u.feel=fl.dataset.fl;if(nt)u.athlete_notes=nt;if(lk)u.run_link=lk;
-  const r2=await sb.from('plans').update(u).eq('id',id).eq('status','pending').select('id');
-  if(r2.error||!(r2.data&&r2.data.length)){if(wid)await sb.from('workouts').delete().eq('id',wid);b.disabled=false;return alert(r2.error?msg(r2.error):'Could not save. Please try again.')}
-  b.disabled=false;redo()})}
+  b.disabled=true;
+  const r=await sb.rpc('athlete_complete_plan',{pid:String(id),st:st,fl:(full&&fl)?fl.dataset.fl:null,nt:nt,lk:lk,dist:row?row.distance_km:null,dunit:row?row.distance_unit:'km',dur:row?row.duration_min:null,pace:row?row.avg_pace:null});
+  b.disabled=false;if(r.error)return alert(/function|schema cache|does not exist/i.test(r.error.message||'')?'Please run the update SQL in Supabase first.':msg(r.error));redo()})}
 
 let lastN=0,dip=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e});
