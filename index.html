@@ -435,9 +435,11 @@ function weekHTML(ps,ws){
 
 function planCard(p,coach){
  const t=tot(p),tag=dayTag(p.plan_date),id=esc(p.id);
- const ctl=coach?`<div>${badge(p.status)}</div>${p.athlete_notes?`<div class="cm"><b>Athlete Note:</b> ${esc(p.athlete_notes)}</div>`:''}${me.role!='admin'?`<div class="sts" data-cp="${id}" style="margin-top:8px">${[['pending','Pending'],['finished','Completed'],['less','Partial'],['not_finished','Missed']].map(([k,l])=>`<button class="chip ${p.status==k?'on':''}" data-st="${k}">${l}</button>`).join('')}</div><button class="sm" data-csave="${id}">Update Status</button>`:''}`
-  :p.status!='pending'?`<div>${badge(p.status)}</div>`
+ const ctl=coach?`<div>${badge(p.status)}${p.feel?` <span class="bdg" style="--c:#4C7DFF">${EFF[p.feel]||''}</span>`:''}</div>${p.athlete_notes?`<div class="cm"><b>Athlete Note:</b> ${esc(p.athlete_notes)}</div>`:''}${me.role!='admin'?`<div class="sts" data-cp="${id}" style="margin-top:8px">${[['pending','Pending'],['finished','Completed'],['less','Partial'],['not_finished','Missed']].map(([k,l])=>`<button class="chip ${p.status==k?'on':''}" data-st="${k}">${l}</button>`).join('')}</div><button class="sm" data-csave="${id}">Update Status</button>`:''}`
+  :p.status!='pending'?`<div>${badge(p.status)}${p.feel?` <span class="bdg" style="--c:#4C7DFF">${EFF[p.feel]||''}</span>`:''}</div>${p.athlete_notes?`<div class="cm"><b>Your note:</b> ${esc(p.athlete_notes)}</div>`:''}`
   :`<div class="sts" data-p="${id}">${[['finished','Completed'],['less','Partial'],['not_finished','Missed']].map(([k,l])=>`<button class="chip ${p.status==k?'on':''}" data-st="${k}">${l}</button>`).join('')}</div>
+  <div class="m" style="margin-top:8px">How did it feel?</div><div class="sts" data-pf="${id}">${[['easy','Easy'],['medium','Medium'],['hard','Hard']].map(([k,l])=>`<button class="chip" data-fl="${k}">${l}</button>`).join('')}</div>
+  <textarea data-pn="${id}" rows="2" maxlength="50" placeholder="Note (optional, max 50 characters)" aria-label="Note" style="margin-top:8px"></textarea>
   <button class="sm" data-save="${id}">Save</button>`;
  return `<div class="pc" id="pc-${id}"><div class="ph"><span>${tag?`<b>${tag}</b> · `:''}${esc(p.plan_date)}</span>${coach?`<span style="white-space:nowrap">${me.role!='admin'?`<button class="x" data-pedit="${id}" aria-label="Edit session" style="font-size:1rem">✎</button>`:''}<button class="x" data-pcopy="${id}" aria-label="Copy session" style="font-size:1rem">⧉</button><button class="x" data-pdel="${id}" aria-label="Remove from plan">×</button></span>`:''}</div>
  <div class="pt"><b>${esc(p.title)}</b>${t?`<span class="tot">${t}</span>`:''}</div>${splitsHTML(p.splits)}${p.details?`<div class="pre">${esc(p.details)}</div>`:''}${linkHTML(p.link,'Open Link')}${ctl}</div>`}
@@ -445,7 +447,7 @@ function planCard(p,coach){
 const wTxt=w=>[w.distance_km!=null?fmtD(+w.distance_km,w.distance_unit):'',w.duration_min!=null?dur(+w.duration_min):'',(w.avg_pace?pcs(w.avg_pace)+' /km':paceOf(+w.distance_km,+w.duration_min)),EFF[w.feel]||''].filter(Boolean).join(' • ');
 function wRow(w,cm,coach,pm){pm=pm||{};const id=esc(w.id),pv=pm[w.id];
  return `<div class="w" id="w-${id}"><div style="flex:1;min-width:0"><b>${esc(TYPES[w.type]||w.type)}</b> <span class="m">${esc(w.workout_date)}</span><div class="m">${wTxt(w)}</div>${w.notes?`<div class="n pre">${esc(w.notes)}</div>`:''}
- ${(cm[w.id]||[]).map(c=>`<div class="cm"><b>Coach:</b> ${esc(c.body)}</div>`).join('')}
+ ${(cm[w.id]||[]).map(c=>`<div class="cm"><b>Coach:</b> ${esc(c.body)}${coach&&me.role!='admin'&&c.coach_id==me.id?` <button class="back" style="padding:2px 8px;font-size:.75rem" data-ce="${esc(c.id)}" data-b="${esc(c.body)}">Edit</button> <button class="back" style="padding:2px 8px;font-size:.75rem" data-cd="${esc(c.id)}" aria-label="Delete comment">×</button>`:''}</div>`).join('')}
  ${coach&&me.role!='admin'?`<div class="inl" style="align-items:center"><label style="margin:0">Points</label><select data-wpt="${id}" style="width:auto" aria-label="Points"><option value="">–</option>${[1,2,3,4,5].map(n=>`<option${pv==n?' selected':''}>${n}</option>`).join('')}</select></div>`:pv?`<span class="bdg" style="--c:#B26A00">⭐ ${pv} points</span>`:''}
  ${coach?`<div class="inl"><input data-ci="${id}" maxlength="50" placeholder="Comment (max 50 characters)" aria-label="Comment"><button data-c="${id}" class="${pv||(cm[w.id]||[]).length?'sent':''}">${pv||(cm[w.id]||[]).length?'Sent ✓':'Send'}</button></div>`:''}</div>
  <span style="white-space:nowrap">${coach?`<button class="x" data-wedit="${id}" aria-label="Edit activity" style="font-size:1rem">✎</button>`:''}${coach?`<button class="x" data-wdel="${id}" aria-label="Delete activity">×</button>`:''}</span></div>`}
@@ -454,11 +456,14 @@ function bindPlan(redo){
  document.querySelectorAll('.sts .chip').forEach(c=>c.onclick=()=>{c.parentNode.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')});
  document.querySelectorAll('[data-csave]').forEach(b=>b.onclick=async()=>{const id=b.dataset.csave,on=document.querySelector('[data-cp="'+id+'"] .on');if(!on)return alert('Choose a status first.');b.disabled=true;const {error}=await sb.from('plans').update({status:on.dataset.st}).eq('id',id);b.disabled=false;if(error)return alert(msg(error));redo()});
  document.querySelectorAll('[data-save]').forEach(b=>b.onclick=async()=>{
-  const id=b.dataset.save,on=document.querySelector('[data-p="'+id+'"] .on');
-  if(!on)return alert('Choose Finished, Did less or Not finished first.');
+  const id=b.dataset.save,on=document.querySelector('[data-p="'+id+'"] .on'),fl=document.querySelector('[data-pf="'+id+'"] .on'),nt=((document.querySelector('[data-pn="'+id+'"]')||{}).value||'').trim();
+  if(!on)return alert('Choose Completed, Partial or Missed first.');
+  if(on.dataset.st!='not_finished'&&!fl)return alert('Choose how it felt: Easy, Medium or Hard.');
   if(!confirm('Once you save, you can’t change this. Save?'))return;
-  const u={status:on.dataset.st};
-  b.disabled=true;const {error}=await sb.from('plans').update(u).eq('id',id).eq('status','pending');b.disabled=false;
+  const u={status:on.dataset.st};if(fl)u.feel=fl.dataset.fl;if(nt)u.athlete_notes=nt;
+  b.disabled=true;let {error}=await sb.from('plans').update(u).eq('id',id).eq('status','pending');
+  if(error&&/feel/i.test(error.message||'')){delete u.feel;({error}=await sb.from('plans').update(u).eq('id',id).eq('status','pending'))}
+  b.disabled=false;
   if(error)return alert(msg(error));redo()})}
 
 let lastN=0,dip=null;
@@ -593,21 +598,20 @@ async function aLoad(mn){
  <div><label for="wd">Date</label><input id="wd" type="date" value="${iso(new Date())}"></div><div><label for="wt">Activity</label><select id="wt"><option value="">Choose Activity</option>${typeOpts('')}</select></div>
  <div class="rd"><label for="wk">Distance *</label><div class="two"><input id="wk" type="number" step="0.01" min="0" inputmode="decimal"><select id="wku" aria-label="Unit"><option value="km">km</option><option value="m">m</option></select></div></div><div><label>Duration *</label><div class="three"><input id="wh" type="number" min="0" inputmode="numeric" placeholder="hr" aria-label="Hours"><input id="wm" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="min" aria-label="Minutes"><input id="wsec" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
  <div class="rd"><label>Average Pace (min/km), calculated automatically</label><div class="two"><input id="wpm" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="min"><input id="wps" class="t2" type="text" maxlength="2" inputmode="numeric" placeholder="sec"></div></div>
- <div class="full"><label for="wef">How hard was it? *</label><select id="wef"><option value="">Choose</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></div><div class="full"><label for="wn" id="wnl">Notes</label><textarea id="wn" rows="2" maxlength="50" placeholder="Max 50 characters"></textarea></div><div class="full"><button id="wsave">Save Activity</button></div></div><p class="err" id="werr" role="alert"></p></div>
+ <div class="full"><button id="wsave">Save Activity</button></div></div><p class="err" id="werr" role="alert"></p></div>
  <h2>Your Activities</h2><div class="card">${ws.length?ws.map(w=>wRow(w,cm,false,pm)).join(''):'<div class="empty">Nothing logged yet.</div>'}</div></div>`;
- const tg=()=>{const t=$('#wt').value;document.querySelectorAll('.rd').forEach(e=>e.style.display=isRun(t)?'':'none');$('#wnl').textContent=isRun(t)?'Notes':'Description (optional)'};
+ const tg=()=>{const t=$('#wt').value;document.querySelectorAll('.rd').forEach(e=>e.style.display=isRun(t)?'':'none')};
  $('#wt').onchange=tg;tg();bindPace('wk','wku','wh','wm','wsec','wpm','wps',true);
  $('#wsave').onclick=async()=>{
-  const t=$('#wt').value,km=toKm(num($('#wk').value),$('#wku').value),dm=durIn3($('#wh').value,$('#wm').value,$('#wsec').value),nt=$('#wn').value.trim(),e=$('#werr');
+  const t=$('#wt').value,km=toKm(num($('#wk').value),$('#wku').value),dm=durIn3($('#wh').value,$('#wm').value,$('#wsec').value),e=$('#werr');
   if(!$('#wd').value)return e.textContent='Choose the date.';
   if(num($('#wsec').value)>59||num($('#wm').value)>59)return e.textContent='Minutes and seconds must be 0 to 59.';
   if(!t)return e.textContent='Choose the activity.';if(isRun(t)&&!(km>0))return e.textContent='Enter the distance.';
   if(!(dm>0))return e.textContent='Enter the duration.';
-  if(!$('#wef').value)return e.textContent='Choose how hard it was.';
   const pm=num($('#wpm').value),ps=num($('#wps').value);
   if(isRun(t)){if(!((pm||0)*60+(ps||0)>0))return e.textContent='Enter the average pace.';if((pm||0)>59||(ps||0)>59)return e.textContent='Pace minutes and seconds must be 0 to 59.'}
   $('#wsave').disabled=true;
-  const row={athlete_id:me.id,workout_date:$('#wd').value,type:t,distance_km:isRun(t)?km:null,distance_unit:isRun(t)?$('#wku').value:'km',duration_min:dm,notes:nt||null,avg_pace:isRun(t)?(pm||0)+':'+String(ps||0).padStart(2,'0'):null,feel:$('#wef').value};
+  const row={athlete_id:me.id,workout_date:$('#wd').value,type:t,distance_km:isRun(t)?km:null,distance_unit:isRun(t)?$('#wku').value:'km',duration_min:dm,notes:null,avg_pace:isRun(t)?(pm||0)+':'+String(ps||0).padStart(2,'0'):null};
   let {error}=await sb.from('workouts').insert(row);if(error&&/feel/i.test(error.message||'')){delete row.feel;({error}=await sb.from('workouts').insert(row))}
   $('#wsave').disabled=false;if(error)return e.textContent=msg(error);athleteView()};
  document.querySelectorAll('[data-wdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this activity?'))return;await sb.from('workouts').delete().eq('id',b.dataset.wdel);athleteView()})}
@@ -639,13 +643,14 @@ async function coachView(){
 
 async function cHome(mn){
  const as=await myAthletes(),t=iso(new Date()),d=new Date();d.setDate(d.getDate()-14);const i7=iso(new Date(Date.now()-7*864e5));
- const [pr,wr0]=await Promise.all([sb.from('plans').select('athlete_id,plan_date,status,title,target_km,athlete_notes').gte('plan_date',iso(d)).lte('plan_date',t),sb.from('workouts').select('athlete_id,workout_date,feel').gte('workout_date',iso(d)).order('workout_date',{ascending:false})]);
+ const [pr0,wr0]=await Promise.all([sb.from('plans').select('athlete_id,plan_date,status,title,target_km,athlete_notes,feel').gte('plan_date',iso(d)).lte('plan_date',t),sb.from('workouts').select('athlete_id,workout_date').gte('workout_date',iso(d)).order('workout_date',{ascending:false})]);
+ const pr=pr0.error?await sb.from('plans').select('athlete_id,plan_date,status,title,target_km,athlete_notes').gte('plan_date',iso(d)).lte('plan_date',t):pr0;
  const wr=wr0.error?await sb.from('workouts').select('athlete_id,workout_date').gte('workout_date',iso(d)).order('workout_date',{ascending:false}):wr0;
  const ps=pr.data||[],wd=wr.data||[],today=ps.filter(p=>p.plan_date==t),done=today.filter(p=>p.status=='finished').length,nmap={};as.forEach(a=>nmap[a.id]=nm(a));
  const live=as.filter(a=>a.active!==false);
  const actSet=new Set([...ps.filter(p=>p.plan_date>=i7&&(p.status=='finished'||p.status=='less')).map(p=>p.athlete_id),...wd.filter(w=>w.workout_date>=i7).map(w=>w.athlete_id)]);
  const actL=live.filter(a=>actSet.has(a.id)),notL=live.filter(a=>!actSet.has(a.id));
- const att=[];live.forEach(a=>{const r=[];if(!actSet.has(a.id))r.push('No activity in 7 days');const mp=ps.filter(p=>p.athlete_id==a.id&&p.status!='pending').sort((x,y)=>String(y.plan_date).localeCompare(String(x.plan_date)));if(mp.length>1&&mp[0].status=='not_finished'&&mp[1].status=='not_finished')r.push('Missed 2 sessions in a row');const mw=wd.filter(w=>w.athlete_id==a.id).slice(0,3);if(mw.length==3&&mw.every(w=>w.feel=='hard'))r.push('3 hard sessions in a row');if(r.length)att.push([a,r])});
+ const att=[];live.forEach(a=>{const r=[];if(!actSet.has(a.id))r.push('No activity in 7 days');const mp=ps.filter(p=>p.athlete_id==a.id&&p.status!='pending').sort((x,y)=>String(y.plan_date).localeCompare(String(x.plan_date)));if(mp.length>1&&mp[0].status=='not_finished'&&mp[1].status=='not_finished')r.push('Missed 2 sessions in a row');const hp=ps.filter(p=>p.athlete_id==a.id&&p.feel).sort((x,y)=>String(y.plan_date).localeCompare(String(x.plan_date))).slice(0,3);if(hp.length==3&&hp.every(p=>p.feel=='hard'))r.push('3 hard sessions in a row');if(r.length)att.push([a,r])});
  const attn=att.length?`<h2>Needs Attention (${att.length})</h2><div class="card">${att.map(([a,r])=>`<div class="rl" data-go="${esc(a.id)}" style="cursor:pointer"><div><b>${esc(nm(a))}</b><div class="m">${r.map(esc).join(' · ')}</div></div></div>`).join('')}</div>`:'';
  mn.innerHTML=H('Home')+`<div class="tiles t4"><div class="tile"><div class="mid">${live.length}</div><div class="lbl">Total Athletes</div></div>
  <div class="tile tap" data-lst="a" role="button" tabindex="0"><div class="mid">${actL.length}</div><div class="lbl">Active (last 7 days)</div></div>
@@ -727,7 +732,7 @@ async function cAthlete(mn,fl){
  if($('#cwgo'))$('#cwgo').onclick=async()=>{const f=$('#cwf').value,t=$('#cwt').value,to=$('#cwa').value;if(!f||!t)return alert('Choose both weeks.');const s0=wkOf(f),t0=wkOf(t),off=Math.round((new Date(t0+'T00:00:00')-new Date(s0+'T00:00:00'))/864e5);if(to==a.id&&off==0)return alert('Choose a different week or a different athlete.');
   const {data:src,error:e0}=await sb.from('plans').select('*').eq('athlete_id',a.id).gte('plan_date',s0).lte('plan_date',addDays(s0,6));if(e0)return alert(msg(e0));if(!src||!src.length)return alert('There are no sessions in that week.');
   const who=mine.find(x=>x.id==to)||a;if(!confirm('Copy '+src.length+' session(s) to '+nm(who)+', week starting '+t0+'?'))return;
-  const rows=src.map(p=>{const {id,created_at,updated_at,status,athlete_notes,...r}=p;return{...r,athlete_id:to,plan_date:addDays(p.plan_date,off),status:'pending',athlete_notes:null}});
+  const rows=src.map(p=>{const {id,created_at,updated_at,status,athlete_notes,feel,...r}=p;return{...r,athlete_id:to,plan_date:addDays(p.plan_date,off),status:'pending',athlete_notes:null}});
   const {error}=await sb.from('plans').insert(rows);if(error)return alert(msg(error));flash=rows.length+' session(s) copied to '+nm(who)+'.';coachView()};
  if($('#csave'))$('#csave').onclick=async()=>{const {error}=await sb.from('profiles').update({coach_id:$('#acs2').value,coach_from:$('#cf').value||null,coach_until:$('#cu').value||null}).eq('id',a.id);alert(error?msg(error):'Coach updated.')};
  if($('#ren'))$('#ren').onclick=async()=>{const v=prompt('New name',nm(a));if(v==null||!v.trim())return;const {error}=await sb.from('profiles').update({full_name:v.trim()}).eq('id',a.id);if(error)return alert(msg(error));coachView()};
@@ -783,9 +788,11 @@ async function cAthlete(mn,fl){
   const o=dlg(`<h2 style="margin-top:0">Copy Session</h2><label for="cpa">To athlete</label><select id="cpa">${mine.map(x=>`<option value="${esc(x.id)}"${x.id==a.id?' selected':''}>${esc(nm(x))}</option>`).join('')}</select><label for="cpd" style="margin-top:10px">Date</label><input type="date" id="cpd" value="${esc(p.plan_date)}"><p class="err" id="cpe" role="alert"></p><div class="inl"><button id="cpgo">Copy</button><button class="back" id="cpx">Cancel</button></div>`);
   o.querySelector('#cpx').onclick=()=>o.remove();
   o.querySelector('#cpgo').onclick=async()=>{const d=o.querySelector('#cpd').value,to=o.querySelector('#cpa').value;if(!d)return o.querySelector('#cpe').textContent='Choose a date.';
-   const {id,created_at,updated_at,status,athlete_notes,...r}=p;const {error}=await sb.from('plans').insert({...r,athlete_id:to,plan_date:d,status:'pending',athlete_notes:null});
+   const {id,created_at,updated_at,status,athlete_notes,feel,...r}=p;const {error}=await sb.from('plans').insert({...r,athlete_id:to,plan_date:d,status:'pending',athlete_notes:null});
    if(error)return o.querySelector('#cpe').textContent=msg(error);o.remove();flash='Session copied to '+nm(mine.find(x=>x.id==to)||a)+' ('+d+').';coachView()}});
  document.querySelectorAll('[data-pdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Remove this session from the plan?'))return;await sb.from('plans').delete().eq('id',b.dataset.pdel);coachView()});
+ document.querySelectorAll('[data-ce]').forEach(b=>b.onclick=async()=>{const t=prompt('Edit comment (max 50 characters)',b.dataset.b);if(t===null)return;const v=t.trim().slice(0,50);if(!v)return;const {data,error}=await sb.from('comments').update({body:v}).eq('id',b.dataset.ce).select();if(error)return alert(msg(error));if(!data||!data.length)return alert('Could not edit this comment. Run the comments SQL file in Supabase first.');coachView()});
+ document.querySelectorAll('[data-cd]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this comment?'))return;const {data,error}=await sb.from('comments').delete().eq('id',b.dataset.cd).select();if(error)return alert(msg(error));if(!data||!data.length)return alert('Could not delete this comment. Run the comments SQL file in Supabase first.');coachView()});
  document.querySelectorAll('[data-ci]').forEach(i=>i.oninput=()=>{const b=document.querySelector('[data-c="'+i.dataset.ci+'"]');if(b){b.classList.remove('sent');b.textContent='Send';b.disabled=false}});
  document.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{const i=document.querySelector('[data-ci="'+b.dataset.c+'"]'),t=i.value.trim();if(!t)return;const {error}=await sb.from('comments').insert({workout_id:b.dataset.c,coach_id:me.id,body:t});if(error)return alert(msg(error));b.textContent='Sent ✓';b.classList.add('sent');b.disabled=true;i.disabled=true;setTimeout(coachView,1100)});
  document.querySelectorAll('[data-wdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete This Activity?'))return;const {error}=await sb.from('workouts').delete().eq('id',b.dataset.wdel);if(error)return alert(msg(error));coachView()});
