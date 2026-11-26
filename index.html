@@ -273,6 +273,7 @@ const fsat=(y,m)=>{const d=new Date(y,m,1);d.setDate(1+(6-d.getDay()+7)%7);retur
 function period(off){const n=new Date(),t=new Date(n.getFullYear(),n.getMonth(),n.getDate());let y=t.getFullYear(),m=t.getMonth();if(t<fsat(y,m))m--;m-=(off||0);const a=fsat(y,m),b=fsat(y,m+1);b.setDate(b.getDate()-1);const f=d=>d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});return{s:iso(a),e:iso(b),name:new Date(y,m,1).toLocaleDateString('en-GB',{month:'long'}),rng:f(a)+' – '+f(b)}}
 const ordn=n=>{const t=['th','st','nd','rd'],v=n%100;return n+(t[(v-20)%10]||t[v]||t[0])};
 const EFF={easy:'Easy',medium:'Medium',hard:'Hard'};
+let PX={wbp:{},cm:{},pm:{}};
 
 const pcs=p=>{const q=String(p||'').split(':'),z=n=>String(n).padStart(2,'0');return z(+q[0]||0)+':'+z(+q[1]||0)};
 const url=u=>{u=(u||'').trim();if(!u)return '';if(!/^https?:\/\//i.test(u))u='https://'+u;try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return ''}};
@@ -382,7 +383,7 @@ async function boot(){
  const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
  if(error||!data){await sb.auth.signOut();return authView()}
  me=data;document.body.classList.add('in');
- try{const o=JSON.parse(localStorage.getItem('runova_nav')||'null'),ok=me.role=='athlete'?['home','plan','load','events','notes','about']:me.role=='admin'?['home','coaches','athletes','events','races','about']:['home','athletes','events','notes','races','about'];if(o&&o.u==me.id&&ok.includes(o.view)){view=o.view;picked=me.role=='athlete'?null:(o.picked||null)}}catch(e){}
+ try{const o=JSON.parse(localStorage.getItem('runova_nav')||'null'),ok=me.role=='athlete'?['home','plan','events','notes','about']:me.role=='admin'?['home','coaches','athletes','events','races','about']:['home','athletes','events','notes','races','about'];if(o&&o.u==me.id&&ok.includes(o.view)){view=o.view;picked=me.role=='athlete'?null:(o.picked||null)}}catch(e){}
  $('#who').innerHTML=`<span>${esc(nm(me))}</span><span class="rc">${esc(me.role)}</span>${me.role=='admin'?'<button class="ghost" id="myn">Edit name</button>':''}<button class="ghost" id="out">Log Out</button>`;
  $('#out').onclick=async()=>{localStorage.removeItem('runova_nav');await sb.auth.signOut();me=null;picked=null;adding=false;view='home';authView()};
  if($('#myn'))$('#myn').onclick=editMyName;
@@ -435,10 +436,22 @@ function weekHTML(ps,ws){
 
 function planCard(p,coach){
  const t=tot(p),tag=dayTag(p.plan_date),id=esc(p.id);
- const ctl=coach?`<div>${badge(p.status)}${p.feel?` <span class="bdg" style="--c:#4C7DFF">${EFF[p.feel]||''}</span>`:''}</div>${p.athlete_notes?`<div class="cm"><b>Athlete Note:</b> ${esc(p.athlete_notes)}</div>`:''}${me.role!='admin'?`<div class="sts" data-cp="${id}" style="margin-top:8px">${[['pending','Pending'],['finished','Completed'],['less','Partial'],['not_finished','Missed']].map(([k,l])=>`<button class="chip ${p.status==k?'on':''}" data-st="${k}">${l}</button>`).join('')}</div><button class="sm" data-csave="${id}">Update Status</button>`:''}`
-  :p.status!='pending'?`<div>${badge(p.status)}${p.feel?` <span class="bdg" style="--c:#4C7DFF">${EFF[p.feel]||''}</span>`:''}</div>${p.athlete_notes?`<div class="cm"><b>Your note:</b> ${esc(p.athlete_notes)}</div>`:''}`
-  :`<div class="sts" data-p="${id}">${[['finished','Completed'],['less','Partial'],['not_finished','Missed']].map(([k,l])=>`<button class="chip ${p.status==k?'on':''}" data-st="${k}">${l}</button>`).join('')}</div>
-  <div class="m" style="margin-top:8px">How did it feel?</div><div class="sts" data-pf="${id}">${[['easy','Easy'],['medium','Medium'],['hard','Hard']].map(([k,l])=>`<button class="chip" data-fl="${k}">${l}</button>`).join('')}</div>
+const w0=PX.wbp[p.id],fe=p.feel?` <span class="bdg" style="--c:#4C7DFF">${EFF[p.feel]||''}</span>`:'';
+ const sum=`${w0?`<div class="m">${wTxt(w0)}</div>`:''}${p.run_link?linkHTML(p.run_link,'Open run link'):''}`;
+ const fb=(coach||!w0)?'':`${PX.pm[w0.id]?`<span class="bdg" style="--c:#B26A00">⭐ ${PX.pm[w0.id]} points</span>`:''}${(PX.cm[w0.id]||[]).map(c=>`<div class="cm"><b>Coach:</b> ${esc(c.body)}</div>`).join('')}`;
+ const run=isRun(p.type)||(!p.type&&p.target_km!=null);
+ const ctl=coach?`<div>${badge(p.status)}${fe}</div>${sum}${p.athlete_notes?`<div class="cm"><b>Athlete Note:</b> ${esc(p.athlete_notes)}</div>`:''}${me.role!='admin'?`<div class="sts" data-cp="${id}" style="margin-top:8px">${[['pending','Pending'],['finished','Completed'],['less','Partial'],['not_finished','Missed']].map(([k,l])=>`<button class="chip ${p.status==k?'on':''}" data-st="${k}">${l}</button>`).join('')}</div><button class="sm" data-csave="${id}">Update Status</button>${p.status=='finished'||p.status=='less'?`<div class="m" style="margin-top:12px">Athlete’s feel and link</div><div class="sts" data-cf="${id}">${[['easy','Easy'],['medium','Medium'],['hard','Hard']].map(([k,l])=>`<button class="chip ${p.feel==k?'on':''}" data-fl="${k}">${l}</button>`).join('')}</div><input type="url" data-cl="${id}" value="${esc(p.run_link||'')}" placeholder="Link" aria-label="Link" style="margin-top:6px"><button class="sm" data-cdsave="${id}" data-run="${run?1:0}">Save details</button>`:''}${p.status!='pending'?`<button class="sm" data-reopen="${id}">Reopen for athlete</button>`:''}`:''}`
+  :p.status!='pending'?`<div>${badge(p.status)}${fe}</div>${sum}${p.athlete_notes?`<div class="cm"><b>Your note:</b> ${esc(p.athlete_notes)}</div>`:''}${fb}`
+  :`<div class="sts" data-p="${id}" style="margin-top:8px">${[['finished','Completed'],['less','Partial'],['not_finished','Missed']].map(([k,l])=>`<button class="chip" data-st="${k}">${l}</button>`).join('')}</div>
+  <div data-pd="${id}" data-run="${run?1:0}" data-date="${esc(p.plan_date)}" data-type="${esc(p.type||'')}" style="display:none">
+   <div class="grid" style="margin-top:8px">
+    ${run?`<div><label>Distance *</label><div class="two"><input class="pd-km" type="number" step="0.01" min="0" inputmode="decimal" aria-label="Distance"><select class="pd-ku" aria-label="Unit"><option value="km"${p.distance_unit=='m'?'':' selected'}>km</option><option value="m"${p.distance_unit=='m'?' selected':''}>m</option></select></div></div>`:''}
+    <div><label>Duration *</label><div class="three"><input class="pd-h" type="number" min="0" inputmode="numeric" placeholder="hr" aria-label="Hours"><input class="pd-m t2" type="text" maxlength="2" inputmode="numeric" placeholder="min" aria-label="Minutes"><input class="pd-s t2" type="text" maxlength="2" inputmode="numeric" placeholder="sec" aria-label="Seconds"></div></div>
+    ${run?`<div><label>Average Pace (min/km), calculated automatically</label><div class="two"><input class="pd-pm t2" type="text" maxlength="2" inputmode="numeric" placeholder="min"><input class="pd-ps t2" type="text" maxlength="2" inputmode="numeric" placeholder="sec"></div></div>`:''}
+    <div class="full"><label>${run?'Run link *':'Link (optional)'}</label><input class="pd-lk" type="url" placeholder="Strava, Garmin, Apple Fitness or any app link" aria-label="Link"></div>
+   </div>
+   <div class="m" style="margin-top:8px">How did it feel? *</div><div class="sts" data-pf="${id}">${[['easy','Easy'],['medium','Medium'],['hard','Hard']].map(([k,l])=>`<button class="chip" data-fl="${k}">${l}</button>`).join('')}</div>
+  </div>
   <textarea data-pn="${id}" rows="2" maxlength="50" placeholder="Note (optional, max 50 characters)" aria-label="Note" style="margin-top:8px"></textarea>
   <button class="sm" data-save="${id}">Save</button>`;
  return `<div class="pc" id="pc-${id}"><div class="ph"><span>${tag?`<b>${tag}</b> · `:''}${esc(p.plan_date)}</span>${coach?`<span style="white-space:nowrap">${me.role!='admin'?`<button class="x" data-pedit="${id}" aria-label="Edit session" style="font-size:1rem">✎</button>`:''}<button class="x" data-pcopy="${id}" aria-label="Copy session" style="font-size:1rem">⧉</button><button class="x" data-pdel="${id}" aria-label="Remove from plan">×</button></span>`:''}</div>
@@ -453,18 +466,35 @@ function wRow(w,cm,coach,pm){pm=pm||{};const id=esc(w.id),pv=pm[w.id];
  <span style="white-space:nowrap">${coach?`<button class="x" data-wedit="${id}" aria-label="Edit activity" style="font-size:1rem">✎</button>`:''}${coach?`<button class="x" data-wdel="${id}" aria-label="Delete activity">×</button>`:''}</span></div>`}
 
 function bindPlan(redo){
- document.querySelectorAll('.sts .chip').forEach(c=>c.onclick=()=>{c.parentNode.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')});
+ document.querySelectorAll('.sts .chip').forEach(c=>c.onclick=()=>{c.parentNode.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');const pc=c.closest('.pc'),bx=pc&&pc.querySelector('[data-pd]');if(bx&&c.dataset.st&&c.parentNode.hasAttribute('data-p'))bx.style.display=c.dataset.st=='not_finished'?'none':''});
+ document.querySelectorAll('[data-pd]').forEach(bx=>{if(bx.dataset.run!='1')return;const g=c=>bx.querySelector(c),f=()=>{const a1=g('.pd-pm'),b1=g('.pd-ps');if(a1.dataset.man||b1.dataset.man)return;const km=toKm(num(g('.pd-km').value),g('.pd-ku').value),dm=durIn3(g('.pd-h').value,g('.pd-m').value,g('.pd-s').value);if(km>0&&dm>0){const sec=Math.round(dm*60/km);a1.value=String(Math.floor(sec/60));b1.value=String(sec%60).padStart(2,'0')}};['.pd-km','.pd-ku','.pd-h','.pd-m','.pd-s'].forEach(k=>{g(k).addEventListener('input',f);g(k).addEventListener('change',f)});['.pd-pm','.pd-ps'].forEach(k=>g(k).addEventListener('input',e=>{e.target.dataset.man='1'}))});
  document.querySelectorAll('[data-csave]').forEach(b=>b.onclick=async()=>{const id=b.dataset.csave,on=document.querySelector('[data-cp="'+id+'"] .on');if(!on)return alert('Choose a status first.');b.disabled=true;const {error}=await sb.from('plans').update({status:on.dataset.st}).eq('id',id);b.disabled=false;if(error)return alert(msg(error));redo()});
+ document.querySelectorAll('[data-cdsave]').forEach(b=>b.onclick=async()=>{const id=b.dataset.cdsave,fl=document.querySelector('[data-cf="'+id+'"] .on'),inp=document.querySelector('[data-cl="'+id+'"]'),l0=((inp&&inp.value)||'').trim(),lk=l0?url(l0):'';if(l0&&!lk)return alert('That link doesn’t look right.');if(b.dataset.run=='1'&&!lk)return alert('A run needs a link.');b.disabled=true;const r=await sb.from('plans').update({feel:fl?fl.dataset.fl:null,run_link:lk||null}).eq('id',id).select('id');b.disabled=false;if(r.error)return alert(msg(r.error));if(!(r.data&&r.data.length))return alert('Could not save.');redo()});
+ document.querySelectorAll('[data-reopen]').forEach(b=>b.onclick=async()=>{if(!confirm('Reopen this session? The athlete can fill it in again, and the saved feel, link and note will be cleared.'))return;const r=await sb.from('plans').update({status:'pending',feel:null,run_link:null,athlete_notes:null}).eq('id',b.dataset.reopen).select('id');if(r.error)return alert(msg(r.error));if(!(r.data&&r.data.length))return alert('Could not reopen.');redo()});
  document.querySelectorAll('[data-save]').forEach(b=>b.onclick=async()=>{
-  const id=b.dataset.save,on=document.querySelector('[data-p="'+id+'"] .on'),fl=document.querySelector('[data-pf="'+id+'"] .on'),nt=((document.querySelector('[data-pn="'+id+'"]')||{}).value||'').trim();
+  const id=b.dataset.save,on=document.querySelector('[data-p="'+id+'"] .on'),fl=document.querySelector('[data-pf="'+id+'"] .on'),nt=((document.querySelector('[data-pn="'+id+'"]')||{}).value||'').trim(),bx=document.querySelector('[data-pd="'+id+'"]');
   if(!on)return alert('Choose Completed, Partial or Missed first.');
-  if(on.dataset.st!='not_finished'&&!fl)return alert('Choose how it felt: Easy, Medium or Hard.');
+  const st=on.dataset.st,full=st!='not_finished',run=!!bx&&bx.dataset.run=='1',g=c=>bx?bx.querySelector(c):null,gv=c=>g(c)?g(c).value:'';
+  let row=null,lk='';
+  if(full){
+   const km=run?toKm(num(gv('.pd-km')),gv('.pd-ku')):null,dm=durIn3(gv('.pd-h'),gv('.pd-m'),gv('.pd-s')),pm=num(gv('.pd-pm')),ps=num(gv('.pd-ps')),l0=gv('.pd-lk').trim();
+   if(run&&!(km>0))return alert('Enter the distance.');
+   if(!(dm>0))return alert('Enter the duration.');
+   if(num(gv('.pd-s'))>59||num(gv('.pd-m'))>59)return alert('Minutes and seconds must be 0 to 59.');
+   if(run){if(!((pm||0)*60+(ps||0)>0))return alert('Enter the average pace.');if((pm||0)>59||(ps||0)>59)return alert('Pace minutes and seconds must be 0 to 59.')}
+   if(run&&!l0)return alert('Add your run link (Strava, Garmin, Apple Fitness or any app).');
+   lk=l0?url(l0):'';if(l0&&!lk)return alert('That link doesn’t look right.');
+   if(!fl)return alert('Choose how it felt: Easy, Medium or Hard.');
+   row={athlete_id:me.id,workout_date:bx.dataset.date,type:bx.dataset.type,distance_km:run?km:null,distance_unit:run?gv('.pd-ku'):'km',duration_min:dm,notes:null,avg_pace:run?(pm||0)+':'+String(ps||0).padStart(2,'0'):null,plan_id:id};
+  }
   if(!confirm('Once you save, you can’t change this. Save?'))return;
-  const u={status:on.dataset.st};if(fl)u.feel=fl.dataset.fl;if(nt)u.athlete_notes=nt;
-  b.disabled=true;let {error}=await sb.from('plans').update(u).eq('id',id).eq('status','pending');
-  if(error&&/feel/i.test(error.message||'')){delete u.feel;({error}=await sb.from('plans').update(u).eq('id',id).eq('status','pending'))}
-  b.disabled=false;
-  if(error)return alert(msg(error));redo()})}
+  b.disabled=true;let wid=null;
+  const old=PX.wbp[id];if(old)await sb.from('workouts').delete().eq('id',old.id);
+  if(full){const r=await sb.from('workouts').insert(row).select('id').single();if(r.error||!r.data){b.disabled=false;return alert(msg(r.error))}wid=r.data.id}
+  const u={status:st};if(fl&&full)u.feel=fl.dataset.fl;if(nt)u.athlete_notes=nt;if(lk)u.run_link=lk;
+  const r2=await sb.from('plans').update(u).eq('id',id).eq('status','pending').select('id');
+  if(r2.error||!(r2.data&&r2.data.length)){if(wid)await sb.from('workouts').delete().eq('id',wid);b.disabled=false;return alert(r2.error?msg(r2.error):'Could not save. Please try again.')}
+  b.disabled=false;redo()})}
 
 let lastN=0,dip=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e});
@@ -527,8 +557,8 @@ async function cEvents(mn,fl){
 
 async function athleteView(){
  try{localStorage.setItem('runova_nav',JSON.stringify({u:me.id,view,picked:null}))}catch(e){}
- await loadReads();NI=await aItems();const n=NI.filter(isNew).length;
- $('#app').innerHTML=shell([['home','Home'],['plan','My Plan'],['load','Activity Log'],['events','Events'],['notes','Notifications'],['about','About']],n);bindNav(athleteView);
+ if(view=='load')view='plan';await loadReads();NI=await aItems();const n=NI.filter(isNew).length;
+ $('#app').innerHTML=shell([['home','Home'],['plan','My Plan'],['events','Events'],['notes','Notifications'],['about','About']],n);bindNav(athleteView);
  await ({home:aHome,plan:aPlan,load:aLoad,events:aEvents,notes:aNotes,about:pgAbout}[view])($('#mn'));doJump()}
 
 async function top3Home(){
@@ -586,7 +616,8 @@ async function aHome(mn){
  bindPlan(athleteView)}
 
 async function aPlan(mn){
- const [ps,ws]=await Promise.all([fetchPlans(me.id),fetchWs(me.id)]),s=split(ps),T0=iso(new Date()),asc=(x,y)=>x.plan_date<y.plan_date?-1:1,due=ps.filter(p=>p.status=='pending'&&p.plan_date<=T0).sort(asc),up2=ps.filter(p=>p.status=='pending'&&p.plan_date>T0).sort(asc),past2=s.past;
+ const [ps,ws,pp]=await Promise.all([fetchPlans(me.id),fetchWs(me.id),sb.from('workout_points').select('workout_id,points').eq('athlete_id',me.id)]),s=split(ps),T0=iso(new Date()),asc=(x,y)=>x.plan_date<y.plan_date?-1:1,due=ps.filter(p=>p.status=='pending'&&p.plan_date<=T0).sort(asc),up2=ps.filter(p=>p.status=='pending'&&p.plan_date>T0).sort(asc),past2=s.past;
+ PX.wbp={};ws.forEach(w=>{if(w.plan_id)PX.wbp[w.plan_id]=w});PX.pm={};(pp.data||[]).forEach(x=>PX.pm[x.workout_id]=x.points);PX.cm=await fetchComments(ws);
  let cn='';try{const r=await sb.rpc('my_coach_name');if(r&&typeof r.data==='string')cn=r.data;else if(me.coach_id){const {data:c}=await sb.from('profiles').select('full_name,username').eq('id',me.coach_id).maybeSingle();if(c)cn=nm(c)}}catch(e){}
  const cn0=cn.replace(/^\s*coach\b[\s.:\-–]*/i,'').trim();
  mn.innerHTML=`<div class="narrow">${H('My Plan'+(cn0?`<span class="cnm"> · Coach ${esc(cn0)}</span>`:''))}${weekHTML(ps,ws)}${chartHTML()}${due.length?sec('Pending',due,false):'<div class="card empty">Nothing pending.</div>'}${sec('Coming Up',up2,false)}${histSec(past2,false)}</div>`;
@@ -697,6 +728,7 @@ async function cAthlete(mn,fl){
  const exC=`<h2>Extra Points</h2><div class="card" style="margin-bottom:14px">${isAd?'':'<button class="sm" id="exadd" style="margin:0 0 6px">+ Add Extra Points</button>'}${exl.length?exl.map(x=>`<div class="rl"><div><span class="bdg" style="--c:#B26A00;margin:0">⭐ Extra +${esc(x.points)}</span>${x.reason?` <span class="n">${esc(x.reason)}</span>`:''} <span class="m">${esc(fd(String(x.created_at).slice(0,10)))}</span></div>${isAd?'':`<button class="x" data-exdel="${esc(x.id)}" aria-label="Remove extra points">×</button>`}</div>`).join(''):'<div class="empty">No extra points yet.</div>'}</div>`;
  const notesC=isAd?'':`<div class="card" style="margin-top:14px"><label for="cnb">Private notes (only you can see these, the athlete cannot)</label><textarea id="cnb" rows="4" maxlength="1500" placeholder="Your private notes about this athlete">${esc(cn&&cn.data?cn.data.body:'')}</textarea><button class="sm" id="cnsave">Save Notes</button></div>`;
  const wkTools=`<h2>Week Tools</h2><div class="card"><div class="lbl" style="margin-bottom:6px">Weekly plan PDF</div><div class="grid"><div><label for="pdfd">Any date in the week</label><input type="date" id="pdfd" value="${weekStart()}"></div><div style="align-self:end"><button id="pdfgo" style="width:100%">Download PDF</button></div></div>${a.phone?`<button class="wa" id="pdfwa" style="width:100%;margin-top:10px">Send plan on WhatsApp</button><div style="margin-top:8px"><a href="https://wa.me/${esc(a.phone)}" target="_blank" rel="noopener noreferrer" style="color:var(--ta);font-weight:600">Open the WhatsApp chat only ↗</a></div>`:`<p class="m" style="margin:10px 0 0">Add the athlete’s WhatsApp number above to send the plan on WhatsApp.</p>`}${me.role=='admin'?'':`<div class="lbl" style="margin:16px 0 6px">Copy a whole week</div><div class="grid"><div><label for="cwf">From week (any date in it)</label><input type="date" id="cwf" value="${weekStart()}"></div><div><label for="cwt">To week (any date in it)</label><input type="date" id="cwt" value="${addDays(weekStart(),7)}"></div><div class="full"><label for="cwa">To athlete</label><select id="cwa">${mine.map(x=>`<option value="${esc(x.id)}"${x.id==a.id?' selected':''}>${esc(nm(x))}</option>`).join('')}</select></div><div class="full"><button id="cwgo">Copy Week</button></div></div>`}</div>`;
+ PX.wbp={};ws.forEach(w=>{if(w.plan_id)PX.wbp[w.plan_id]=w});PX.cm={};PX.pm={};
  mn.innerHTML=(fl?`<p class="ok">${esc(fl)}</p>`:'')+`<button class="back" id="bk">← Athletes</button><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${H(esc(nm(a)))}${cs?'<button class="sm" id="ren" style="margin:0">Edit Name</button>':''}</div>${cs?`<div class="card" style="margin-bottom:14px"><label for="acs2">Coach</label><select id="acs2">${cs.map(c=>`<option value="${esc(c.id)}"${c.id==a.coach_id?' selected':''}>${esc(nm(c))}</option>`).join('')}</select><div class="grid" style="margin-top:10px"><div><label for="cf">Coach From</label><input type="date" id="cf" value="${a.coach_from||''}"></div><div><label for="cu">Coach Until</label><input type="date" id="cu" value="${a.coach_until||''}"></div></div><p class="m">Leave dates empty for no limit. After the end date the coach no longer sees this athlete.</p><button class="sm" id="csave">Save Coach</button></div>`:''}${phoneCard}${stravaCard}${notesC}${ptsC}${exC}${loadHTML(ws,ps)}${chartHTML()}
  ${me.role=='admin'?'':` <h2>Plan a Session</h2><div class="card"><div class="grid"><div><label for="pd">Date *</label><input id="pd" type="date"></div>
  <div><label for="pt">Session *</label><select id="pt"><option value="">Choose Session</option>${typeOpts('')}</select></div>
@@ -869,14 +901,14 @@ async function loadReads(){
 const isNew=i=>!!reads&&new Date(i.at)>reads.init&&!reads.keys.has(i.k);
 const markRead=async k=>{if(!k||!reads||reads.keys.has(k))return;reads.keys.add(k);if(reads.off){try{localStorage.setItem(lrk(),JSON.stringify([...reads.keys].slice(-500)))}catch(e){}return}await sb.from('notif_reads').upsert({user_id:me.id,item_key:k},{onConflict:'user_id,item_key'})};
 async function aItems(){
- const [pr,cr,rr,er,evn]=await Promise.all([sb.from('plans').select('*').order('created_at',{ascending:false}).limit(30),sb.from('comments').select('*').order('created_at',{ascending:false}).limit(30),sb.from('athlete_races').select('*').order('created_at',{ascending:false}).limit(20),sb.from('workouts').select('id,type,workout_date,edited_at').not('edited_at','is',null).order('edited_at',{ascending:false}).limit(30),sb.from('events').select('id,title,event_date,created_at').order('created_at',{ascending:false}).limit(15)]);
+ const [pr,cr,rr,er,evn]=await Promise.all([sb.from('plans').select('*').order('created_at',{ascending:false}).limit(30),sb.from('comments').select('*').order('created_at',{ascending:false}).limit(30),sb.from('athlete_races').select('*').order('created_at',{ascending:false}).limit(20),sb.from('workouts').select('id,type,workout_date,edited_at,plan_id').not('edited_at','is',null).order('edited_at',{ascending:false}).limit(30),sb.from('events').select('id,title,event_date,created_at').order('created_at',{ascending:false}).limit(15)]);
  const wid=[...new Set((cr.data||[]).map(c=>c.workout_id))],rid=[...new Set((rr.data||[]).map(x=>x.race_id))];
- const [wd,rd]=await Promise.all([wid.length?sb.from('workouts').select('id,type,workout_date').in('id',wid):{data:[]},rid.length?sb.from('races').select('id,name,race_date').in('id',rid):{data:[]}]);
+ const [wd,rd]=await Promise.all([wid.length?sb.from('workouts').select('id,type,workout_date,plan_id').in('id',wid):{data:[]},rid.length?sb.from('races').select('id,name,race_date').in('id',rid):{data:[]}]);
  const wm={},rm={};(wd.data||[]).forEach(w=>wm[w.id]=w);(rd.data||[]).forEach(r=>rm[r.id]=r);
  return [...(pr.data||[]).map(p=>({k:'plan:'+p.id,v:'plan',t:'pc-'+p.id,at:p.created_at,h:`Your coach added <b>${esc(p.title)}</b> for ${esc(p.plan_date)}${tot(p)?' • '+tot(p):''}`})),
-  ...(cr.data||[]).map(c=>{const w=wm[c.workout_id];return{k:'cm:'+c.id,v:'load',t:'w-'+c.workout_id,at:c.created_at,h:`Your coach commented on your ${esc(w?(TYPES[w.type]||w.type):'activity')}${w?' ('+esc(w.workout_date)+')':''}<div class="cm">${esc(c.body)}</div>`}}),
+  ...(cr.data||[]).map(c=>{const w=wm[c.workout_id];return{k:'cm:'+c.id,v:'plan',t:(w&&w.plan_id?'pc-'+w.plan_id:''),at:c.created_at,h:`Your coach commented on your ${esc(w?(TYPES[w.type]||w.type):'activity')}${w?' ('+esc(w.workout_date)+')':''}<div class="cm">${esc(c.body)}</div>`}}),
   ...(rr.data||[]).filter(x=>rm[x.race_id]).map(x=>({k:'race:'+x.id,v:'home',at:x.created_at,h:`You were assigned <b>${esc(rm[x.race_id].name)}</b> (${esc(rm[x.race_id].race_date)}${x.distance?' • '+esc(x.distance):''})${x.goal?' • Goal: '+esc(x.goal):''}`})),
-  ...(er.data||[]).map(w=>({k:'we:'+w.id+'|'+w.edited_at,v:'load',t:'w-'+w.id,at:w.edited_at,h:`Your coach edited your ${esc(TYPES[w.type]||w.type)} (${esc(w.workout_date)})`})),...((evn&&evn.data)||[]).map(e=>({k:'ev:'+e.id,v:'events',at:e.created_at,h:`New event: <b>${esc(e.title)}</b> (${esc(e.event_date)})`}))].filter(i=>i.at).sort((x,y)=>new Date(y.at)-new Date(x.at)).slice(0,50)}
+  ...(er.data||[]).map(w=>({k:'we:'+w.id+'|'+w.edited_at,v:'plan',t:(w.plan_id?'pc-'+w.plan_id:''),at:w.edited_at,h:`Your coach edited your ${esc(TYPES[w.type]||w.type)} (${esc(w.workout_date)})`})),...((evn&&evn.data)||[]).map(e=>({k:'ev:'+e.id,v:'events',at:e.created_at,h:`New event: <b>${esc(e.title)}</b> (${esc(e.event_date)})`}))].filter(i=>i.at).sort((x,y)=>new Date(y.at)-new Date(x.at)).slice(0,50)}
 async function aNotes(mn){
  mn.innerHTML=`<div class="narrow">${H('Notifications')}${NI.length?NI.map((i,x)=>{const nw=isNew(i);
   return `<div class="pc ${nw?'new':''}" data-x="${x}" style="cursor:pointer"><div class="ph"><span>${esc(new Date(i.at).toLocaleString())}</span>${nw?'<span class="bdg" style="--c:#FF4F5E;margin:0">New</span>':''}</div><div>${i.h}</div></div>`}).join(''):'<div class="card empty">No updates yet.</div>'}</div>`;
